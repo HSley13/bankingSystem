@@ -6,6 +6,15 @@ using namespace std;
 
 //  g++ -std=c++11 -g -o main main.cpp -L/usr/local/mysql-8.2.0-macos13-arm64/lib -lmysqlclient -rpath /usr/local/mysql-8.2.0-macos13-arm64/lib
 
+// TO do
+// Some options are still needed to be coded
+// Passoword Hahing to secure them
+// Create appropriate triggers for the queries
+// Finish the Bank Class which will be responsible to manage the create accounts
+// check for memory leaks
+// review the code and make it the simplest way it can be
+// 
+
 struct connection_details
 {
     string server, user, password, database;
