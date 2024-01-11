@@ -1,5 +1,22 @@
 {
     "files.associations": {
-        "iostream": "cpp"
-    }
+        "iostream": "cpp",
+        "string": "cpp",
+        "bitset": "cpp"
+    },
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "bankingSystemDatabase",
+            "database": "bankingSystemDatabase",
+            "username": "root"
+        }
+    ]
 }

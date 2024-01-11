@@ -6,14 +6,23 @@ using namespace std;
 
 //  g++ -std=c++11 -g -o main main.cpp -L/usr/local/mysql-8.2.0-macos13-arm64/lib -lmysqlclient -rpath /usr/local/mysql-8.2.0-macos13-arm64/lib
 
+// FOR THIS PROGRAM, THERE ARE SOME TRIGGERS THAT I HAVE CREATED ON THE COMPUTER AMD ARE NOT PART OF THIS CODE.
+// I HAVE PROCEEDED THAT WAY BECAUSE TRIGGERS CAN ONLY BE CREATED ONCE AND BECAUSE THAT PROGRAM WILL BE RUN MORE THAN ONCE, IT IS SAFER NOT IMBEDDING THE TRIGGERS CODE IN THE MAIN FUNCTION CAUSE IT WOULD
+// TRIED TO CREATE THEM AS MANY TIME AS THE PROGRAM IS RUN AND AFTER THE FIRST TIME, YOU WOULD ALWAYS GET AN SQL ERROR EVERYTIME SAYING THE TRIGGERS YOU ARE TRYING TO CREATE ALREADY EXIST
+
+// THOSE TRIGGERS MUST BE ON THE COMPUTER IN ORDER FOR THE PROFRAM TO RUN AS EXPECTED.
+// PS: WRITE ME ON YOUR MAIL IF YOU WANT TO HAVE THEM (sleyhortes13@gamil.com) OR COMMENT IT ON THAT GIT REPOSITORY
+
+
+
 // TO do
-// Some options are still needed to be coded
-// Passoword Hahing to secure them
-// Create appropriate triggers for the queries
+// Passoword Hahing for a better security
 // Finish the Bank Class which will be responsible to manage the create accounts
-// check for memory leaks
+// check and resolve the memory leaks problem
+// reduce code redundancy into functions
 // review the code and make it the simplest way it can be
-// 
+// Prevent direct SGL injection in the code by changing the queries methods
+// create the GUI for a more user friendly
 
 struct connection_details
 {
@@ -53,9 +62,8 @@ class Bank
 {
     public :
 
-    // on hold
-
-
+    vector <string> password;
+    
 };
 
 class Account
@@ -63,148 +71,205 @@ class Account
     public:
 
     string first_name, last_name, date_birth, email, password, national_ID, address;
-    int phone_number, account_number;
+    int phone_number;
 
-    void create_account(int account_number, string first_name, string last_name, string result, string date_birth, string email, string password, string national_ID, string address, int phone_number, MYSQL *connection);
+    void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, MYSQL *connection);
 
-    void check_balance(const Account &obj, MYSQL *connection);
+    void check_balance(const Account &obj, MYSQL *connection, double account_number);
 
-    void remove_accounts(const Account &obj, MYSQL *connection);
+    void remove_accounts(const Account &obj, MYSQL *connection, double account_number);
 };
 
-void Account :: create_account(int account_number, string first_name, string last_name, string results, string date_birth, string email, string password, string national_ID, string address, int phone_number, MYSQL *connection)
+void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, MYSQL *connection)
 {
-    string account_number_str = to_string(account_number);
+    string account_number_str;
+    string balance_str = to_string(balance);
+    string phone_number_str = to_string(phone_number);
 
-    string create_account = " CREATE TABLE ' "+account_number_str+" ' (account_number INT PRIMARY KEY, first_name VARCHAR(100), last_name VARCHAR(100), balance DECIMAL(100, 6) DEFAULT 100, transactions_history VARCHAR(100), transactions_date DATETIME DEFAULT NOW()  ); ";
+    string create_account = "INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance) VALUES ("+national_ID+" , "+first_name+", "+last_name+", "+date_birth+" , "+phone_number_str+" , "+email+" , "+address+" , "+balance_str+");";
 
     MYSQL_RES *result = mysql_perform_query(connection, create_account.c_str());
 
-    string insert = "INSERT INTO ' "+account_number_str+" ' (account_number, first_name, last_name) VALUES ( ' "+account_number_str+" ', ' "+first_name +" ', ' "+last_name+" ',  ); ";
-
-    result = mysql_perform_query(connection, insert.c_str());
-
     cout << "This is Your Account Number, remember it cause you will need it to gain access to everything you want to do in the future:  ";
-    // cout << ;
 
-    create_account = "SELECT account_number WHERE national_ID = ' "+national_ID+" '; ";
+    string assign_account_number = "SELECT account_number FROM accounts WHERE national_ID = "+national_ID+"; ";
 
-    result = mysql_perform_query(connection, create_account.c_str());
+    result = mysql_perform_query(connection, assign_account_number.c_str());
     if (result)
     {
         MYSQL_ROW row = mysql_fetch_row(result);
-        cout << row;
+        
+        if (row)
+        {
+            cout << row[0] << endl;
+
+            account_number_str.assign(row[0]);
+            string table_history = "CREATE TABLE NO"+account_number_str+" (transaction_details VARCHAR(100), date_time DATIME DEFAULT NOW()); ";
+            result = mysql_perform_query(connection, table_history.c_str());
+        }   
     }
 }
 
-void Account :: check_balance(const Account &obj, MYSQL *connection)
+void Account :: check_balance(const Account &obj, MYSQL *connection, double account_number)
 {
-    string account_number_str = to_string(obj.account_number);
+    string account_number_str = to_string(account_number);
 
-    string check_balance1 = "SELECT balance FROM ' "+account_number_str+" '; ";
+    string check_balance0 = "SELECT balance FROM accounts WHERE account_number = "+account_number_str+"; ";
 
-    MYSQL_RES *result = mysql_perform_query(connection, check_balance1.c_str());
+    MYSQL_RES *result = mysql_perform_query(connection, check_balance0.c_str());
     if (result)
     {
         MYSQL_ROW row = mysql_fetch_row(result);
 
-        cout << "Your Current Balance is: ";
+        if (row)
+        {
+            cout << "Your Current Balance is: ";
 
-        cout << row[mysql_num_fields(result) - 1];
+            cout << row[mysql_num_fields(result) - 1];
+        }
 
         mysql_free_result(result);
     }
 }
 
-void Account :: remove_accounts(const Account &obj, MYSQL *connection)
+void Account :: remove_accounts(const Account &obj, MYSQL *connection, double account_number)
 {
-    string account_number_str = to_string(obj.account_number);
+    string account_number_str = to_string(account_number);
 
-    string remove_account0 = " DROP TABLE ' "+account_number_str+" '; ";
+    string remove_account0 = "DELETE FROM accounts WHERE account_number = "+account_number_str+"; ";
 }
 
 class Transactions : public Account
 {
-
     public:
 
-    void log_transactions();
+    void deposit(MYSQL *connection, double amount_to_deposit, double account_number);
 
-    void retrieve_transaction_history(const Account &obj, MYSQL *connection);
+    void withdrawal( MYSQL *connection, double sum_to_withdraw, double account_number);
 
-    void money_withdrawal(const Account &obj, MYSQL *connection, int sum_to_withdraw);
+    void transfer(MYSQL *connection, double amount_to_send, double account_number1, double account_number2);
 
-    void transfer_money(const Account &obj1, const Account &obj2, MYSQL *connection, int amount_to_send);
+    void transactions_history(MYSQL *connection, double account_number); 
 };
 
-void Transactions :: money_withdrawal(const Account &obj, MYSQL *connection, int sum_to_withdraw)
+void Transactions :: deposit (MYSQL *connection, double amount_to_deposit, double account_number)
 {
-    MYSQL_RES *result;
-    string account_number_str = to_string(obj.account_number);
-    string sum_to_withdraw_str = to_string(sum_to_withdraw);
+     MYSQL_RES *result;
+    string account_number_str = to_string(account_number);
+    string amount_to_deposit_str = to_string(amount_to_deposit);
 
-    string money_withdrawal0 = "UPDATE TABLE ' "+account_number_str+" ' SET balance = balance - ' "+sum_to_withdraw_str+" ';";
-    result = mysql_perform_query(connection, money_withdrawal0.c_str());
+    string deposit0 = "UPDATE transactions SET withdraw = "+amount_to_deposit_str+" WHERE account_number = "+account_number_str+"; ";
+    result = mysql_perform_query(connection, deposit0.c_str());
 
-    cout << "You have withdrawed " << sum_to_withdraw << " dollars and your new Balance is: ";
+    cout << "You have withdrawed " << amount_to_deposit << " dollars and your new Balance is: ";
 
-    string new_balance = "SELECT balance FROM ' "+account_number_str+" ';";
+    string new_balance = "SELECT balance FROM accounts WHERE account_number = "+account_number_str+"; ";
     result = mysql_perform_query(connection, new_balance.c_str());
     if (result)
     {
         MYSQL_ROW row = mysql_fetch_row(result);
-        cout << row << endl;
+
+        if (row) cout << row[0] << endl;
 
         mysql_free_result(result);
     }
+
+    string new_deposit = "New Deposit of ";
+
+    string log_deposit0 = "INSERT INTO NO"+account_number_str+" VALUES (CONCAT("+new_deposit+", "+amount_to_deposit_str+"), NOW()) ";
+    result = mysql_perform_query(connection, log_deposit0.c_str());
 }
 
-void Transactions :: retrieve_transaction_history(const Account &obj, MYSQL *connection)
+void Transactions :: withdrawal(MYSQL *connection, double amount_to_withdraw, double account_number)
 {
     MYSQL_RES *result;
-    string account_number_str = to_string(obj.account_number);
+    string account_number_str = to_string(account_number);
+    string amount_to_withdraw_str = to_string(amount_to_withdraw);
 
-    string retrieve_transaction_history0 = "SELECT transactions_history FROM ' "+account_number_str+" ';";
-    
-    result = mysql_perform_query(connection, retrieve_transaction_history0.c_str());
+    string withdrawal0 = "UPDATE transactions SET withdraw = "+amount_to_withdraw_str+" WHERE account_number = "+account_number_str+"; ";
+    result = mysql_perform_query(connection, withdrawal0.c_str());
+
+    cout << "You have withdrawed " << amount_to_withdraw << " dollars and your new Balance is: ";
+
+    string new_balance = "SELECT balance FROM accounts WHERE account_number = "+account_number_str+"; ";
+    result = mysql_perform_query(connection, new_balance.c_str());
     if (result)
     {
         MYSQL_ROW row = mysql_fetch_row(result);
-        cout << row << endl;
+
+        if (row) cout << row[0] << endl;
 
         mysql_free_result(result);
     }
+
+    string new_withdraw = "New Withdraw of ";
+
+    string log_withdrawal0 = "INSERT INTO NO"+account_number_str+" VALUES (CONCAT("+new_withdraw+", "+amount_to_withdraw_str+"), NOW()) ";
+    result = mysql_perform_query(connection, log_withdrawal0.c_str());
 }
 
-void Transactions :: transfer_money(const Account &obj1, const Account &obj2, MYSQL *connection, int amount_to_send)
+void Transactions :: transfer(MYSQL *connection, double amount_to_transfer, double account_number1, double account_number2)
 {
     MYSQL_RES *result;
-    string account_number1_str = to_string(obj1.account_number);
-    string account_number2_str = to_string(obj2.account_number);
-    string amount_to_send_str = to_string(amount_to_send);
+    string account_number1_str = to_string(account_number1);
+    string account_number2_str = to_string(account_number2);
+    string amount_to_transfer_str = to_string(amount_to_transfer);
 
-    string transfer0 = "UPTADE TABLE ' "+account_number1_str+" ' SET balance = balance - ' "+amount_to_send_str+" ';";
+    string transfer0 = "UPDATE transactions SET transfer = "+amount_to_transfer_str+" WHERE account_number = "+account_number1_str+"; ";
     result = mysql_perform_query(connection, transfer0.c_str());
 
-    string transfer1 = "UPTADE TABLE ' "+account_number2_str+" ' SET balance = balance + ' "+amount_to_send_str+" ';";
-    result = mysql_perform_query(connection, transfer1.c_str());
+    string receive0 = "UPDATE TABLE transactions SET receive = "+amount_to_transfer_str+" WHERE account_number = "+account_number1_str+"; ";
+    result = mysql_perform_query(connection, receive0.c_str());
 
-    cout << "You have send " << amount_to_send << " dollars and your new Balance is: ";
+    cout << "You have sent " << amount_to_transfer << " dollars and your new Balance is: ";
 
-    string new_balance = "SELECT balance FROM ' "+account_number1_str+" ';";
+    string new_balance = "SELECT balance FROM accounts WHERE account_number = "+account_number1_str+"; ";
     result = mysql_perform_query(connection, new_balance.c_str());
     if (result)
     {
         MYSQL_ROW row = mysql_fetch_row(result);
-        cout << row << endl;
+
+        if (row) cout << row[0] << endl;
+
+        mysql_free_result(result);
+    }
+
+    string new_transfer= "New Transfer of ";
+
+    string log_transfer0 = "INSERT INTO NO"+account_number1_str+" VALUES (CONCAT("+new_transfer+", "+amount_to_transfer_str+"), NOW()) ";
+    result = mysql_perform_query(connection, log_transfer0.c_str());
+
+    string new_receive= "New Receive of ";
+
+    string log_receive0 = "INSERT INTO NO"+account_number2_str+" VALUES (CONCAT("+new_receive+", "+amount_to_transfer_str+"), NOW()) ";
+    result = mysql_perform_query(connection, log_receive0.c_str());
+}
+
+void Transactions :: transactions_history(MYSQL *connection, double account_number)
+{
+    MYSQL_RES *result;
+    string account_number_str = to_string(account_number);
+
+    string transaction_history0 = "SELECT * FROM NO"+account_number_str+"; ";
+    
+    result = mysql_perform_query(connection, transaction_history0.c_str());
+    if (result)
+    {
+        MYSQL_ROW row = mysql_fetch_row(result);
+        if (row)
+        {
+            for (int i = 0; i < mysql_num_fields(result); i++) cout << row[i] << endl;  
+        }
 
         mysql_free_result(result);
     }
 }
-
 
 int main(void)
 {
+    Bank CROSS_CONTINENTAL_TREASUTY_BANK;
+    CROSS_CONTINENTAL_TREASUTY_BANK.password.reserve(1000000);  // reserving memory to hold the passwods;
+
     MYSQL *connection;
     MYSQL_RES *result;
 
