@@ -2,7 +2,8 @@
     "files.associations": {
         "iostream": "cpp",
         "string": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "ostream": "cpp"
     },
     "sqltools.connections": [
         {
