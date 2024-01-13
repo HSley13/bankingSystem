@@ -90,10 +90,12 @@ void Transactions :: deposit (sql :: Connection *connection, double amount_to_de
 
     if (result->next()) cout << result->getDouble("balance") << endl;
 
-    prep_statement = connection->prepareStatement("INSERT INTO CONCAT(NO, ?) VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setInt(1, account_number);
-    prep_statement->setString(2, "New deposit of ");
-    prep_statement->setDouble(3, amount_to_deposit);
+    string table_name = "NO";
+    table_name.append(to_string(account_number));
+
+    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
+    prep_statement->setString(1, "New deposit of ");
+    prep_statement->setDouble(2, amount_to_deposit);
 
     prep_statement->executeUpdate();
     
@@ -103,7 +105,7 @@ void Transactions :: deposit (sql :: Connection *connection, double amount_to_de
 
 void Transactions :: withdrawal(sql :: Connection *connection, double amount_to_withdraw, int account_number)
 {
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE transactions SET withdraw = ? WHERE account_number = ?;");
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE transactions SET withdrawal = ? WHERE account_number = ?;");
     prep_statement->setDouble(1, amount_to_withdraw);
     prep_statement->setInt(2, account_number);
 
@@ -118,10 +120,12 @@ void Transactions :: withdrawal(sql :: Connection *connection, double amount_to_
 
     if (result->next()) cout << result->getDouble("balance") << endl;
 
-    prep_statement = connection->prepareStatement("INSERT INTO CONCAT(NO, ?) VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setInt(1, account_number);
-    prep_statement->setString(2, "New Withdrawal of ");
-    prep_statement->setDouble(3, amount_to_withdraw);
+    string table_name = "NO";
+    table_name.append(to_string(account_number));
+
+    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
+    prep_statement->setString(1, "New Withdrawal of ");
+    prep_statement->setDouble(2, amount_to_withdraw);
 
     prep_statement->executeUpdate();
     
@@ -152,17 +156,23 @@ void Transactions :: transfer(sql :: Connection *connection, double amount_to_tr
 
     prep_statement->executeUpdate();
 
-    prep_statement = connection->prepareStatement("INSERT INTO CONCAT(NO, ?) VALUES ( CONCAT(?, ?), NOW() );");
+    string table_name1 = "NO";
+    table_name1.append(to_string(account_number1));
+
+    prep_statement = connection->prepareStatement("INSERT INTO "+table_name1+" VALUES ( CONCAT(?, ?), NOW() );");
     prep_statement->setString(1, "New Transfer of ");
     prep_statement->setDouble(2, amount_to_transfer);
 
     prep_statement->executeUpdate();
 
-    string new_receive= "New Receive of ";
+    string table_name2 = "NO";
+    table_name2.append(to_string(account_number2));
 
-    prep_statement = connection->prepareStatement("INSERT INTO CONCAT(NO, ?) VALUES ( CONCAT(?, ?), NOW() );");
+    prep_statement = connection->prepareStatement("INSERT INTO "+table_name2+" VALUES ( CONCAT(?, ?), NOW() );");
     prep_statement->setString(1, "New Receive of ");
     prep_statement->setDouble(2, amount_to_transfer);
+
+    prep_statement->executeUpdate();
 
     delete prep_statement;
     delete result;
@@ -170,8 +180,10 @@ void Transactions :: transfer(sql :: Connection *connection, double amount_to_tr
 
 void Transactions :: transactions_history(sql :: Connection *connection, int account_number)
 {
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT * FROM CONCAT(NO, ?);");
-    prep_statement->setInt(1, account_number);
+    string table_name = "NO";
+    table_name.append(to_string(account_number));
+
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT * FROM "+table_name+";");
 
     sql :: ResultSet *result = prep_statement->executeQuery();
 
@@ -307,7 +319,7 @@ int main(void)
     
         string first_name, last_name, date_birth, email, national_ID, address, password, password_confirmation;
 
-        int phone_number, account_number;
+        int phone_number, account_number, account_number1, account_number2;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
 
@@ -344,7 +356,7 @@ int main(void)
 
                 do
                 {
-                    cout << "100 dollars FEE in order to create the account. PS: This amount won't appeat in your balance: ";
+                    cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: ";
                     cin >> balance;
                 } while (balance < 100);
                 
@@ -382,15 +394,16 @@ int main(void)
 
                 cout << "5. Edit Account Information" << endl;
 
+                cout << endl;
 
                 cin >> options2;
                 switch(options2)
                 {
                     case 1: // Balance Check
-                        cout << "What is yout Account Number: " << endl;
+                        cout << "What is yout Account Number: ";
                         cin >> account_number;
 
-                        cout << "What is your Password: " << endl;
+                        cout << "What is your Password: ";
                         cin >> password;
 
                         // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
@@ -400,13 +413,13 @@ int main(void)
                     break;
 
                     case 2: // Deposit
-                        cout << "What is yout Account Number: " << endl;
+                        cout << "What is yout Account Number: ";
                         cin >> account_number;
 
-                        cout << "What is your Password: " << endl;
+                        cout << "What is your Password: ";
                         cin >> password;
 
-                        cout << "What is the Amount you would like to deposit: " << endl;
+                        cout << "What is the Amount you would like to deposit: ";
                         cin >> amount_to_deposit;
                     
                         // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
@@ -416,13 +429,13 @@ int main(void)
                     break;
 
                     case 3: // Withdraw
-                        cout << "What is yout Account Number: " << endl;
+                        cout << "What is yout Account Number: ";
                         cin >> account_number;
 
-                        cout << "What is your Password: " << endl;
+                        cout << "What is your Password: ";
                         cin >> password;
 
-                        cout << "What is the Amount you would like to Withdraw: " << endl;
+                        cout << "What is the Amount you would like to Withdraw: ";
                         cin >> amount_to_withdraw;
                     
                         // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
@@ -436,14 +449,17 @@ int main(void)
                     break;
 
                     case 4: // Transfer
-                        cout << "What is yout Account Number: " << endl;
-                        cin >> account_number;
+                        cout << "What is yout Account Number: ";
+                        cin >> account_number1;
 
-                        cout << "What is your Password: " << endl;
+                        cout << "What is your Password: ";
                         cin >> password;
 
-                        cout << "What is the Amount you would like to Transfer: " << endl;
+                        cout << "What is the Amount you would like to Transfer: ";
                         cin >> amount_to_deposit;
+
+                        cout << "What is the Account Number to receive the Money: ";
+                        cin >> account_number2;
                     
                         // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
@@ -451,7 +467,7 @@ int main(void)
 
                         // I should also return the exact Balance so that the user might be aware of it and enter a reasonnable amount
 
-                        accounts.deposit(connection, amount_to_deposit, account_number);
+                        accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);
 
                     break;
 
@@ -475,6 +491,8 @@ int main(void)
                             cout << "2. Edit email" << endl;
 
                             cout << "3. Edit Phone Number" << endl;
+
+                            cout << endl;
 
                             cin >> options4;
                             switch(options4)
