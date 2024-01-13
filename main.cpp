@@ -358,7 +358,12 @@ int main(void)
 
                 } while (password.compare(password_confirmation));
 
+                // Use Argon2_ID to hash the passwrord and store the hashed result into a table where only the BANK class will have access to it
+
                 accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, connection);
+
+                password.clear();
+                password_confirmation.clear();
 
             break;
 
