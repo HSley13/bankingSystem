@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <random>
+#include <stack>
 
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_driver.h>
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_connection.h>
@@ -363,6 +364,12 @@ int main(int argc, const char* argv[])
 {
     try
     {
+        if (argc < 2)
+        {
+            cerr << "You should Enter the Password in order to connect to the Database as the Second Argument" << endl;
+            return 1;
+        }
+
         connection_details ID;
         ID.server= "localhost";
         ID.user = "root";
@@ -381,353 +388,451 @@ int main(int argc, const char* argv[])
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
 
+        stack <int> main_menu;
+
+        stack <int> sub_menu;
+
+
+
+
         Account accounts;
 
-        cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << endl;
-
-        cout << endl;
-        cout << endl;
-        cout << endl;
-
-        cout << "                                                 *********** Among the List below, choose what best suits your Status **********"                                                     << endl;
-        cout << endl;
-
-        cout << "1. You are New to our Bank and Would like to Create an Account" << endl;
-
-        cout << "2. You already possess an Account and would like to process some inquiries relative to it" << endl;
-
-        cout << "3. Information on our Bank" << endl;
-
-        cout << endl;
-
-        cin >> options;
-        switch(options)
+        do 
         {
-            case 1: // Create the Account and the table History along the way
+            cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << endl;
 
-                cout << "Please Provide Us with the following Information in order to create your account, Make sure that you enter the correct Information: " << endl;
-                cout << endl;
-                
-                cout << "National ID with at least a letter: ";
-                cin >> national_ID;
+            cout << endl;
+            cout << endl;
+            cout << endl;
 
-                cout << "First Name: ";
-                cin >> first_name;
+            cout << "                                                 *********** Among the List below, choose what best suits your Status **********"                                                     << endl;
+            cout << endl;
 
-                cout << "Last Name: ";
-                cin >> last_name;
+            cout << "1. You are New to our Bank and Would like to Create an Account" << endl;
 
-                cout << "Date of Birth with format 2024-01-31 : ";
-                cin >> date_birth;
+            cout << "2. You already possess an Account and would like to process some inquiries relative to it" << endl;
 
-                cout << "Phone Number: ";
-                cin >> phone_number;
-               
-                cout << "Email: ";
-                cin >> email;
+            cout << "3. Information on our Bank" << endl;
 
-                cout << "address with format Taiwan-shoufeng-zhixue-Dong_Hwa_University-Dormitory_4: ";
-                cin >> address;
+            cout << "0. To Quit" << endl;
 
-                do
-                {
-                    cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: ";
-                    cin >> balance;
-                } while (balance < 100);
-                
-                cout << "Password: ";
-                cin >> password;
+            cout << endl;
 
-                do
-                {
-                    cout << "Passord Confirmation: ";
-                    cin >> password_confirmation;
+            cin >> options;
+            switch(options)
+            {
+                case 1: // Create the Account and the table History along the way
 
-                } while (password.compare(password_confirmation));
+                    cout << "Please Provide Us with the following Information in order to create your account, Make sure that you enter the correct Information: " << endl;
+                    cout << endl;
 
-                hash_password = hashing_password(password);
+                    cout << "National ID with at least a letter: ";
+                    cin >> national_ID;
 
-                accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, hash_password, connection);
+                    cout << "First Name: ";
+                    cin >> first_name;
 
-                password.clear();
-                password_confirmation.clear();
+                    cout << "Last Name: ";
+                    cin >> last_name;
 
-            break;
+                    cout << "Date of Birth with format 2024-01-31 : ";
+                    cin >> date_birth;
 
-            case 2: // Perform Inquiry Relative to an Existing Account 
+                    cout << "Phone Number: ";
+                    cin >> phone_number;
 
-                cout << "Choose among the options below, what best suits your requirements" << endl;
-                cout << endl;
+                    cout << "Email: ";
+                    cin >> email;
 
-                cout << "1. Checking your Balance" << endl;
+                    cout << "address with format Taiwan-shoufeng-zhixue-Dong_Hwa_University-Dormitory_4: ";
+                    cin >> address;
 
-                cout << "2. Deposit" << endl;
+                    do
+                    {
+                        cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: ";
+                        cin >> balance;
+                    } while (balance < 100);
 
-                cout << "3. Money Withdrawal " << endl;
+                    cout << "Password: ";
+                    cin >> password;
 
-                cout << "4. Money Transfer" << endl;
+                    do
+                    {
+                        cout << "Passord Confirmation: ";
+                        cin >> password_confirmation;
 
-                cout << "5. Edit Account Information" << endl;
+                    } while (password.compare(password_confirmation));
 
-                cout << "6. Delete Your Account" << endl;
+                    hash_password = hashing_password(password);
 
-                cout << endl;
+                    accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, hash_password, connection);
 
-                cin >> options2;
-                switch(options2)
-                {
-                    case 1: // Balance Check
-                        cout << "What is yout Account Number: ";
-                        cin >> account_number;
+                    password.clear();
+                    password_confirmation.clear();
 
-                        cout << "What is your Password: ";
-                        cin >> password;
+                break;
 
-                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                        if (verifying_password(password, hash_password)) 
-                        {
-                            cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
-
-                            password.clear();
-                        }
-
-                        else cout << "Your Password is Incorrect" << endl;
-                        
-                    break;
-
-                    case 2: // Deposit
-                        cout << "What is yout Account Number: ";
-                        cin >> account_number;
-
-                        cout << "What is the Amount you would like to deposit: ";
-                        cin >> amount_to_deposit;
-
-                        cout << "What is your Password: ";
-                        cin >> password;
-
-                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                        if (verifying_password(password, hash_password)) 
-                        {
-                            accounts.deposit(connection, amount_to_deposit, account_number);
-
-                            password.clear();
-                        }
-
-                        else cout << "Your Password is Incorrect" << endl;
-                        
-                    break;
-
-                    case 3: // Withdraw
-                        cout << "What is yout Account Number: ";
-                        cin >> account_number;
-
-                        cout << "What is the Amount you would like to Withdraw: ";
-                        cin >> amount_to_withdraw;
-
-                        cout << "What is your Password: ";
-                        cin >> password;
-
-                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                        if (verifying_password(password, hash_password)) 
-                        {
-                            balance = check_balance(connection, account_number);
-
-                            while (amount_to_withdraw > balance) 
-                            {
-                                cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
-
-                                cout << "So Please enter a reasonnable amount: ";
-                                cin >> amount_to_withdraw;
-                            }
-
-                            accounts.withdrawal(connection, amount_to_withdraw, account_number);
-
-                            password.clear();
-                        }
-
-                        else cout << "Your Password is Incorrect" << endl;
-
-                    break;
-
-                    case 4: // Transfer
-                        cout << "What is yout Account Number: ";
-                        cin >> account_number1;
-
-                        cout << "What is the Amount you would like to Transfer: ";
-                        cin >> amount_to_deposit;
-
-                        cout << "What is the Account Number to receive the Money: ";
-                        cin >> account_number2;
-
-                        cout << "What is your Password: ";
-                        cin >> password;
-
-                        hash_password = retrieve_hashed_password(account_number1, connection);
-
-                        if (verifying_password(password, hash_password)) 
-                        {
-                            balance = check_balance(connection, account_number1);
-
-                            while (amount_to_transfer > balance) 
-                            {
-                                cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
-
-                                cout << "So Please enter a reasonnable amount: ";
-                                cin >> amount_to_transfer;
-                            }
-
-                            accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
-
-                            password.clear();                                                         
-                        }
-
-                        else cout << "Your Password is Incorrect" << endl;
-
-                    break;
-
-                    case 5: // Edit Account Information
+                case 2: // Perform Inquiry Relative to an Existing Account 
+                    do
+                    {
                         cout << "Choose among the options below, what best suits your requirements" << endl;
                         cout << endl;
 
-                        cout << "1. Edit Personal Information" << endl;
+                        cout << "1. Checking your Balance" << endl;
 
-                        cout << "2. Change Password" << endl;
+                        cout << "2. Deposit" << endl;
 
-                        cin >> options3;
-                        switch(options3) 
+                        cout << "3. Money Withdrawal " << endl;
+
+                        cout << "4. Money Transfer" << endl;
+
+                        cout << "5. Edit Account Information" << endl;
+
+                        cout << "6. Delete Your Account" << endl;
+
+                        cout << "0. To Go Back to the Previous Menu" << endl;
+
+                        cout << endl;
+
+                        cin >> options2;
+
+                        if (options2 == 0 && !sub_menu.empty())
                         {
-                            case 1: // Edit personal Information
-                                cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
-                                cout << endl;
+                            options2 = sub_menu.top();
+                            sub_menu.pop();
+                            break;
+                        }
 
-                                cout << "1. Edit Name" << endl;
+                        switch(options2)
+                        {
+                            case 1: // Balance Check
+                                cout << "What is yout Account Number: ";
+                                cin >> account_number;
 
-                                cout << "2. Edit email" << endl;
+                                cout << "What is your Password: ";
+                                cin >> password;
 
-                                cout << "3. Edit address" << endl;
+                                hash_password = retrieve_hashed_password(account_number, connection);
 
-                                cout << "4. Edit Phone Number" << endl;
-
-                                cout << endl;
-
-                                cin >> options4;
-                                switch(options4)
+                                if (verifying_password(password, hash_password)) 
                                 {
-                                    case 1: // Edit Name
-                                        cout << "Enter Your Account Number: ";
-                                        cin >> account_number;
+                                    cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
-                                        cout << "What is your Password: ";
-                                        cin >> password;
-
-                                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                                        if (verifying_password(password, hash_password))
-                                        {
-                                            cout << "Enter the New First Name. PS: You can't change your Last Name: ";
-                                            cin >> new_first_name;
-
-                                            prep_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
-                                            prep_statement->setInt(1, account_number);
-                                            prep_statement->setString(2, new_first_name);
-
-                                            prep_statement->executeUpdate();
-
-                                            password.clear();
-                                        }
-
-                                        else cout << "Your Password is Incorrect" << endl;
-
-                                    break;
-
-                                    case 2: // Edit Email
-                                        cout << "Enter Your Account Number: ";
-                                        cin >> account_number;
-
-                                        cout << "What is your Password: ";
-                                        cin >> password;
-
-                                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                                        if (verifying_password(password, hash_password))
-                                        {
-                                            cout << "Enter the New Mail: ";
-                                            cin >> new_email;
-
-                                            prep_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
-                                            prep_statement->setInt(1, account_number);
-                                            prep_statement->setString(2, new_email);
-
-                                            prep_statement->executeUpdate();
-
-                                            password.clear();
-                                        }
-
-                                        else cout << "Your Password is Incorrect" << endl;
-
-                                    break;
-
-                                    case 3: // Edit address
-                                        cout << "Enter Your Account Number: ";
-                                        cin >> account_number;
-
-                                        cout << "What is your Password: ";
-                                        cin >> password;
-
-                                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                                        if (verifying_password(password, hash_password))
-                                        {
-                                            cout << "Enter the New Address: ";
-                                            cin >> new_address;
-
-                                            prep_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
-                                            prep_statement->setInt(1, account_number);
-                                            prep_statement->setString(2, new_address);
-
-                                            prep_statement->executeUpdate();
-
-                                            password.clear();
-                                        }
-
-                                        else cout << "Your Password is Incorrect" << endl;
-
-                                    break;
-
-                                    case 4: // Edit Phone Number
-                                        cout << "Enter Your Account Number: ";
-                                        cin >> account_number;
-
-                                        cout << "What is your Password: ";
-                                        cin >> password;
-
-                                        hash_password = retrieve_hashed_password(account_number, connection);
-
-                                        if (verifying_password(password, hash_password))
-                                        {
-                                            cout << "Enter the New Phone Number: ";
-                                            cin >> new_phone_number;
-
-                                            prep_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
-                                            prep_statement->setInt(1, account_number);
-                                            prep_statement->setInt(2, new_phone_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            password.clear();
-                                        }
-
-                                        else cout << "Your Password is Incorrect" << endl;   
-
-                                    break;
+                                    password.clear();
                                 }
+
+                                else cout << "Your Password is Incorrect" << endl;
 
                             break;
 
-                            case 2: // Change Password
+                            case 2: // Deposit
+                                cout << "What is yout Account Number: ";
+                                cin >> account_number;
+
+                                cout << "What is the Amount you would like to deposit: ";
+                                cin >> amount_to_deposit;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+
+                                hash_password = retrieve_hashed_password(account_number, connection);
+
+                                if (verifying_password(password, hash_password)) 
+                                {
+                                    accounts.deposit(connection, amount_to_deposit, account_number);
+
+                                    password.clear();
+                                }
+
+                                else cout << "Your Password is Incorrect" << endl;
+
+                            break;
+
+                            case 3: // Withdraw
+                                cout << "What is yout Account Number: ";
+                                cin >> account_number;
+
+                                cout << "What is the Amount you would like to Withdraw: ";
+                                cin >> amount_to_withdraw;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+
+                                hash_password = retrieve_hashed_password(account_number, connection);
+
+                                if (verifying_password(password, hash_password)) 
+                                {
+                                    balance = check_balance(connection, account_number);
+
+                                    while (amount_to_withdraw > balance) 
+                                    {
+                                        cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
+
+                                        cout << "So Please enter a reasonnable amount: ";
+                                        cin >> amount_to_withdraw;
+                                    }
+
+                                    accounts.withdrawal(connection, amount_to_withdraw, account_number);
+
+                                    password.clear();
+                                }
+
+                                else cout << "Your Password is Incorrect" << endl;
+
+                            break;
+
+                            case 4: // Transfer
+                                cout << "What is yout Account Number: ";
+                                cin >> account_number1;
+
+                                cout << "What is the Amount you would like to Transfer: ";
+                                cin >> amount_to_deposit;
+
+                                cout << "What is the Account Number to receive the Money: ";
+                                cin >> account_number2;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+
+                                hash_password = retrieve_hashed_password(account_number1, connection);
+
+                                if (verifying_password(password, hash_password)) 
+                                {
+                                    balance = check_balance(connection, account_number1);
+
+                                    while (amount_to_transfer > balance) 
+                                    {
+                                        cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
+
+                                        cout << "So Please enter a reasonnable amount: ";
+                                        cin >> amount_to_transfer;
+                                    }
+
+                                    accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
+
+                                    password.clear();                                                         
+                                }
+
+                                else cout << "Your Password is Incorrect" << endl;
+
+                            break;
+
+                            case 5: // Edit Account Information
+                                do
+                                {
+                                    cout << "Choose among the options below, what best suits your requirements" << endl;
+                                    cout << endl;
+
+                                    cout << "1. Edit Personal Information" << endl;
+
+                                    cout << "2. Change Password" << endl;
+
+                                    cout << "0. To Go Back to the Previous Menu" << endl;
+
+                                    cout << endl;
+
+                                    cin >> options3;
+
+                                    if (options3 == 0 && !sub_menu.empty())
+                                    {
+                                        options3 = sub_menu.top();
+                                        sub_menu.pop();
+                                        break;
+                                    }
+
+                                    switch(options3) 
+                                    {
+                                        case 1: // Edit personal Information
+                                            do
+                                            {
+
+                                                cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
+                                                cout << endl;
+
+                                                cout << "1. Edit Name" << endl;
+
+                                                cout << "2. Edit email" << endl;
+
+                                                cout << "3. Edit address" << endl;
+
+                                                cout << "4. Edit Phone Number" << endl;
+
+                                                cout << "0. To Go Back to the Previous Menu" << endl;
+
+                                                cout << endl;
+
+                                                cin >> options4;
+
+                                                if (options4 == 0 && !sub_menu.empty())
+                                                {
+                                                    options4 = sub_menu.top();
+                                                    sub_menu.pop();
+                                                    break;
+                                                }
+
+                                                switch(options4)
+                                                {
+                                                    case 1: // Edit Name
+                                                        cout << "Enter Your Account Number: ";
+                                                        cin >> account_number;
+
+                                                        cout << "What is your Password: ";
+                                                        cin >> password;
+
+                                                        hash_password = retrieve_hashed_password(account_number, connection);
+
+                                                        if (verifying_password(password, hash_password))
+                                                        {
+                                                            cout << "Enter the New First Name. PS: You can't change your Last Name: ";
+                                                            cin >> new_first_name;
+
+                                                            prep_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
+                                                            prep_statement->setInt(1, account_number);
+                                                            prep_statement->setString(2, new_first_name);
+
+                                                            prep_statement->executeUpdate();
+
+                                                            password.clear();
+                                                        }
+
+                                                        else cout << "Your Password is Incorrect" << endl;
+
+                                                    break;
+
+                                                    case 2: // Edit Email
+                                                        cout << "Enter Your Account Number: ";
+                                                        cin >> account_number;
+
+                                                        cout << "What is your Password: ";
+                                                        cin >> password;
+
+                                                        hash_password = retrieve_hashed_password(account_number, connection);
+
+                                                        if (verifying_password(password, hash_password))
+                                                        {
+                                                            cout << "Enter the New Mail: ";
+                                                            cin >> new_email;
+
+                                                            prep_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
+                                                            prep_statement->setInt(1, account_number);
+                                                            prep_statement->setString(2, new_email);
+
+                                                            prep_statement->executeUpdate();
+
+                                                            password.clear();
+                                                        }
+
+                                                        else cout << "Your Password is Incorrect" << endl;
+
+                                                    break;
+
+                                                    case 3: // Edit address
+                                                        cout << "Enter Your Account Number: ";
+                                                        cin >> account_number;
+
+                                                        cout << "What is your Password: ";
+                                                        cin >> password;
+
+                                                        hash_password = retrieve_hashed_password(account_number, connection);
+
+                                                        if (verifying_password(password, hash_password))
+                                                        {
+                                                            cout << "Enter the New Address: ";
+                                                            cin >> new_address;
+
+                                                            prep_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
+                                                            prep_statement->setInt(1, account_number);
+                                                            prep_statement->setString(2, new_address);
+
+                                                            prep_statement->executeUpdate();
+
+                                                            password.clear();
+                                                        }
+
+                                                        else cout << "Your Password is Incorrect" << endl;
+
+                                                    break;
+
+                                                    case 4: // Edit Phone Number
+                                                        cout << "Enter Your Account Number: ";
+                                                        cin >> account_number;
+
+                                                        cout << "What is your Password: ";
+                                                        cin >> password;
+
+                                                        hash_password = retrieve_hashed_password(account_number, connection);
+
+                                                        if (verifying_password(password, hash_password))
+                                                        {
+                                                            cout << "Enter the New Phone Number: ";
+                                                            cin >> new_phone_number;
+
+                                                            prep_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
+                                                            prep_statement->setInt(1, account_number);
+                                                            prep_statement->setInt(2, new_phone_number);
+
+                                                            prep_statement->executeUpdate();
+
+                                                            password.clear();
+                                                        }
+
+                                                        else cout << "Your Password is Incorrect" << endl;   
+
+                                                    break;
+                                                }
+
+                                                if (options4 != 0) sub_menu.push(options4);
+
+                                            }while (options4 != 0);
+
+                                        break;
+
+                                        case 2: // Change Password
+                                            cout << "Enter Your Account Number: ";
+                                            cin >> account_number;
+
+                                            cout << "What is your Password: ";
+                                            cin >> password;
+
+                                            hash_password = retrieve_hashed_password(account_number, connection);
+
+                                            if (verifying_password(password, hash_password))
+                                            {
+                                                cout << "What is the New Password: ";
+                                                cin >> new_password;
+
+                                                do
+                                                {
+                                                    cout << "New Password Confirmation: ";
+                                                    cin >> new_password_confirmation;
+
+                                                } while (password.compare(new_password_confirmation));
+
+                                                new_hash_password = hashing_password(new_password);
+
+                                                prep_statement = connection->prepareStatement("CALL insert_or_update_hash_password(?, ?);");
+                                                prep_statement->setInt(1, account_number);
+                                                prep_statement->setString(2, new_hash_password);
+
+                                                prep_statement->executeUpdate();
+
+                                                password.clear();
+                                                new_password.clear();
+                                            }   
+
+                                            else cout << "Your Password is Incorrect" << endl;
+
+                                        break;
+
+                                    }
+
+                                    if (options3 != 0) sub_menu.push(options3);
+
+                                }while (options3 != 0);
+
+                            break;
+
+                            case 6: // Delete an Account
                                 cout << "Enter Your Account Number: ";
                                 cin >> account_number;
 
@@ -736,162 +841,133 @@ int main(int argc, const char* argv[])
 
                                 hash_password = retrieve_hashed_password(account_number, connection);
 
-                                if (verifying_password(password, hash_password))
+                                if (verifying_password(password, hash_password)) 
                                 {
-                                    cout << "What is the New Password: ";
-                                    cin >> new_password;
-
-                                    do
-                                    {
-                                        cout << "New Password Confirmation: ";
-                                        cin >> new_password_confirmation;
-
-                                    } while (password.compare(new_password_confirmation));
-
-                                    new_hash_password = hashing_password(new_password);
-
-                                    prep_statement = connection->prepareStatement("CALL insert_or_update_hash_password(?, ?);");
-                                    prep_statement->setInt(1, account_number);
-                                    prep_statement->setString(2, new_hash_password);
-
-                                    prep_statement->executeUpdate();
-
+                                    accounts.remove_accounts(connection, account_number);
                                     password.clear();
-                                    new_password.clear();
-                                }   
+                                }
 
                                 else cout << "Your Password is Incorrect" << endl;
 
                             break;
-                    
+
                         }
 
-                    break;
+                        if (options2 != 0) sub_menu.push(options2); 
 
-                    case 6: // Delete an Account
-                        cout << "Enter Your Account Number: ";
-                        cin >> account_number;
+                    } while(options2 != 0);
 
-                        cout << "What is your Password: ";
-                        cin >> password;
+                break;
 
-                        hash_password = retrieve_hashed_password(account_number, connection);
+                case 3: // Information on the Bank
+                    cout <<  "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence"<< endl;
 
-                        if (verifying_password(password, hash_password)) 
-                        {
-                            accounts.remove_accounts(connection, account_number);
-                            password.clear();
-                        }
+                    cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK"<< endl;
+                    cout << "SECTION 1.1: Our Vision and Mission"<< endl;
+                    cout << endl;
+                    cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth."<< endl;
+                    cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction."<< endl;
+                    cout << "SECTION 1.2: Core Values"<< endl;
+                    cout << endl;
+                    cout << "Integrity: Upholding the highest ethical standards in all interactions."<< endl;
+                    cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape."<< endl;
+                    cout << "Client Satisfaction: Placing our clients at the center and ensuring their success is our success."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-                        else cout << "Your Password is Incorrect" << endl;
-                      
-                    break;
-                        
-                }   
+                    cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << endl;
+                    cout << endl;
+                    cout << "SECTION 2.1: Robust Security Protocols"<< endl;
+                    cout << endl;
+                    cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information."<< endl;
+                    cout << "Regular audits and assessments to fortify our defenses against emerging threats."<< endl;
+                    cout << "SECTION 2.2: Compliance and Regulatory Adherence"<< endl;
+                    cout << endl;
+                    cout << "Strict adherence to international banking regulations and compliance standards."<< endl;
+                    cout << "Continuous training and development for staff to stay abreast of regulatory changes."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-            break;
+                    cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS"<< endl;
+                    cout << endl;
+                    cout << "SECTION 3.1: Personalized Banking Solutions"<< endl;
+                    cout << endl;
+                    cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele."<< endl;
+                    cout << "Offering a wide array of accounts, investment options, and lending services."<< endl;
+                    cout << "SECTION 3.2: Global Accessibility"<< endl;
+                    cout << endl;
+                    cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-            case 3: // Information on the Bank
-                cout <<  "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence"<< endl;
+                    cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY"<< endl;
+                    cout << endl;
+                    cout << "SECTION 4.1: Educational Initiatives"<< endl;
+                    cout << endl;
+                    cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources."<< endl;
+                    cout << "Encouraging informed decision-making and responsible financial behavior."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-                cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK"<< endl;
-                cout << "SECTION 1.1: Our Vision and Mission"<< endl;
-                cout << endl;
-                cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth."<< endl;
-                cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction."<< endl;
-                cout << "SECTION 1.2: Core Values"<< endl;
-                cout << endl;
-                cout << "Integrity: Upholding the highest ethical standards in all interactions."<< endl;
-                cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape."<< endl;
-                cout << "Client Satisfaction: Placing our clients at the center and ensuring their success is our success."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                    cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY"<< endl;
+                    cout << endl;
+                    cout << "SECTION 5.1: Sustainable Banking Practices"<< endl;
+                    cout << endl;
+                    cout << "Integrating environmental and social responsibility into our business model."<< endl;
+                    cout << "Investing in eco-friendly initiatives and supporting community development projects."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-                cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << endl;
-                cout << endl;
-                cout << "SECTION 2.1: Robust Security Protocols"<< endl;
-                cout << endl;
-                cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information."<< endl;
-                cout << "Regular audits and assessments to fortify our defenses against emerging threats."<< endl;
-                cout << "SECTION 2.2: Compliance and Regulatory Adherence"<< endl;
-                cout << endl;
-                cout << "Strict adherence to international banking regulations and compliance standards."<< endl;
-                cout << "Continuous training and development for staff to stay abreast of regulatory changes."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                    cout << "CHAPTER 6: THE FUTURE OF BANKING"<< endl;
+                    cout << endl;
+                    cout << "SECTION 6.1: Technological Advancements"<< endl;
+                    cout << endl;
+                    cout << "Embracing cutting-edge technology to enhance efficiency, security, and user experience."<< endl;
+                    cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking."<< endl;
+                    cout << "SECTION 6.2: Continuous Improvement"<< endl;
+                    cout << endl;
+                    cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-                cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS"<< endl;
-                cout << endl;
-                cout << "SECTION 3.1: Personalized Banking Solutions"<< endl;
-                cout << endl;
-                cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele."<< endl;
-                cout << "Offering a wide array of accounts, investment options, and lending services."<< endl;
-                cout << "SECTION 3.2: Global Accessibility"<< endl;
-                cout << endl;
-                cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                    cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH"<< endl;
+                    cout << endl;
+                    cout << "SECTION 7.1: Personalized Customer Service"<< endl;
+                    cout << endl;
+                    cout << "A dedicated customer support team ensuring a seamless and delightful banking experience."<< endl;
+                    cout << "Proactive resolution of issues and a commitment to exceeding client expectations."<< endl;
+                    cout << endl;
+                    cout << endl;
+                    cout << endl;
 
-                cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY"<< endl;
-                cout << endl;
-                cout << "SECTION 4.1: Educational Initiatives"<< endl;
-                cout << endl;
-                cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources."<< endl;
-                cout << "Encouraging informed decision-making and responsible financial behavior."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                    cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK"<< endl;
+                    cout <<  endl;
+                    cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
+                    cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
+                    cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl; 
 
-                cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY"<< endl;
-                cout << endl;
-                cout << "SECTION 5.1: Sustainable Banking Practices"<< endl;
-                cout << endl;
-                cout << "Integrating environmental and social responsibility into our business model."<< endl;
-                cout << "Investing in eco-friendly initiatives and supporting community development projects."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                break;
 
-                cout << "CHAPTER 6: THE FUTURE OF BANKING"<< endl;
-                cout << endl;
-                cout << "SECTION 6.1: Technological Advancements"<< endl;
-                cout << endl;
-                cout << "Embracing cutting-edge technology to enhance efficiency, security, and user experience."<< endl;
-                cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking."<< endl;
-                cout << "SECTION 6.2: Continuous Improvement"<< endl;
-                cout << endl;
-                cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+                case 0:
+                        exit(1);
+                break;
 
-                cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH"<< endl;
-                cout << endl;
-                cout << "SECTION 7.1: Personalized Customer Service"<< endl;
-                cout << endl;
-                cout << "A dedicated customer support team ensuring a seamless and delightful banking experience."<< endl;
-                cout << "Proactive resolution of issues and a commitment to exceeding client expectations."<< endl;
-                cout << endl;
-                cout << endl;
-                cout << endl;
+            }
 
-                cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK"<< endl;
-                cout <<  endl;
-                cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
-                cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
-                cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl; 
+            connection->close();
+            delete connection;
+            delete prep_statement;
+            delete result;
 
-            break;
+            if (options != 0) main_menu.push(options);
 
-        }
-
-        connection->close();
-        delete connection;
-        delete prep_statement;
-        delete result;
+        }while (options != 0);
     }
 
     catch (sql :: SQLException *e)
