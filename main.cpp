@@ -359,14 +359,14 @@ class BANK : public Account
 
 };
 
-int main(void)
+int main(int argc, const char* argv[])
 {
     try
     {
         connection_details ID;
         ID.server= "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = argv[1];
 
         sql :: Connection *connection = connection_setup(&ID);
     
