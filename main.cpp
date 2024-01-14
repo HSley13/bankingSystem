@@ -1,11 +1,17 @@
 #include <iostream>
+#include <string>
+#include <random>
+
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_driver.h>
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_connection.h>
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/cppconn/prepared_statement.h>
-#include <string>
+#include </opt/homebrew/include/argon2.h>
+
 using namespace std;
 
-// g++ -std=c++11 -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64   
+// g++ -std=c++11 -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
+
+// g++ -std=c++11 -o argon2 argon2.cpp -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib 
 
 // THIS PORGRAM IS BANKING SYSTEM WHICH USES C++ OOP AND MYSQL DATABASE FOR THE BACKEND.
 // IT OPEREATES LIKE A REAL BANKING SYSTEM WHICH HAS ALL THE FEATURES THAT YOU COULD IMAGINED.
@@ -24,8 +30,7 @@ using namespace std;
 
 
 // TODO LIST
-// Implement a Balance function to use wherever there is a query to return the balance
-// Passoword Hahing for a better security and Authentification for DEPOSIT, WITHDRAW AND TRANSFER
+// In case someone forgets his/she password, use his/her national ID to change the password to a new one. Create a Function.
 // Finish the Bank Class which will be responsible to manage the createD accounts
 // Check and resolve the memory leaks problem
 // Reduce code redundancy into functions
@@ -191,16 +196,102 @@ void Transactions :: transactions_history(sql :: Connection *connection, int acc
    delete result;
 }
 
+string generate_random_salt(size_t len)
+{
+    const string valid_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    random_device rd;
+    mt19937 generator(rd());
+
+    uniform_int_distribution<> distribution(0, valid_chars.size() - 1);
+
+    string salt;
+    for (size_t i = 0; i < valid_chars.size(); i++) 
+    {
+        salt.push_back(valid_chars[distribution(generator)]);
+    }
+
+    return salt;
+}
+
+string hashing_password(const string &password)
+{
+    const size_t SALT_LENGTH = 32;
+
+    string salt = generate_random_salt(SALT_LENGTH);
+
+    const uint32_t t_cost = 2;
+    const uint32_t m_cost = 32;
+    const uint32_t parallelism = 1;
+    const uint32_t hash_length = 32;
+
+    string hash;
+    hash.resize(hash_length);
+
+    int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), salt.c_str(), salt.length(), &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
+
+    if (result != ARGON2_OK) 
+    {
+        cout << "Error Hashing Password" << endl;
+        exit(1);
+    }
+
+    string hashed_password = salt;
+    hashed_password.append(hash);
+
+    return hashed_password;
+}
+
+bool verifying_password(const string &password, const string &hashed_password)
+{
+    const uint32_t t_cost = 2;
+    const uint32_t m_cost = 32;
+    const uint32_t parallelism = 1;
+    const uint32_t hash_length = 32;
+
+    const size_t SALT_LENGH = hashed_password.length() - hash_length;
+
+    string hash;
+    hash.resize(hash_length);
+
+    int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), hashed_password.c_str(), SALT_LENGH, &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
+
+    if (result != ARGON2_OK) 
+    {
+        cout << "Error Verifying Password" << endl;
+        exit(1);
+    }
+
+    return !hashed_password.substr(SALT_LENGH, hash_length).compare(hash);
+}
+
+string retrieve_hashed_password(int account_number, sql :: Connection *connection)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?");
+    prep_statement->setInt(1, account_number);
+
+    sql :: ResultSet *result = prep_statement->executeQuery();
+
+    string hashed_password;
+
+    if(result->next()) hashed_password = result->getString("hashed_password");
+
+    delete prep_statement;
+    delete result;
+
+    return hashed_password;
+}
+
 class Account : public Transactions
 {
     public:
 
-    void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection);
+    void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, string hash_password, sql :: Connection *connection);
 
     void remove_accounts(sql :: Connection *connection, int account_number);
 };
 
-void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection)
+void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, string hash_password, sql :: Connection *connection)
 {
     sql :: PreparedStatement *prep_statement = connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     prep_statement->setString(1, national_ID);
@@ -240,6 +331,12 @@ void Account :: create_account(int account_number, string national_ID, string fi
         prep_statement->executeUpdate();
     }
 
+    prep_statement = connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);");
+    prep_statement->setInt(1, account_number);
+    prep_statement->setString(2, hash_password);
+
+    prep_statement->executeUpdate();
+
     delete prep_statement;
     delete result;
 }
@@ -273,12 +370,12 @@ int main(void)
 
         sql :: Connection *connection = connection_setup(&ID);
     
-        sql :: PreparedStatement *pre_statement;
+        sql :: PreparedStatement *prep_statement;
         sql :: ResultSet *result;
 
         int options, options2, options3, options4;
     
-        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation;
+        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password;
 
         int phone_number, new_phone_number, account_number, account_number1, account_number2;
 
@@ -348,9 +445,9 @@ int main(void)
 
                 } while (password.compare(password_confirmation));
 
-                // Use Argon2_ID to hash the passwrord and store the hashed result into a table where only the BANK class will have access to it
+                hash_password = hashing_password(password);
 
-                accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, connection);
+                accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, hash_password, connection);
 
                 password.clear();
                 password_confirmation.clear();
@@ -386,51 +483,72 @@ int main(void)
                         cout << "What is your Password: ";
                         cin >> password;
 
-                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                        cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
+                        if (verifying_password(password, hash_password)) 
+                        {
+                            cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
+                            password.clear();
+                        }
+
+                        else cout << "Your Password is Incorrect" << endl;
+                        
                     break;
 
                     case 2: // Deposit
                         cout << "What is yout Account Number: ";
                         cin >> account_number;
 
+                        cout << "What is the Amount you would like to deposit: ";
+                        cin >> amount_to_deposit;
+
                         cout << "What is your Password: ";
                         cin >> password;
 
-                        cout << "What is the Amount you would like to deposit: ";
-                        cin >> amount_to_deposit;
-                    
-                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                        accounts.deposit(connection, amount_to_deposit, account_number);
+                        if (verifying_password(password, hash_password)) 
+                        {
+                            accounts.deposit(connection, amount_to_deposit, account_number);
 
+                            password.clear();
+                        }
+
+                        else cout << "Your Password is Incorrect" << endl;
+                        
                     break;
 
                     case 3: // Withdraw
                         cout << "What is yout Account Number: ";
                         cin >> account_number;
 
+                        cout << "What is the Amount you would like to Withdraw: ";
+                        cin >> amount_to_withdraw;
+
                         cout << "What is your Password: ";
                         cin >> password;
 
-                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                        cout << "What is the Amount you would like to Withdraw: ";
-                        cin >> amount_to_withdraw;
-                        
-                        balance = check_balance(connection, account_number);
-
-                        while (amount_to_withdraw > balance) 
+                        if (verifying_password(password, hash_password)) 
                         {
-                            cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
+                            balance = check_balance(connection, account_number);
 
-                            cout << "So Please enter a reasonnable amount: ";
-                            cin >> amount_to_withdraw;
+                            while (amount_to_withdraw > balance) 
+                            {
+                                cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
+
+                                cout << "So Please enter a reasonnable amount: ";
+                                cin >> amount_to_withdraw;
+                            }
+
+                            accounts.withdrawal(connection, amount_to_withdraw, account_number);
+
+                            password.clear();
                         }
 
-                        accounts.withdrawal(connection, amount_to_withdraw, account_number);
+                        else cout << "Your Password is Incorrect" << endl;
 
                     break;
 
@@ -438,28 +556,35 @@ int main(void)
                         cout << "What is yout Account Number: ";
                         cin >> account_number1;
 
-                        cout << "What is your Password: ";
-                        cin >> password;
-
-                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
-
                         cout << "What is the Amount you would like to Transfer: ";
                         cin >> amount_to_deposit;
 
                         cout << "What is the Account Number to receive the Money: ";
                         cin >> account_number2;
 
-                        balance = check_balance(connection, account_number);
+                        cout << "What is your Password: ";
+                        cin >> password;
 
-                        while (amount_to_transfer > balance) 
+                        hash_password = retrieve_hashed_password(account_number1, connection);
+
+                        if (verifying_password(password, hash_password)) 
                         {
-                            cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
+                            balance = check_balance(connection, account_number1);
 
-                            cout << "So Please enter a reasonnable amount: ";
-                            cin >> amount_to_transfer;
+                            while (amount_to_transfer > balance) 
+                            {
+                                cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
+
+                                cout << "So Please enter a reasonnable amount: ";
+                                cin >> amount_to_transfer;
+                            }
+
+                            accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
+
+                            password.clear();                                                         
                         }
 
-                        accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);
+                        else cout << "Your Password is Incorrect" << endl;
 
                     break;
 
@@ -498,16 +623,23 @@ int main(void)
                                         cout << "What is your Password: ";
                                         cin >> password;
 
-                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                                        cout << "Enter the New First Name. PS: You can't change your Last Name: ";
-                                        cin >> new_first_name;
+                                        if (verifying_password(password, hash_password))
+                                        {
+                                            cout << "Enter the New First Name. PS: You can't change your Last Name: ";
+                                            cin >> new_first_name;
 
-                                        pre_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
-                                        pre_statement->setInt(1, account_number);
-                                        pre_statement->setString(2, new_first_name);
+                                            prep_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
+                                            prep_statement->setInt(1, account_number);
+                                            prep_statement->setString(2, new_first_name);
 
-                                        pre_statement->executeUpdate();
+                                            prep_statement->executeUpdate();
+
+                                            password.clear();
+                                        }
+
+                                        else cout << "Your Password is Incorrect" << endl;
 
                                     break;
 
@@ -518,16 +650,23 @@ int main(void)
                                         cout << "What is your Password: ";
                                         cin >> password;
 
-                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                                        cout << "Enter the New Mail: ";
-                                        cin >> new_email;
+                                        if (verifying_password(password, hash_password))
+                                        {
+                                            cout << "Enter the New Mail: ";
+                                            cin >> new_email;
 
-                                        pre_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
-                                        pre_statement->setInt(1, account_number);
-                                        pre_statement->setString(2, new_email);
+                                            prep_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
+                                            prep_statement->setInt(1, account_number);
+                                            prep_statement->setString(2, new_email);
 
-                                        pre_statement->executeUpdate();
+                                            prep_statement->executeUpdate();
+
+                                            password.clear();
+                                        }
+
+                                        else cout << "Your Password is Incorrect" << endl;
 
                                     break;
 
@@ -538,16 +677,23 @@ int main(void)
                                         cout << "What is your Password: ";
                                         cin >> password;
 
-                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                                        cout << "Enter the New Address: ";
-                                        cin >> new_address;
+                                        if (verifying_password(password, hash_password))
+                                        {
+                                            cout << "Enter the New Address: ";
+                                            cin >> new_address;
 
-                                        pre_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
-                                        pre_statement->setInt(1, account_number);
-                                        pre_statement->setString(2, new_address);
+                                            prep_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
+                                            prep_statement->setInt(1, account_number);
+                                            prep_statement->setString(2, new_address);
 
-                                        pre_statement->executeUpdate();
+                                            prep_statement->executeUpdate();
+
+                                            password.clear();
+                                        }
+
+                                        else cout << "Your Password is Incorrect" << endl;
 
                                     break;
 
@@ -558,21 +704,23 @@ int main(void)
                                         cout << "What is your Password: ";
                                         cin >> password;
 
-                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                                        // on hold
-                                        // on hold
-                                        // on hold
+                                        if (verifying_password(password, hash_password))
+                                        {
+                                            cout << "Enter the New Phone Number: ";
+                                            cin >> new_phone_number;
 
+                                            prep_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
+                                            prep_statement->setInt(1, account_number);
+                                            prep_statement->setInt(2, new_phone_number);
 
-                                        cout << "Enter the New Phone Number: ";
-                                        cin >> new_phone_number;
+                                            prep_statement->executeUpdate();
 
-                                        pre_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
-                                        pre_statement->setInt(1, account_number);
-                                        pre_statement->setInt(2, new_phone_number);
+                                            password.clear();
+                                        }
 
-                                        pre_statement->executeUpdate();
+                                        else cout << "Your Password is Incorrect" << endl;   
 
                                     break;
                                 }
@@ -586,27 +734,33 @@ int main(void)
                                 cout << "What is your Password: ";
                                 cin >> password;
 
-                                // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                hash_password = retrieve_hashed_password(account_number, connection);
 
-                                // on hold
-                                // on hold
-                                // on hold
-
-                                cout << "What is the New Password: ";
-                                cin >> new_password;
-
-                                do
+                                if (verifying_password(password, hash_password))
                                 {
-                                    cout << "New Password Confirmation: ";
-                                    cin >> new_password_confirmation;
+                                    cout << "What is the New Password: ";
+                                    cin >> new_password;
 
-                                } while (password.compare(new_password_confirmation));
+                                    do
+                                    {
+                                        cout << "New Password Confirmation: ";
+                                        cin >> new_password_confirmation;
 
-                                // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                    } while (password.compare(new_password_confirmation));
 
-                                // on hold
-                                // on hold
-                                // on hold
+                                    new_hash_password = hashing_password(new_password);
+
+                                    prep_statement = connection->prepareStatement("CALL insert_or_update_hash_password(?, ?);");
+                                    prep_statement->setInt(1, account_number);
+                                    prep_statement->setString(2, new_hash_password);
+
+                                    prep_statement->executeUpdate();
+
+                                    password.clear();
+                                    new_password.clear();
+                                }   
+
+                                else cout << "Your Password is Incorrect" << endl;
 
                             break;
                     
@@ -614,20 +768,22 @@ int main(void)
 
                     break;
 
-                    case 6:
+                    case 6: // Delete an Account
                         cout << "Enter Your Account Number: ";
                         cin >> account_number;
 
                         cout << "What is your Password: ";
                         cin >> password;
 
-                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        hash_password = retrieve_hashed_password(account_number, connection);
 
-                        // on hold
-                        // on hold
-                        // on hold
+                        if (verifying_password(password, hash_password)) 
+                        {
+                            accounts.remove_accounts(connection, account_number);
+                            password.clear();
+                        }
 
-                        accounts.remove_accounts(connection, account_number);
+                        else cout << "Your Password is Incorrect" << endl;
                       
                     break;
                         
@@ -734,7 +890,7 @@ int main(void)
 
         connection->close();
         delete connection;
-        delete pre_statement;
+        delete prep_statement;
         delete result;
     }
 

@@ -1,0 +1,5 @@
+CREATE TABLE password_security
+(
+    account_number INT PRIMARY KEY AUTO_INCREMENT,
+    hashed_password VARCHAR(500)
+)AUTO_INCREMENT = 1000000002;
