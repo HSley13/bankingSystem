@@ -184,7 +184,7 @@ void Transactions :: transactions_history(sql :: Connection *connection, int acc
 
     while (result->next())
     {
-        cout << "transaction_details: " << result->getString("transaction_details") << "  Date & Time: " << result->getString("date_time") << endl;
+        cout << "Transaction_details: " << result->getString("transaction_details") << "  Date & Time: " << result->getString("date_time") << endl;
     }
     
    delete prep_statement;
@@ -198,10 +198,6 @@ class Account : public Transactions
     void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection);
 
     void remove_accounts(sql :: Connection *connection, int account_number);
-
-    void edit_info_string(sql :: Connection *connection, int account_number, string info, string info_replace);
-
-    void edit_info_int(sql :: Connection *connection, int account_number, string info, int info_replace);
 };
 
 void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection)
@@ -258,28 +254,6 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     delete prep_statement;
 }
 
-void Account :: edit_info_string(sql :: Connection *connection, int account_number, string info, string info_replace)
-{
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE accounts SET "+info+" = ? WHERE account_number = ?;");
-    prep_statement->setString(1, info_replace);
-    prep_statement->setInt(2, account_number);
-
-    prep_statement->executeUpdate();
-
-    delete prep_statement;
-}
-
-void Account :: edit_info_int(sql :: Connection *connection, int account_number, string info, int info_replace)
-{
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE accounts SET "+info+" = ? WHERE account_number = ?;");
-    prep_statement->setInt(1, info_replace);
-    prep_statement->setInt(2, account_number);
-
-    prep_statement->executeUpdate();
-
-    delete prep_statement;
-}
-
 class BANK : public Account
 {   
     public :
@@ -302,6 +276,16 @@ int main(void)
         sql :: PreparedStatement *pre_statement;
         sql :: ResultSet *result;
 
+        int options, options2, options3, options4;
+    
+        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation;
+
+        int phone_number, new_phone_number, account_number, account_number1, account_number2;
+
+        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
+
+        Account accounts;
+
         cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << endl;
 
         cout << endl;
@@ -318,16 +302,6 @@ int main(void)
         cout << "3. Information on our Bank" << endl;
 
         cout << endl;
-
-        int options, options2, options3, options4;
-    
-        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation;
-
-        int phone_number, new_phone_number, account_number, account_number1, account_number2;
-
-        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
-
-        Account accounts;
 
         cin >> options;
         switch(options)
@@ -397,6 +371,8 @@ int main(void)
                 cout << "4. Money Transfer" << endl;
 
                 cout << "5. Edit Account Information" << endl;
+
+                cout << "6. Delete Your Account" << endl;
 
                 cout << endl;
 
@@ -495,142 +471,166 @@ int main(void)
 
                         cout << "2. Change Password" << endl;
 
-                    cin >> options3;
-                    switch(options3) 
-                    {
-                        case 1: // Edit personal Information
-                            cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
-                            cout << endl;
+                        cin >> options3;
+                        switch(options3) 
+                        {
+                            case 1: // Edit personal Information
+                                cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
+                                cout << endl;
 
-                            cout << "1. Edit Name" << endl;
+                                cout << "1. Edit Name" << endl;
 
-                            cout << "2. Edit email" << endl;
+                                cout << "2. Edit email" << endl;
 
-                            cout << "3. Edit address" << endl;
+                                cout << "3. Edit address" << endl;
 
-                            cout << "4. Edit Phone Number" << endl;
+                                cout << "4. Edit Phone Number" << endl;
 
-                            cout << endl;
+                                cout << endl;
 
-                            cin >> options4;
-                            switch(options4)
-                            {
-                                case 1: // Edit Name
-                                    cout << "Enter Your Account Number: ";
-                                    cin >> account_number;
+                                cin >> options4;
+                                switch(options4)
+                                {
+                                    case 1: // Edit Name
+                                        cout << "Enter Your Account Number: ";
+                                        cin >> account_number;
 
-                                    cout << "What is your Password: ";
-                                    cin >> password;
+                                        cout << "What is your Password: ";
+                                        cin >> password;
 
-                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                                    cout << "Enter the New First Name. PS: You can't change your Last Name: ";
-                                    cin >> new_first_name;
+                                        cout << "Enter the New First Name. PS: You can't change your Last Name: ";
+                                        cin >> new_first_name;
 
-                                    pre_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
-                                    pre_statement->setInt(1, account_number);
-                                    pre_statement->setString(2, new_first_name);
+                                        pre_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
+                                        pre_statement->setInt(1, account_number);
+                                        pre_statement->setString(2, new_first_name);
 
-                                    pre_statement->executeUpdate();
+                                        pre_statement->executeUpdate();
 
-                                break;
+                                    break;
 
-                                case 2: // Edit Email
-                                    cout << "Enter Your Account Number: ";
-                                    cin >> account_number;
+                                    case 2: // Edit Email
+                                        cout << "Enter Your Account Number: ";
+                                        cin >> account_number;
 
-                                    cout << "What is your Password: ";
-                                    cin >> password;
+                                        cout << "What is your Password: ";
+                                        cin >> password;
 
-                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                                    cout << "Enter the New Mail: ";
-                                    cin >> new_email;
+                                        cout << "Enter the New Mail: ";
+                                        cin >> new_email;
 
-                                    pre_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
-                                    pre_statement->setInt(1, account_number);
-                                    pre_statement->setString(2, new_email);
+                                        pre_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
+                                        pre_statement->setInt(1, account_number);
+                                        pre_statement->setString(2, new_email);
 
-                                    pre_statement->executeUpdate();
+                                        pre_statement->executeUpdate();
 
-                                break;
+                                    break;
 
-                                case 3: // Edit address
-                                    cout << "Enter Your Account Number: ";
-                                    cin >> account_number;
+                                    case 3: // Edit address
+                                        cout << "Enter Your Account Number: ";
+                                        cin >> account_number;
 
-                                    cout << "What is your Password: ";
-                                    cin >> password;
+                                        cout << "What is your Password: ";
+                                        cin >> password;
 
-                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                                    cout << "Enter the New Address: ";
-                                    cin >> new_address;
+                                        cout << "Enter the New Address: ";
+                                        cin >> new_address;
 
-                                    pre_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
-                                    pre_statement->setInt(1, account_number);
-                                    pre_statement->setString(2, new_address);
+                                        pre_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
+                                        pre_statement->setInt(1, account_number);
+                                        pre_statement->setString(2, new_address);
 
-                                    pre_statement->executeUpdate();
+                                        pre_statement->executeUpdate();
 
-                                break;
+                                    break;
 
-                                case 4: // Edit Phone Number
-                                    cout << "Enter Your Account Number: ";
-                                    cin >> account_number;
+                                    case 4: // Edit Phone Number
+                                        cout << "Enter Your Account Number: ";
+                                        cin >> account_number;
 
-                                    cout << "What is your Password: ";
-                                    cin >> password;
+                                        cout << "What is your Password: ";
+                                        cin >> password;
 
-                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                                    cout << "Enter the New Phone Number: ";
-                                    cin >> new_phone_number;
+                                        // on hold
+                                        // on hold
+                                        // on hold
 
-                                    pre_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
-                                    pre_statement->setInt(1, account_number);
-                                    pre_statement->setInt(2, new_phone_number);
 
-                                    pre_statement->executeUpdate();
+                                        cout << "Enter the New Phone Number: ";
+                                        cin >> new_phone_number;
 
-                                break;
-                            }
+                                        pre_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
+                                        pre_statement->setInt(1, account_number);
+                                        pre_statement->setInt(2, new_phone_number);
 
-                        break;
+                                        pre_statement->executeUpdate();
 
-                        case 2: // Change Password
-                            cout << "Enter Your Account Number: ";
-                            cin >> account_number;
+                                    break;
+                                }
 
-                            cout << "What is your Password: ";
-                            cin >> password;
+                            break;
 
-                            // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                            case 2: // Change Password
+                                cout << "Enter Your Account Number: ";
+                                cin >> account_number;
 
-                            // on hold
-                            // on hold
-                            // on hold
+                                cout << "What is your Password: ";
+                                cin >> password;
 
-                            cout << "What is the New Password: ";
-                            cin >> new_password;
+                                // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                            do
-                            {
-                                cout << "New Password Confirmation: ";
-                                cin >> new_password_confirmation;
+                                // on hold
+                                // on hold
+                                // on hold
 
-                            } while (password.compare(new_password_confirmation));
-                            
-                            // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                                cout << "What is the New Password: ";
+                                cin >> new_password;
 
-                            // on hold
-                            // on hold
-                            // on hold
+                                do
+                                {
+                                    cout << "New Password Confirmation: ";
+                                    cin >> new_password_confirmation;
 
-                        break;
-                    }
+                                } while (password.compare(new_password_confirmation));
+
+                                // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                                // on hold
+                                // on hold
+                                // on hold
+
+                            break;
+                    
+                        }
 
                     break;
+
+                    case 6:
+                        cout << "Enter Your Account Number: ";
+                        cin >> account_number;
+
+                        cout << "What is your Password: ";
+                        cin >> password;
+
+                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                        // on hold
+                        // on hold
+                        // on hold
+
+                        accounts.remove_accounts(connection, account_number);
+                      
+                    break;
+                        
                 }   
 
             break;
