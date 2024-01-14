@@ -1,0 +1,6 @@
+CREATE TABLE password_hashing
+(
+    account_number INT PRIMARY KEY AUTO_INCREMENT,
+    hashed_password VARCHAR(500) DEFAULT NULL
+    
+)AUTO_INCREMENT = ;

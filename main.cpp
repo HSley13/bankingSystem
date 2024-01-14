@@ -12,18 +12,19 @@ using namespace std;
 // I  ALSO IMPLEMENT INTEREST RATES (COUMPOUND EFFECT) THAT WILL INCREASE ACCORGING TO WHEN THE MONEY HAS BEEN PLACED
 // USERS ARE ABLE TO BORROW MONEY FROM THE BANK WITH AN INTEREST RATE
 // I USE PREPARED STATEMENTS TO PREVENT SQL INJECTIONS AND PROTECT THE DATABASE ALONG WITH THE INFORMATION/MONEY STORED WITHIN IT
-//
-// 
 
 
 // FOR THIS PROGRAM, THERE ARE SOME TRIGGERS THAT I HAVE CREATED ON THE COMPUTER AND ARE NOT PART OF THIS CODE.
 // I HAVE PROCEEDED THAT WAY BECAUSE TRIGGERS CAN ONLY BE CREATED ONCE AND BECAUSE THAT PROGRAM WILL BE RUN MORE THAN ONCE, IT IS SAFER NOT IMBEDDING THE TRIGGERS CODE IN THE MAIN FUNCTION CAUSE IT WOULD
 // TRIED TO CREATE THEM AS MANY TIME AS THE PROGRAM IS RUN AND AFTER THE FIRST TIME, YOU WOULD ALWAYS GET AN SQL ERROR SAYING THE TRIGGERS YOU ARE TRYING TO CREATE ALREADY EXIST
 
+
 // THOSE TRIGGERS MUST BE ON THE COMPUTER FOR THE PROFRAM TO RUN AS EXPECTED.
 // PS: WRITE ME ON A MAIL IF YOU WANT TO HAVE THEM (sleyhortes13@gamil.com) OR COMMENT IT ON THAT GIT REPOSITORY
 
+
 // TODO LIST
+// Implement a Balance function to use wherever there is a query to return the balance
 // Passoword Hahing for a better security and Authentification for DEPOSIT, WITHDRAW AND TRANSFER
 // Finish the Bank Class which will be responsible to manage the createD accounts
 // Check and resolve the memory leaks problem
@@ -53,11 +54,29 @@ sql :: Connection *connection_setup(connection_details *ID)
 
         return connection;
     }
+
     catch (sql :: SQLException *e)
     {
         cerr << "Connection Error: " << e->what() << "Code causing Error: " << e->getErrorCode() << endl;
         return NULL;
     }
+}
+
+double check_balance(sql :: Connection *connection, int account_number)
+{
+    double balance;
+
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    sql :: ResultSet *result = prep_statement->executeQuery();
+
+    if (result->next()) balance = result->getDouble("balance");
+
+    delete prep_statement;
+    delete result;
+
+    return balance;
 }
 
 class Transactions
@@ -81,14 +100,7 @@ void Transactions :: deposit (sql :: Connection *connection, double amount_to_de
 
     prep_statement->executeQuery();
 
-    cout << "You have deposit " << amount_to_deposit << " dollars and your new Balance is: ";
-
-    prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
-    prep_statement->setInt(1, account_number);
-
-    sql :: ResultSet *result = prep_statement->executeQuery();
-
-    if (result->next()) cout << result->getDouble("balance") << endl;
+    cout << "You have deposit " << amount_to_deposit << " dollars and your new Balance is: " << check_balance(connection, account_number) << endl;
 
     string table_name = "NO";
     table_name.append(to_string(account_number));
@@ -100,7 +112,6 @@ void Transactions :: deposit (sql :: Connection *connection, double amount_to_de
     prep_statement->executeUpdate();
     
     delete prep_statement;
-    delete result;
 }
 
 void Transactions :: withdrawal(sql :: Connection *connection, double amount_to_withdraw, int account_number)
@@ -111,14 +122,7 @@ void Transactions :: withdrawal(sql :: Connection *connection, double amount_to_
 
     prep_statement->executeQuery();
 
-    cout << "You have withdrawn " << amount_to_withdraw << " dollars and your new Balance is: ";
-
-    prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
-    prep_statement->setInt(1, account_number);
-
-    sql :: ResultSet *result = prep_statement->executeQuery();
-
-    if (result->next()) cout << result->getDouble("balance") << endl;
+    cout << "You have withdrawn " << amount_to_withdraw << " dollars and your new Balance is: " << check_balance(connection, account_number) << endl;
 
     string table_name = "NO";
     table_name.append(to_string(account_number));
@@ -130,7 +134,6 @@ void Transactions :: withdrawal(sql :: Connection *connection, double amount_to_
     prep_statement->executeUpdate();
     
     delete prep_statement;
-    delete result;
 }
 
 void Transactions :: transfer(sql :: Connection *connection, double amount_to_transfer,int account_number1, int account_number2)
@@ -141,14 +144,7 @@ void Transactions :: transfer(sql :: Connection *connection, double amount_to_tr
 
     prep_statement->executeUpdate();
 
-    cout << "You have sent " << amount_to_transfer << " dollars to the account_number :" << account_number2 << " and Your new balance is: ";
-
-    prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
-    prep_statement->setInt(1, account_number1);
-
-    sql :: ResultSet *result = prep_statement->executeQuery();
-
-    if (result->next()) cout << result->getDouble("balance") << endl;
+    cout << "You have sent " << amount_to_transfer << " dollars to the account_number :" << account_number2 << " and Your new balance is: " << check_balance(connection, account_number1) << endl;
 
     prep_statement = connection->prepareStatement("UPDATE transactions SET receive = ? WHERE account_number = ?;");
     prep_statement->setDouble(1, amount_to_transfer);
@@ -175,7 +171,6 @@ void Transactions :: transfer(sql :: Connection *connection, double amount_to_tr
     prep_statement->executeUpdate();
 
     delete prep_statement;
-    delete result;
 }
 
 void Transactions :: transactions_history(sql :: Connection *connection, int account_number)
@@ -200,14 +195,13 @@ class Account : public Transactions
 {
     public:
 
-    string first_name, last_name, date_birth, email, password, national_ID, address;
-    int phone_number;
-
     void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection);
 
-    void check_balance(sql :: Connection *connection, int account_number);
-
     void remove_accounts(sql :: Connection *connection, int account_number);
+
+    void edit_info_string(sql :: Connection *connection, int account_number, string info, string info_replace);
+
+    void edit_info_int(sql :: Connection *connection, int account_number, string info, int info_replace);
 };
 
 void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, sql :: Connection *connection)
@@ -254,19 +248,6 @@ void Account :: create_account(int account_number, string national_ID, string fi
     delete result;
 }
 
-void Account :: check_balance(sql :: Connection *connection, int account_number)
-{
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
-    prep_statement->setInt(1, account_number);
-
-    sql :: ResultSet *result = prep_statement->executeQuery();
-
-    if (result->next()) cout << "Your Current Balance is: " << result->getDouble("balance") << endl;
-
-    delete prep_statement;
-    delete result;
-}
-
 void Account :: remove_accounts(sql :: Connection *connection, int account_number)
 {
     sql :: PreparedStatement *prep_statement = connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;");
@@ -277,9 +258,32 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     delete prep_statement;
 }
 
+void Account :: edit_info_string(sql :: Connection *connection, int account_number, string info, string info_replace)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE accounts SET "+info+" = ? WHERE account_number = ?;");
+    prep_statement->setString(1, info_replace);
+    prep_statement->setInt(2, account_number);
+
+    prep_statement->executeUpdate();
+
+    delete prep_statement;
+}
+
+void Account :: edit_info_int(sql :: Connection *connection, int account_number, string info, int info_replace)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("UPDATE accounts SET "+info+" = ? WHERE account_number = ?;");
+    prep_statement->setInt(1, info_replace);
+    prep_statement->setInt(2, account_number);
+
+    prep_statement->executeUpdate();
+
+    delete prep_statement;
+}
+
 class BANK : public Account
 {   
     public :
+
     vector <Account> created_accounts;
 
 };
@@ -304,7 +308,7 @@ int main(void)
         cout << endl;
         cout << endl;
 
-        cout << "                                                 *********** Among the List below, choose what best suits your Status **********" << endl;
+        cout << "                                                 *********** Among the List below, choose what best suits your Status **********"                                                     << endl;
         cout << endl;
 
         cout << "1. You are New to our Bank and Would like to Create an Account" << endl;
@@ -315,11 +319,11 @@ int main(void)
 
         cout << endl;
 
-        int options, options2, options3, options4, options5;
+        int options, options2, options3, options4;
     
-        string first_name, last_name, date_birth, email, national_ID, address, password, password_confirmation;
+        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation;
 
-        int phone_number, account_number, account_number1, account_number2;
+        int phone_number, new_phone_number, account_number, account_number1, account_number2;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
 
@@ -406,9 +410,9 @@ int main(void)
                         cout << "What is your Password: ";
                         cin >> password;
 
-                        // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                        accounts.check_balance(connection, account_number);
+                        cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
                     break;
 
@@ -422,7 +426,7 @@ int main(void)
                         cout << "What is the Amount you would like to deposit: ";
                         cin >> amount_to_deposit;
                     
-                        // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
                         accounts.deposit(connection, amount_to_deposit, account_number);
 
@@ -435,14 +439,20 @@ int main(void)
                         cout << "What is your Password: ";
                         cin >> password;
 
+                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
                         cout << "What is the Amount you would like to Withdraw: ";
                         cin >> amount_to_withdraw;
-                    
-                        // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+                        
+                        balance = check_balance(connection, account_number);
 
-                        // Also Check if the user's Balance >= to the amounts he/she wants to Withdraw
+                        while (amount_to_withdraw > balance) 
+                        {
+                            cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
 
-                        // I should also return the exact Balance so that the user might be aware of it and enter a reasonnable amount
+                            cout << "So Please enter a reasonnable amount: ";
+                            cin >> amount_to_withdraw;
+                        }
 
                         accounts.withdrawal(connection, amount_to_withdraw, account_number);
 
@@ -455,17 +465,23 @@ int main(void)
                         cout << "What is your Password: ";
                         cin >> password;
 
+                        // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
                         cout << "What is the Amount you would like to Transfer: ";
                         cin >> amount_to_deposit;
 
                         cout << "What is the Account Number to receive the Money: ";
                         cin >> account_number2;
-                    
-                        // I should inplement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
 
-                        // Also Check if the user's Balance >= to the amounts he/she wants to Transfer
+                        balance = check_balance(connection, account_number);
 
-                        // I should also return the exact Balance so that the user might be aware of it and enter a reasonnable amount
+                        while (amount_to_transfer > balance) 
+                        {
+                            cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
+
+                            cout << "So Please enter a reasonnable amount: ";
+                            cin >> amount_to_transfer;
+                        }
 
                         accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);
 
@@ -490,7 +506,9 @@ int main(void)
 
                             cout << "2. Edit email" << endl;
 
-                            cout << "3. Edit Phone Number" << endl;
+                            cout << "3. Edit address" << endl;
+
+                            cout << "4. Edit Phone Number" << endl;
 
                             cout << endl;
 
@@ -498,17 +516,82 @@ int main(void)
                             switch(options4)
                             {
                                 case 1: // Edit Name
-                                // on hold
+                                    cout << "Enter Your Account Number: ";
+                                    cin >> account_number;
+
+                                    cout << "What is your Password: ";
+                                    cin >> password;
+
+                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                                    cout << "Enter the New First Name. PS: You can't change your Last Name: ";
+                                    cin >> new_first_name;
+
+                                    pre_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
+                                    pre_statement->setInt(1, account_number);
+                                    pre_statement->setString(2, new_first_name);
+
+                                    pre_statement->executeUpdate();
 
                                 break;
 
                                 case 2: // Edit Email
-                                // on hold
+                                    cout << "Enter Your Account Number: ";
+                                    cin >> account_number;
+
+                                    cout << "What is your Password: ";
+                                    cin >> password;
+
+                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                                    cout << "Enter the New Mail: ";
+                                    cin >> new_email;
+
+                                    pre_statement = connection->prepareStatement("CALL update_and_log_email(?,?);");
+                                    pre_statement->setInt(1, account_number);
+                                    pre_statement->setString(2, new_email);
+
+                                    pre_statement->executeUpdate();
 
                                 break;
 
-                                case 3: // Edit Number
-                                // on hold
+                                case 3: // Edit address
+                                    cout << "Enter Your Account Number: ";
+                                    cin >> account_number;
+
+                                    cout << "What is your Password: ";
+                                    cin >> password;
+
+                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                                    cout << "Enter the New Address: ";
+                                    cin >> new_address;
+
+                                    pre_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
+                                    pre_statement->setInt(1, account_number);
+                                    pre_statement->setString(2, new_address);
+
+                                    pre_statement->executeUpdate();
+
+                                break;
+
+                                case 4: // Edit Phone Number
+                                    cout << "Enter Your Account Number: ";
+                                    cin >> account_number;
+
+                                    cout << "What is your Password: ";
+                                    cin >> password;
+
+                                    // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                                    cout << "Enter the New Phone Number: ";
+                                    cin >> new_phone_number;
+
+                                    pre_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
+                                    pre_statement->setInt(1, account_number);
+                                    pre_statement->setInt(2, new_phone_number);
+
+                                    pre_statement->executeUpdate();
 
                                 break;
                             }
@@ -516,6 +599,32 @@ int main(void)
                         break;
 
                         case 2: // Change Password
+                            cout << "Enter Your Account Number: ";
+                            cin >> account_number;
+
+                            cout << "What is your Password: ";
+                            cin >> password;
+
+                            // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                            // on hold
+                            // on hold
+                            // on hold
+
+                            cout << "What is the New Password: ";
+                            cin >> new_password;
+
+                            do
+                            {
+                                cout << "New Password Confirmation: ";
+                                cin >> new_password_confirmation;
+
+                            } while (password.compare(new_password_confirmation));
+                            
+                            // I should implement using ARGON2_ID the code which will make sure that the user passwors authentification is correct before procceding to the balance chack query
+
+                            // on hold
+                            // on hold
                             // on hold
 
                         break;
@@ -523,7 +632,6 @@ int main(void)
 
                     break;
                 }   
-
 
             break;
 
@@ -619,6 +727,7 @@ int main(void)
                 cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
                 cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
                 cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl; 
+
             break;
 
         }
@@ -636,6 +745,6 @@ int main(void)
 
     catch (const std :: exception *e)
     {
-            cout << "Error: " << e->what() << endl;
+        cout << "Error: " << e->what() << endl;
     }
 }
