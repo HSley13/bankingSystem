@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 #include <stack>
+#include <vector>
 
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_driver.h>
 #include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_connection.h>
@@ -11,8 +12,6 @@
 using namespace std;
 
 // g++ -std=c++11 -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
-
-// g++ -std=c++11 -o argon2 argon2.cpp -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib 
 
 // THIS PORGRAM IS BANKING SYSTEM WHICH USES C++ OOP AND MYSQL DATABASE FOR THE BACKEND.
 // IT OPEREATES LIKE A REAL BANKING SYSTEM WHICH HAS ALL THE FEATURES THAT YOU COULD IMAGINED.
@@ -366,7 +365,7 @@ int main(int argc, const char* argv[])
     {
         if (argc < 2)
         {
-            cerr << "You should Enter the Password in order to connect to the Database as the Second Argument" << endl;
+            cerr << "You should Enter the Password as the Second Argument in order to connect to the Database" << endl;
             return 1;
         }
 
@@ -391,9 +390,6 @@ int main(int argc, const char* argv[])
         stack <int> main_menu;
 
         stack <int> sub_menu;
-
-
-
 
         Account accounts;
 
