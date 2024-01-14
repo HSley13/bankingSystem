@@ -90,7 +90,7 @@ class Transactions
 
     void deposit(sql :: Connection *connection, double amount_to_deposit, int account_number);
 
-    void withdrawal( sql :: Connection *connection, double sum_to_withdraw, int account_number);
+    void withdrawal(sql :: Connection *connection, double sum_to_withdraw, int account_number);
 
     void transfer(sql :: Connection *connection, double amount_to_send, int account_number1, int account_number2);
 
@@ -447,6 +447,7 @@ int main(int argc, const char* argv[])
                     {
                         cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: ";
                         cin >> balance;
+
                     } while (balance < 100);
 
                     cout << "Password: ";
@@ -457,7 +458,7 @@ int main(int argc, const char* argv[])
                         cout << "Passord Confirmation: ";
                         cin >> password_confirmation;
 
-                    } while (password.compare(password_confirmation));
+                    }while (password.compare(password_confirmation));
 
                     hash_password = hashing_password(password);
 
@@ -496,6 +497,7 @@ int main(int argc, const char* argv[])
                         {
                             options2 = sub_menu.top();
                             sub_menu.pop();
+
                             break;
                         }
 
@@ -633,6 +635,7 @@ int main(int argc, const char* argv[])
                                     {
                                         options3 = sub_menu.top();
                                         sub_menu.pop();
+
                                         break;
                                     }
 
@@ -641,7 +644,6 @@ int main(int argc, const char* argv[])
                                         case 1: // Edit personal Information
                                             do
                                             {
-
                                                 cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
                                                 cout << endl;
 
@@ -663,6 +665,7 @@ int main(int argc, const char* argv[])
                                                 {
                                                     options4 = sub_menu.top();
                                                     sub_menu.pop();
+
                                                     break;
                                                 }
 
@@ -802,7 +805,7 @@ int main(int argc, const char* argv[])
                                                     cout << "New Password Confirmation: ";
                                                     cin >> new_password_confirmation;
 
-                                                } while (password.compare(new_password_confirmation));
+                                                }while (password.compare(new_password_confirmation));
 
                                                 new_hash_password = hashing_password(new_password);
 
@@ -851,7 +854,7 @@ int main(int argc, const char* argv[])
 
                         if (options2 != 0) sub_menu.push(options2); 
 
-                    } while(options2 != 0);
+                    }while (options2 != 0);
 
                 break;
 
