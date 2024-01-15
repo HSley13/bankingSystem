@@ -410,11 +410,14 @@ int main(int argc, const char* argv[])
 
             cout << "3. Information on our Bank" << endl;
 
-            cout << "0. To Quit" << endl;
+            cout << "0. Quit" << endl;
 
             cout << endl;
 
             cin >> options;
+
+            if (options != 0) main_menu.push(options);
+
             switch(options)
             {
                 case 1: // Create the Account and the table History along the way
@@ -475,7 +478,7 @@ int main(int argc, const char* argv[])
                         cout << "Choose among the options below, what best suits your requirements" << endl;
                         cout << endl;
 
-                        cout << "1. Checking your Balance" << endl;
+                        cout << "1. Check your Balance" << endl;
 
                         cout << "2. Deposit" << endl;
 
@@ -487,11 +490,13 @@ int main(int argc, const char* argv[])
 
                         cout << "6. Delete Your Account" << endl;
 
-                        cout << "0. To Go Back to the Previous Menu" << endl;
+                        cout << "0. Back to the Previous Menu" << endl;
 
                         cout << endl;
 
                         cin >> options2;
+
+                        if (options2 != 0) main_menu.push(options2);
 
                         if (options2 == 0 && !sub_menu.empty())
                         {
@@ -504,7 +509,7 @@ int main(int argc, const char* argv[])
                         switch(options2)
                         {
                             case 1: // Balance Check
-                                cout << "What is yout Account Number: ";
+                                cout << "What is your Account Number: ";
                                 cin >> account_number;
 
                                 cout << "What is your Password: ";
@@ -524,10 +529,10 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 2: // Deposit
-                                cout << "What is yout Account Number: ";
+                                cout << "What is your Account Number: ";
                                 cin >> account_number;
 
-                                cout << "What is the Amount you would like to deposit: ";
+                                cout << "What is the Amount you would like to Deposit: ";
                                 cin >> amount_to_deposit;
 
                                 cout << "What is your Password: ";
@@ -547,7 +552,7 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 3: // Withdraw
-                                cout << "What is yout Account Number: ";
+                                cout << "What is your Account Number: ";
                                 cin >> account_number;
 
                                 cout << "What is the Amount you would like to Withdraw: ";
@@ -580,7 +585,7 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 4: // Transfer
-                                cout << "What is yout Account Number: ";
+                                cout << "What is your Account Number: ";
                                 cin >> account_number1;
 
                                 cout << "What is the Amount you would like to Transfer: ";
@@ -625,11 +630,13 @@ int main(int argc, const char* argv[])
 
                                     cout << "2. Change Password" << endl;
 
-                                    cout << "0. To Go Back to the Previous Menu" << endl;
+                                    cout << "0. Back to the Previous Menu" << endl;
 
                                     cout << endl;
 
                                     cin >> options3;
+
+                                    if (options3 != 0) main_menu.push(options3);
 
                                     if (options3 == 0 && !sub_menu.empty())
                                     {
@@ -655,11 +662,13 @@ int main(int argc, const char* argv[])
 
                                                 cout << "4. Edit Phone Number" << endl;
 
-                                                cout << "0. To Go Back to the Previous Menu" << endl;
+                                                cout << "0. Back to the Previous Menu" << endl;
 
                                                 cout << endl;
 
                                                 cin >> options4;
+
+                                                if (options4 != 0) main_menu.push(options4);
 
                                                 if (options4 == 0 && !sub_menu.empty())
                                                 {
@@ -780,8 +789,6 @@ int main(int argc, const char* argv[])
                                                     break;
                                                 }
 
-                                                if (options4 != 0) sub_menu.push(options4);
-
                                             }while (options4 != 0);
 
                                         break;
@@ -825,8 +832,6 @@ int main(int argc, const char* argv[])
 
                                     }
 
-                                    if (options3 != 0) sub_menu.push(options3);
-
                                 }while (options3 != 0);
 
                             break;
@@ -851,8 +856,6 @@ int main(int argc, const char* argv[])
                             break;
 
                         }
-
-                        if (options2 != 0) sub_menu.push(options2); 
 
                     }while (options2 != 0);
 
@@ -954,7 +957,9 @@ int main(int argc, const char* argv[])
                 break;
 
                 case 0:
-                        exit(1);
+                    cout << "Thanks for having choose CROSS-CONTINENTAL TREASURY BANK, Have a Good Day" << endl;
+                    exit(1);
+
                 break;
 
             }
@@ -964,9 +969,8 @@ int main(int argc, const char* argv[])
             delete prep_statement;
             delete result;
 
-            if (options != 0) main_menu.push(options);
-
         }while (options != 0);
+        
     }
 
     catch (sql :: SQLException *e)
