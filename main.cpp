@@ -16,7 +16,7 @@ using namespace std;
 // BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABSE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
 
 /*
-        ***************  CREATE THE accounts TABLE *************** 
+        *************** CREATE accounts TABLE *************** 
         CREATE TABLE accounts 
         (
             account_number INT PRIMARY KEY AUTO_INCREMENT,
@@ -33,7 +33,7 @@ using namespace std;
         )AUTO_INCREMENT = 1000000000;
 
 
-       ***************  CREATE transactions TABLE *************** 
+       *************** CREATE transactions TABLE *************** 
         CREATE TABLE transactions
         (
             account_number INT PRIMARY KEY AUTO_INCREMENT,
@@ -44,7 +44,7 @@ using namespace std;
         )AUTO_INCREMENT = 1000000000;
 
 
-       ***************  CREATE TABLE hashed_password *************** 
+       *************** CREATE hashed_password TABLE *************** 
         CREATE TABLE hashed_password
         (
             account_number INT PRIMARY KEY,
@@ -98,7 +98,7 @@ using namespace std;
             END;
 
 
-        *************** PROCEDURES *************** 
+        *************** ALL THE PROCEDURES *************** 
         ------- update_and_log_name
         CREATE PROCEDURE update_and_log_name (IN account_number1 INT, IN new_first_name VARCHAR(255))
             BEGIN
