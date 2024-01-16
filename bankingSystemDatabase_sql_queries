@@ -1,2 +1,0 @@
-SELECT routine_name, routine_definition FROM information_schema.routines
-WHERE routine_type = 'PROCEDURE';

@@ -55,44 +55,44 @@ using namespace std;
         *************** ALL THE TRIGGERS  ***************
 
         ------- insert account
-        CREATE TRIGGERS insert_account AFTER INSERT ON accounts FOR EACH ROW 
+        CREATE TRIGGER insert_account AFTER INSERT ON accounts FOR EACH ROW 
             BEGIN
                 INSERT INTO transactions (deposit, withdrawal, transfer, receive) 
                 VALUES (0, 0, 0, 0);
             END;
 
         ------- new_deposit
-        CREATE TRIGER new_deposit AFTER UPDATE ON transactions FOR EACH ROW
+        CREATE TRIGGER new_deposit AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
                 IF OLD.deposit <> NEW.deposit THEN
-                    UPDATE accounts SET balance = balance + NEW.deposit 
+                    UPDATE accounts SET balance = balance + NEW.deposit, initial_timestamp = NOW()
                     WHERE account_number = NEW.account_number;
                 END IF;
             END;
 
         ------- new_withdrawal
-        CREATE TRIGER new_withdrawal AFTER UPDATE ON transactions FOR EACH ROW
+        CREATE TRIGGER new_withdrawal AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
                 IF OLD.withdrawal <> NEW.withdrawal THEN
-                    UPDATE accounts SET balance = balance - NEW.withdrawal 
+                    UPDATE accounts SET balance = balance - NEW.withdrawal, initial_timestamp = NOW()
                     WHERE account_number = NEW.account_number;
                 END IF;
             END;
 
         ------- new_transfer
-        CREATE TRIGER new_transfer AFTER UPDATE ON transactions FOR EACH ROW
+        CREATE TRIGGER new_transfer AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
                 IF OLD.transfer <> NEW.transfer THEN
-                    UPDATE accounts SET balance = balance - NEW.transfer
+                    UPDATE accounts SET balance = balance - NEW.transfer, initial_timestamp = NOW()
                     WHERE account_number = NEW.account_number;
                 END IF;
             END;
 
         ------- new_receive
-        CREATE TRIGER new_receive AFTER UPDATE ON transactions FOR EACH ROW
+        CREATE TRIGGER new_receive AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
                 IF OLD.receive <> NEW.receive THEN
-                    UPDATE accounts SET balance = balance + NEW.receive
+                    UPDATE accounts SET balance = balance + NEW.receive, initial_timestamp = NOW()
                     WHERE account_number = NEW.account_number;
                 END IF;
             END;
@@ -511,6 +511,23 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
 
     prep_statement->executeUpdate();
 
+    prep_statement = connection->prepareStatement("DELETE FROM password_security WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    prep_statement->executeUpdate();
+
+    prep_statement = connection->prepareStatement("DELETE FROM transactions WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    prep_statement->executeUpdate();
+
+    string table_name = "NO";
+    table_name.append(to_string(account_number));
+
+    prep_statement = connection->prepareStatement("DROP TABLE "+table_name+";");
+
+    prep_statement->executeUpdate();
+
     delete prep_statement;
 }
 
@@ -697,12 +714,12 @@ int main(int argc, const char* argv[])
                     cout << "Email: ";
                     cin >> email;
 
-                    cout << "address with format Taiwan-shoufeng-zhixue-Dong_Hwa_University-Dormitory_4: ";
+                    cout << "Address with format Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001: ";
                     cin >> address;
 
                     do
                     {
-                        cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
+                        cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
 
                         cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
 
