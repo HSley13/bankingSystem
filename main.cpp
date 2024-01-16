@@ -13,21 +13,184 @@ using namespace std;
 
 // g++ -std=c++11 -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
 
-// THIS PORGRAM IS BANKING SYSTEM WHICH USES C++ OOP AND MYSQL DATABASE FOR THE BACKEND.
-// IT OPEREATES LIKE A REAL BANKING SYSTEM WHICH HAS ALL THE FEATURES THAT YOU COULD IMAGINED.
-// I  ALSO IMPLEMENT INTEREST RATES (COUMPOUND EFFECT) THAT WILL INCREASE ACCORGING TO WHEN THE MONEY HAS BEEN PLACED
-// USERS ARE ABLE TO BORROW MONEY FROM THE BANK WITH AN INTEREST RATE
-// I USE PREPARED STATEMENTS TO PREVENT SQL INJECTIONS AND PROTECT THE DATABASE ALONG WITH THE INFORMATION/MONEY STORED WITHIN IT
+// BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABSE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
+
+/*
+        ***************  CREATE THE accounts TABLE *************** 
+        CREATE TABLE accounts 
+        (
+            account_number INT PRIMARY KEY AUTO_INCREMENT,
+            national_ID VARCHAR(255) NOT NULL UNIQUE,
+            first_name VARCHAR(255),
+            last_name VARCHAR(1000),
+            date_birth VARCHAR(255),
+            phone_number INT,
+            email VARCHAR(255),
+            address VARCHAR(255),
+            balance DECIMAL(20,5),
+            interest_rate DECIMAL(5,2),
+            initial_timestamp DATETIME DEFAULT NOW()
+        )AUTO_INCREMENT = 1000000000;
 
 
-// FOR THIS PROGRAM, THERE ARE SOME TRIGGERS THAT I HAVE CREATED ON THE COMPUTER AND ARE NOT PART OF THIS CODE.
-// I HAVE PROCEEDED THAT WAY BECAUSE TRIGGERS CAN ONLY BE CREATED ONCE AND BECAUSE THAT PROGRAM WILL BE RUN MORE THAN ONCE, IT IS SAFER NOT IMBEDDING THE TRIGGERS CODE IN THE MAIN FUNCTION CAUSE IT WOULD
-// TRIED TO CREATE THEM AS MANY TIME AS THE PROGRAM IS RUN AND AFTER THE FIRST TIME, YOU WOULD ALWAYS GET AN SQL ERROR SAYING THE TRIGGERS YOU ARE TRYING TO CREATE ALREADY EXIST
+       ***************  CREATE transactions TABLE *************** 
+        CREATE TABLE transactions
+        (
+            account_number INT PRIMARY KEY AUTO_INCREMENT,
+            deposit DECIMAL(20,5) DEFAULT 0,
+            withdrawal DECIMAL(20,5) DEFAULT 0,
+            transfer DECIMAL(20,5) DEFAULT 0,
+            receive DECIMAL(20,5) DEFAULT 0
+        )AUTO_INCREMENT = 1000000000;
 
 
-// THOSE TRIGGERS MUST BE ON THE COMPUTER FOR THE PROFRAM TO RUN AS EXPECTED.
-// PS: WRITE ME ON A MAIL IF YOU WANT TO HAVE THEM (sleyhortes13@gamil.com) OR COMMENT IT ON THAT GIT REPOSITORY
+       ***************  CREATE TABLE hashed_password *************** 
+        CREATE TABLE hashed_password
+        (
+            account_number INT PRIMARY KEY,
+            hashed_password VARBINARY(500)
+        );
 
+
+        *************** ALL THE TRIGGERS  ***************
+
+        ------- insert account
+        CREATE TRIGGERS insert_account AFTER INSERT ON accounts FOR EACH ROW 
+            BEGIN
+                INSERT INTO transactions (deposit, withdrawal, transfer, receive) 
+                VALUES (0, 0, 0, 0);
+            END;
+
+        ------- new_deposit
+        CREATE TRIGER new_deposit AFTER UPDATE ON transactions FOR EACH ROW
+            BEGIN
+                IF OLD.deposit <> NEW.deposit THEN
+                    UPDATE accounts SET balance = balance + NEW.deposit 
+                    WHERE account_number = NEW.account_number;
+                END IF;
+            END;
+
+        ------- new_withdrawal
+        CREATE TRIGER new_withdrawal AFTER UPDATE ON transactions FOR EACH ROW
+            BEGIN
+                IF OLD.withdrawal <> NEW.withdrawal THEN
+                    UPDATE accounts SET balance = balance - NEW.withdrawal 
+                    WHERE account_number = NEW.account_number;
+                END IF;
+            END;
+
+        ------- new_transfer
+        CREATE TRIGER new_transfer AFTER UPDATE ON transactions FOR EACH ROW
+            BEGIN
+                IF OLD.transfer <> NEW.transfer THEN
+                    UPDATE accounts SET balance = balance - NEW.transfer
+                    WHERE account_number = NEW.account_number;
+                END IF;
+            END;
+
+        ------- new_receive
+        CREATE TRIGER new_receive AFTER UPDATE ON transactions FOR EACH ROW
+            BEGIN
+                IF OLD.receive <> NEW.receive THEN
+                    UPDATE accounts SET balance = balance + NEW.receive
+                    WHERE account_number = NEW.account_number;
+                END IF;
+            END;
+
+
+        *************** PROCEDURES *************** 
+        ------- update_and_log_name
+        CREATE PROCEDURE update_and_log_name (IN account_number1 INT, IN new_first_name VARCHAR(255))
+            BEGIN
+                DECLARE old_first_name VARCHAR(255);
+
+                SELECT first_name INTO old_first_name FROM accounts WHERE account_number = account_number1;
+
+                IF old_first_name <> new_first_name THEN
+                    UPDATE accounts SET first_name = new_first_name
+                    WHERE account_number = account_number1;
+
+                    SET @table_name = CONCAT('NO', account_number1);
+                    SET @transaction_details = CONCAT('Name changed to ', new_first_name);
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+
+                    PREPARE stmt FROM @sql_statement;
+                    EXECUTE stmt USING @transaction_details;
+                    DEALLOCATE PREPARE stmt;
+                END IF;
+            END;
+
+        ------- update_and_log_email
+        CREATE PROCEDURE update_and_log_email (IN account_number1 INT, IN new_email VARCHAR(255))
+            BEGIN
+                DECLARE old_email VARCHAR(255);
+
+                SELECT email INTO old_email FROM accounts WHERE account_number = account_number1;
+
+                IF old_email <> new_email THEN
+                    UPDATE accounts SET email = new_email
+                    WHERE account_number = account_number1;
+
+                    SET @table_name = CONCAT('NO', account_number1);
+                    SET @transaction_details = CONCAT('Email changed to ', new_email);
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+
+                    PREPARE stmt FROM @sql_statement;
+                    EXECUTE stmt USING @transaction_details;
+                    DEALLOCATE PREPARE stmt;
+                END IF;
+            END;
+
+        ------- update_and_log_address 
+        CREATE PROCEDURE update_and_log_address (IN account_number1, IN new_address VARCHAR(255))
+            BEGIN
+                DECLARE old_address VARCHAR(255);
+
+                SELECT address INTO old_address FROM accounts WHERE account_number = account_number1;
+
+                IF old_address <> new_address THEN
+                    UPDATE accounts SET address = new_address
+                    WHERE account_number = account_number1;
+
+                    SET @table_name = CONCAT('NO', account_number1);
+                    SET @transaction_details = CONCAT('Address changed to ', new_address);
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+
+                    PREPARE stmt FROM @sql_statement;
+                    EXECUTE stmt USING @transaction_details;
+                    DEALLOCATE PREPARE stmt;
+                END IF;
+            END;
+
+        ------- update_and_log_phone_number
+        CREATE PROCEDURE update_and_log_phone_number (IN account_number1, IN new_phone_number VARCHAR(255))
+            BEGIN
+                DECLARE old_phone_number INT;
+
+                SELECT phone_number INTO old_phone_number FROM accounts WHERE account_number = account_number1;
+
+                IF old_phone_number <> new_phone_number THEN
+                    UPDATE accounts SET phone_number = new_phone_number
+                    WHERE account_number = account_number1;
+
+                    SET @table_name = CONCAT('NO', account_number1);
+                    SET @transaction_details = CONCAT('Phone Number changed to ', new_phone_number);
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+
+                    PREPARE stmt FROM @sql_statement;
+                    EXECUTE stmt USING @transaction_details;
+                    DEALLOCATE PREPARE stmt;
+                END IF;
+            END;
+
+        ------- insert_or_update_hashed_password
+        CREATE PROCEDURE insert_or_update_hashed_password (IN account_number INT, IN hash_password VARCHAR(1000))
+            BEGIN
+            INSERT INTO password_security (account_number, hashed_password)
+            VALUES (account_number1, hashed_password1)
+            ON DUPLICATE KEY UPDATE hashed_password = hashed_password1;
+        END;
+*/
 
 // TODO LIST
 // In case someone forgets his/she password, use his/her national ID to change the password to a new one. Create a Function.
@@ -35,7 +198,6 @@ using namespace std;
 // Check and resolve the memory leaks problem
 // Reduce code redundancy into functions
 // Review the code and make it the simplest way it can be
-// Interest Rate Class which will increase the balance according to when the money has been placed
 // Borrow / Lend Class which will increase the borrowed / lent money to pay the Bank according the duration
 // Create the GUI for a more user friendly
 
@@ -286,14 +448,14 @@ class Account : public Transactions
 {
     public:
 
-    void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, string hash_password, sql :: Connection *connection);
+    void create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, double interest_rate, string password, string hash_password, sql :: Connection *connection);
 
     void remove_accounts(sql :: Connection *connection, int account_number);
 };
 
-void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, string password, string hash_password, sql :: Connection *connection)
+void Account :: create_account(int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, double balance, double interest_rate, string password, string hash_password, sql :: Connection *connection)
 {
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
     prep_statement->setString(1, national_ID);
     prep_statement->setString(2, first_name);
     prep_statement->setString(3, last_name);
@@ -302,6 +464,7 @@ void Account :: create_account(int account_number, string national_ID, string fi
     prep_statement->setString(6, email);
     prep_statement->setString(7, address);
     prep_statement->setDouble(8, balance);
+    prep_statement->setDouble(9, interest_rate);
 
     prep_statement->executeUpdate();
 
@@ -351,6 +514,76 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     delete prep_statement;
 }
 
+sql :: SQLString retrieve_initial_timestamp(sql :: Connection *connection, int account_number)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT initial_timestamp FROM accounts WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    sql :: ResultSet *result = prep_statement->executeQuery();
+    
+    sql :: SQLString initial_timestamp;
+
+    if (result->next())  initial_timestamp = result->getString("initial_timestamp");
+
+    return initial_timestamp;
+}
+
+int calculate_time_elapsed(sql :: Connection *connection, sql :: SQLString initial_timestamp)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT NOW() AS time_now;");
+    
+    sql :: ResultSet *result = prep_statement->executeQuery();
+
+    sql :: SQLString current_time;
+    if (result->next()) current_time = result->getString("time_now");
+
+    prep_statement = connection->prepareStatement("SELECT TIMESTAMPDIFF(MINUTE, '" + initial_timestamp + "', '" +current_time+ "') AS time_elapsed;");
+
+    result = prep_statement->executeQuery();
+    
+    int time_elapsed = 0;
+
+    if (result->next()) time_elapsed = result->getInt("time_elapsed");
+
+    return time_elapsed;
+}
+
+void apply_interest_rate_to_balance (sql :: Connection *connection, int account_number)
+{
+    double interest_rate;
+
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT interest_rate FROM accounts WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    sql :: ResultSet *result = prep_statement->executeQuery();
+
+    if(result->next()) interest_rate = result->getDouble("interest_rate");
+
+    int time_elapsed = calculate_time_elapsed(connection, retrieve_initial_timestamp(connection, account_number));
+
+    prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
+    prep_statement->setInt(1, account_number);
+
+    result = prep_statement->executeQuery();
+    
+    double balance;
+
+    if (result->next()) balance = result->getDouble("balance");
+
+    double interest_rate_plus_balance;
+
+    interest_rate_plus_balance = (interest_rate * balance * time_elapsed) + balance;
+
+    prep_statement = connection->prepareStatement("UPDATE accounts SET balance = ? WHERE account_number = ?;");
+    prep_statement->setDouble(1, interest_rate_plus_balance);
+    prep_statement->setInt(2, account_number);
+
+    prep_statement->executeUpdate();
+
+    delete prep_statement;
+    delete result;
+}
+
 class BANK : public Account
 {   
     public :
@@ -385,7 +618,7 @@ int main(int argc, const char* argv[])
 
         int phone_number, new_phone_number, account_number, account_number1, account_number2;
 
-        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer;
+        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate;
 
         stack <int> main_menu;
 
@@ -448,10 +681,29 @@ int main(int argc, const char* argv[])
 
                     do
                     {
-                        cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: ";
+                        cout << "Your account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
+
+                        cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
+
+                        cout << "Balance = 100 ---> Interest Rate = 0" << endl;
+
+                        cout << "500 > Balance > 100 ---> Interest Rate = 5%" << endl;
+
+                        cout << "1000 > Balance >= 500 ---> Interest Rate = 7%" << endl;
+
+                        cout << "Balance > 1000 ---> Interest Rate = 10%" << endl;
+
                         cin >> balance;
 
                     } while (balance < 100);
+
+                    if (balance == 100) interest_rate = 0;
+
+                    else if (balance > 100 && balance < 500) interest_rate = 0.05;
+
+                    else if (balance < 1000 && balance >= 500) interest_rate = 0.07;
+
+                    else interest_rate = 0.1;
 
                     cout << "Password: ";
                     cin >> password;
@@ -465,7 +717,7 @@ int main(int argc, const char* argv[])
 
                     hash_password = hashing_password(password);
 
-                    accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, password, hash_password, connection);
+                    accounts.create_account(account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password, connection);
 
                     password.clear();
                     password_confirmation.clear();
@@ -519,6 +771,8 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
+                                    apply_interest_rate_to_balance(connection, account_number);
+
                                     cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
                                     password.clear();
@@ -542,6 +796,8 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
+                                    apply_interest_rate_to_balance(connection, account_number);
+
                                     accounts.deposit(connection, amount_to_deposit, account_number);
 
                                     password.clear();
@@ -565,6 +821,8 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
+                                    apply_interest_rate_to_balance(connection, account_number);
+
                                     balance = check_balance(connection, account_number);
 
                                     while (amount_to_withdraw > balance) 
@@ -601,6 +859,8 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
+                                    apply_interest_rate_to_balance(connection, account_number1);
+
                                     balance = check_balance(connection, account_number1);
 
                                     while (amount_to_transfer > balance) 
@@ -610,6 +870,8 @@ int main(int argc, const char* argv[])
                                         cout << "So Please enter a reasonnable amount: ";
                                         cin >> amount_to_transfer;
                                     }
+
+                                    apply_interest_rate_to_balance(connection, account_number2);
 
                                     accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
 
@@ -970,7 +1232,7 @@ int main(int argc, const char* argv[])
             delete result;
 
         }while (options != 0);
-        
+
     }
 
     catch (sql :: SQLException *e)

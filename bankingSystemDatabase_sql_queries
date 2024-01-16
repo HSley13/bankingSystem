@@ -1,5 +1,2 @@
-CREATE TABLE password_security
-(
-    account_number INT PRIMARY KEY AUTO_INCREMENT,
-    hashed_password VARCHAR(500)
-)AUTO_INCREMENT = 1000000002;
+SELECT routine_name, routine_definition FROM information_schema.routines
+WHERE routine_type = 'PROCEDURE';
