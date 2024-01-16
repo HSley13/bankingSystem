@@ -836,7 +836,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    // apply_interest_rate_to_balance(connection, account_number);
+                                    apply_interest_rate_to_balance(connection, account_number);
 
                                     cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
@@ -864,7 +864,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    // apply_interest_rate_to_balance(connection, account_number);
+                                    apply_interest_rate_to_balance(connection, account_number);
 
                                     accounts.deposit(connection, amount_to_deposit, account_number);
 
@@ -892,7 +892,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    // apply_interest_rate_to_balance(connection, account_number);
+                                    apply_interest_rate_to_balance(connection, account_number);
 
                                     balance = check_balance(connection, account_number);
 
@@ -935,7 +935,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    // apply_interest_rate_to_balance(connection, account_number1);
+                                    apply_interest_rate_to_balance(connection, account_number1);
 
                                     balance = check_balance(connection, account_number1);
 
@@ -948,7 +948,7 @@ int main(int argc, const char* argv[])
                                         cout << endl;
                                     }
 
-                                    // apply_interest_rate_to_balance(connection, account_number2);
+                                    apply_interest_rate_to_balance(connection, account_number2);
 
                                     accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
 
