@@ -13,9 +13,17 @@ using namespace std;
 
 // g++ -std=c++11 -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
 
-// BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABSE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
+// BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABASE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
 
 /*
+
+        ----- Download Argon 2 in order to use its libraty for the password hashing process
+        ----- Change the Include Directory Path so they can find all the preinstalled libraries required to run this project on your PC
+        ----- When Running Your Program, Pass your Database's Password as the Second Argument
+        ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account 
+        -----
+        -----
+
         *************** CREATE accounts TABLE *************** 
         CREATE TABLE accounts 
         (
@@ -672,7 +680,7 @@ int main(int argc, const char* argv[])
             cout << endl;
             cout << endl;
 
-            cout << "                                                 *********** Among the List below, choose what best suits your Status **********"                                                     << endl;
+            cout << "                                                 *********** Among the List below, choose what best suits You **********"                                                     << endl;
             cout << endl;
 
             cout << "1. You are New to our Bank and Would like to Create an Account" << endl;
@@ -693,43 +701,51 @@ int main(int argc, const char* argv[])
             {
                 case 1: // Create the Account and the table History along the way
 
-                    cout << "Please Provide Us with the following Information in order to create your account, Make sure that you enter the correct Information: " << endl;
+                    cout << "Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information: " << endl;
                     cout << endl;
 
-                    cout << "National ID with at least a letter: ";
+                    cout << "National ID with at least a letter within it: ";
                     cin >> national_ID;
+                    cout << endl;
 
                     cout << "First Name: ";
                     cin >> first_name;
+                    cout << endl;
 
                     cout << "Last Name: ";
                     cin >> last_name;
 
-                    cout << "Date of Birth with format 2024-01-31 : ";
+                    cout << "Date of Birth ( 2024-01-31 ) : ";
                     cin >> date_birth;
+                    cout << endl;
 
                     cout << "Phone Number: ";
                     cin >> phone_number;
+                    cout << endl;
 
                     cout << "Email: ";
                     cin >> email;
+                    cout << endl;
 
-                    cout << "Address with format Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001: ";
+                    cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ) : ";
                     cin >> address;
+                    cout << endl;
 
                     do
                     {
                         cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
+                        cout << endl;
 
                         cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
+                        cout << endl;
 
-                        cout << "Balance = 100 ---> Interest Rate = 0" << endl;
+                        cout << "1. Balance = 100 ---> Interest Rate = 0" << endl;
 
-                        cout << "500 > Balance > 100 ---> Interest Rate = 5%" << endl;
+                        cout << "2. 500 > Balance > 100 ---> Interest Rate = 5%" << endl;
 
-                        cout << "1000 > Balance >= 500 ---> Interest Rate = 7%" << endl;
+                        cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 7%" << endl;
 
-                        cout << "Balance > 1000 ---> Interest Rate = 10%" << endl;
+                        cout << "4. Balance > 1000 ---> Interest Rate = 10%" << endl;
 
                         cin >> balance;
 
@@ -745,11 +761,13 @@ int main(int argc, const char* argv[])
 
                     cout << "Password: ";
                     cin >> password;
+                    cout << endl;
 
                     do
                     {
                         cout << "Passord Confirmation: ";
                         cin >> password_confirmation;
+                        cout << endl;
 
                     }while (password.compare(password_confirmation));
 
@@ -765,7 +783,7 @@ int main(int argc, const char* argv[])
                 case 2: // Perform Inquiry Relative to an Existing Account 
                     do
                     {
-                        cout << "Choose among the options below, what best suits your requirements" << endl;
+                        cout << "Choose among the Options below, what best suits You" << endl;
                         cout << endl;
 
                         cout << "1. Check your Balance" << endl;
@@ -778,13 +796,14 @@ int main(int argc, const char* argv[])
 
                         cout << "5. Edit Account Information" << endl;
 
-                        cout << "6. Delete Your Account" << endl;
+                        cout << "6. Delete Account" << endl;
 
                         cout << "0. Back to the Previous Menu" << endl;
 
                         cout << endl;
 
                         cin >> options2;
+                        cout << endl;
 
                         if (options2 != 0) main_menu.push(options2);
 
@@ -801,9 +820,11 @@ int main(int argc, const char* argv[])
                             case 1: // Balance Check
                                 cout << "What is your Account Number: ";
                                 cin >> account_number;
+                                cout << endl;
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
                                 hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -823,12 +844,15 @@ int main(int argc, const char* argv[])
                             case 2: // Deposit
                                 cout << "What is your Account Number: ";
                                 cin >> account_number;
+                                cout << endl;
 
                                 cout << "What is the Amount you would like to Deposit: ";
                                 cin >> amount_to_deposit;
+                                cout << endl;
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
                                 hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -848,12 +872,15 @@ int main(int argc, const char* argv[])
                             case 3: // Withdraw
                                 cout << "What is your Account Number: ";
                                 cin >> account_number;
+                                cout << endl;
 
                                 cout << "What is the Amount you would like to Withdraw: ";
                                 cin >> amount_to_withdraw;
+                                cout << endl;
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
                                 hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -869,6 +896,7 @@ int main(int argc, const char* argv[])
 
                                         cout << "So Please enter a reasonnable amount: ";
                                         cin >> amount_to_withdraw;
+                                        cout << endl;
                                     }
 
                                     accounts.withdrawal(connection, amount_to_withdraw, account_number);
@@ -883,15 +911,19 @@ int main(int argc, const char* argv[])
                             case 4: // Transfer
                                 cout << "What is your Account Number: ";
                                 cin >> account_number1;
+                                cout << endl;
 
                                 cout << "What is the Amount you would like to Transfer: ";
                                 cin >> amount_to_deposit;
+                                cout << endl;
 
                                 cout << "What is the Account Number to receive the Money: ";
                                 cin >> account_number2;
+                                cout << endl;
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
                                 hash_password = retrieve_hashed_password(account_number1, connection);
 
@@ -907,6 +939,7 @@ int main(int argc, const char* argv[])
 
                                         cout << "So Please enter a reasonnable amount: ";
                                         cin >> amount_to_transfer;
+                                        cout << endl;
                                     }
 
                                     apply_interest_rate_to_balance(connection, account_number2);
@@ -935,6 +968,7 @@ int main(int argc, const char* argv[])
                                     cout << endl;
 
                                     cin >> options3;
+                                    cout << endl;
 
                                     if (options3 != 0) main_menu.push(options3);
 
@@ -967,6 +1001,7 @@ int main(int argc, const char* argv[])
                                                 cout << endl;
 
                                                 cin >> options4;
+                                                cout << endl;
 
                                                 if (options4 != 0) main_menu.push(options4);
 
@@ -983,9 +1018,11 @@ int main(int argc, const char* argv[])
                                                     case 1: // Edit Name
                                                         cout << "Enter Your Account Number: ";
                                                         cin >> account_number;
+                                                        cout << endl;
 
                                                         cout << "What is your Password: ";
                                                         cin >> password;
+                                                        cout << endl;
 
                                                         hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -993,6 +1030,7 @@ int main(int argc, const char* argv[])
                                                         {
                                                             cout << "Enter the New First Name. PS: You can't change your Last Name: ";
                                                             cin >> new_first_name;
+                                                            cout << endl;
 
                                                             prep_statement = connection->prepareStatement("CALL update_and_log_name(?,?);");
                                                             prep_statement->setInt(1, account_number);
@@ -1010,9 +1048,11 @@ int main(int argc, const char* argv[])
                                                     case 2: // Edit Email
                                                         cout << "Enter Your Account Number: ";
                                                         cin >> account_number;
+                                                        cout << endl;
 
                                                         cout << "What is your Password: ";
                                                         cin >> password;
+                                                        cout << endl;
 
                                                         hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -1037,9 +1077,11 @@ int main(int argc, const char* argv[])
                                                     case 3: // Edit address
                                                         cout << "Enter Your Account Number: ";
                                                         cin >> account_number;
+                                                        cout << endl;
 
                                                         cout << "What is your Password: ";
                                                         cin >> password;
+                                                        cout << endl;
 
                                                         hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -1047,6 +1089,7 @@ int main(int argc, const char* argv[])
                                                         {
                                                             cout << "Enter the New Address: ";
                                                             cin >> new_address;
+                                                            cout << endl;
 
                                                             prep_statement = connection->prepareStatement("CALL update_and_log_address(?,?);");
                                                             prep_statement->setInt(1, account_number);
@@ -1064,9 +1107,11 @@ int main(int argc, const char* argv[])
                                                     case 4: // Edit Phone Number
                                                         cout << "Enter Your Account Number: ";
                                                         cin >> account_number;
+                                                        cout << endl;
 
                                                         cout << "What is your Password: ";
                                                         cin >> password;
+                                                        cout << endl;
 
                                                         hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -1074,6 +1119,7 @@ int main(int argc, const char* argv[])
                                                         {
                                                             cout << "Enter the New Phone Number: ";
                                                             cin >> new_phone_number;
+                                                            cout << endl;
 
                                                             prep_statement = connection->prepareStatement("CALL update_and_log_phone_number(?,?);");
                                                             prep_statement->setInt(1, account_number);
@@ -1096,9 +1142,11 @@ int main(int argc, const char* argv[])
                                         case 2: // Change Password
                                             cout << "Enter Your Account Number: ";
                                             cin >> account_number;
+                                            cout << endl;
 
                                             cout << "What is your Password: ";
                                             cin >> password;
+                                            cout << endl;
 
                                             hash_password = retrieve_hashed_password(account_number, connection);
 
@@ -1106,11 +1154,13 @@ int main(int argc, const char* argv[])
                                             {
                                                 cout << "What is the New Password: ";
                                                 cin >> new_password;
+                                                cout << endl;
 
                                                 do
                                                 {
                                                     cout << "New Password Confirmation: ";
                                                     cin >> new_password_confirmation;
+                                                    cout << endl;
 
                                                 }while (password.compare(new_password_confirmation));
 
@@ -1139,9 +1189,11 @@ int main(int argc, const char* argv[])
                             case 6: // Delete an Account
                                 cout << "Enter Your Account Number: ";
                                 cin >> account_number;
+                                cout << endl;
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
                                 hash_password = retrieve_hashed_password(account_number, connection);
 
