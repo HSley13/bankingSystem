@@ -514,7 +514,7 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     delete prep_statement;
 }
 
-sql :: SQLString retrieve_initial_timestamp(sql :: Connection *connection, int account_number)
+sql :: SQLString retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, int account_number)
 {
     sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT initial_timestamp FROM accounts WHERE account_number = ?;");
     prep_statement->setInt(1, account_number);
@@ -528,7 +528,7 @@ sql :: SQLString retrieve_initial_timestamp(sql :: Connection *connection, int a
     return initial_timestamp;
 }
 
-int calculate_time_elapsed(sql :: Connection *connection, sql :: SQLString initial_timestamp)
+int calculate_interest_rate_time_elapsed(sql :: Connection *connection, sql :: SQLString initial_timestamp)
 {
     sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT NOW() AS time_now;");
     
@@ -559,7 +559,7 @@ void apply_interest_rate_to_balance (sql :: Connection *connection, int account_
 
     if(result->next()) interest_rate = result->getDouble("interest_rate");
 
-    int time_elapsed = calculate_time_elapsed(connection, retrieve_initial_timestamp(connection, account_number));
+    int time_elapsed = calculate_interest_rate_time_elapsed(connection, retrieve_interest_rate_initial_timestamp(connection, account_number));
 
     prep_statement = connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;");
     prep_statement->setInt(1, account_number);
@@ -591,6 +591,27 @@ class BANK : public Account
     vector <Account> created_accounts;
 
 };
+
+void retrieve_borrowal_initial_timestamp (sql :: Connection *connection, int account_number)
+{
+
+    // on hold
+
+}
+
+void calculate_borrowal_time_elapsed (sql :: Connection *connection, sql :: SQLString initial_timestamp)
+{
+
+    // on hold  
+
+}
+
+void apply_interest_rate_to_borrowed_money(sql :: Connection *connection, int account_number)
+{
+
+    // on hold  
+
+}
 
 int main(int argc, const char* argv[])
 {
