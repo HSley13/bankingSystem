@@ -1,1 +1,1 @@
-SELECT * FROM accounts;
+SHOW TRIGGERS;

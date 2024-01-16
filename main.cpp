@@ -37,7 +37,9 @@ using namespace std;
             address VARCHAR(255),
             balance DECIMAL(20,5),
             interest_rate DECIMAL(5,2),
-            initial_timestamp DATETIME DEFAULT NOW()
+            initial_timestamp DATETIME,
+            borrowed_money DECIMAL(20,5) DEFAULT 0,
+            initial_borrowed_money_timestamp DATETIME, 
         )AUTO_INCREMENT = 1000000000;
 
 
@@ -78,6 +80,16 @@ using namespace std;
                 END IF;
             END;
 
+        ------- new_receive
+        CREATE TRIGGER new_receive AFTER UPDATE ON transactions FOR EACH ROW
+            BEGIN
+                IF OLD.receive <> NEW.receive THEN
+                    UPDATE accounts SET balance = balance + NEW.receive, initial_timestamp = NOW()
+                    WHERE account_number = NEW.account_number;
+                END IF;
+            END;
+
+
         ------- new_withdrawal
         CREATE TRIGGER new_withdrawal AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
@@ -96,15 +108,7 @@ using namespace std;
                 END IF;
             END;
 
-        ------- new_receive
-        CREATE TRIGGER new_receive AFTER UPDATE ON transactions FOR EACH ROW
-            BEGIN
-                IF OLD.receive <> NEW.receive THEN
-                    UPDATE accounts SET balance = balance + NEW.receive, initial_timestamp = NOW()
-                    WHERE account_number = NEW.account_number;
-                END IF;
-            END;
-
+    
 
         *************** ALL THE PROCEDURES *************** 
         ------- update_and_log_name
@@ -201,12 +205,12 @@ using namespace std;
 */
 
 // TODO LIST
+// Borrow / Lend Class which will increase the borrowed / lent money to pay the Bank according the duration
 // In case someone forgets his/she password, use his/her national ID to change the password to a new one. Create a Function.
 // Finish the Bank Class which will be responsible to manage the createD accounts
 // Check and resolve the memory leaks problem
 // Reduce code redundancy into functions
 // Review the code and make it the simplest way it can be
-// Borrow / Lend Class which will increase the borrowed / lent money to pay the Bank according the duration
 // Create the GUI for a more user friendly
 
 class connection_details
@@ -562,7 +566,7 @@ int calculate_interest_rate_time_elapsed(sql :: Connection *connection, sql :: S
     sql :: SQLString current_time;
     if (result->next()) current_time = result->getString("time_now");
 
-    prep_statement = connection->prepareStatement("SELECT TIMESTAMPDIFF(MINUTE, '" + initial_timestamp + "', '" +current_time+ "') AS time_elapsed;");
+    prep_statement = connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, '" + initial_timestamp + "', '" +current_time+ "') AS time_elapsed;");
 
     result = prep_statement->executeQuery();
     
@@ -796,7 +800,9 @@ int main(int argc, const char* argv[])
 
                         cout << "5. Edit Account Information" << endl;
 
-                        cout << "6. Delete Account" << endl;
+                        cout << "6. Transaction History" << endl;
+
+                        cout << "7. Delete Account" << endl;
 
                         cout << "0. Back to the Previous Menu" << endl;
 
@@ -830,7 +836,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    apply_interest_rate_to_balance(connection, account_number);
+                                    // apply_interest_rate_to_balance(connection, account_number);
 
                                     cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
@@ -858,7 +864,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    apply_interest_rate_to_balance(connection, account_number);
+                                    // apply_interest_rate_to_balance(connection, account_number);
 
                                     accounts.deposit(connection, amount_to_deposit, account_number);
 
@@ -886,7 +892,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    apply_interest_rate_to_balance(connection, account_number);
+                                    // apply_interest_rate_to_balance(connection, account_number);
 
                                     balance = check_balance(connection, account_number);
 
@@ -929,7 +935,7 @@ int main(int argc, const char* argv[])
 
                                 if (verifying_password(password, hash_password)) 
                                 {
-                                    apply_interest_rate_to_balance(connection, account_number1);
+                                    // apply_interest_rate_to_balance(connection, account_number1);
 
                                     balance = check_balance(connection, account_number1);
 
@@ -942,7 +948,7 @@ int main(int argc, const char* argv[])
                                         cout << endl;
                                     }
 
-                                    apply_interest_rate_to_balance(connection, account_number2);
+                                    // apply_interest_rate_to_balance(connection, account_number2);
 
                                     accounts.transfer(connection, amount_to_deposit, account_number1, account_number2);    
 
@@ -1186,7 +1192,28 @@ int main(int argc, const char* argv[])
 
                             break;
 
-                            case 6: // Delete an Account
+                            case 6: // Transaction History
+                                cout << "Enter Your Account Number: ";
+                                cin >> account_number;
+                                cout << endl;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+                                cout << endl;
+
+                                hash_password = retrieve_hashed_password(account_number, connection);
+
+                                if (verifying_password(password, hash_password)) 
+                                {
+                                    accounts.transactions_history(connection, account_number);
+                                    password.clear();
+                                }
+
+                                else cout << "Your Password is Incorrect" << endl;
+
+                            break;
+
+                            case 7: // Delete an Account
                                 cout << "Enter Your Account Number: ";
                                 cin >> account_number;
                                 cout << endl;
