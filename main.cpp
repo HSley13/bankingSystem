@@ -17,14 +17,15 @@ using namespace std;
 
 /*
 
-        ----- Download Argon 2 in order to use its libraty for the password hashing process
-        ----- Change the Include Directory Path so they can find all the preinstalled libraries required to run this project on your PC
+        ----- Download Argon 2 in order to use its library for the password hashing process
+        ----- Change the Include Directories Path to find all the preinstalled libraries required to run this project on your PC
         ----- When Running Your Program, Pass your Database's Password as the Second Argument
         ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account 
         -----
         -----
 
-        *************** CREATE accounts TABLE *************** 
+        *************** ALL THE TABLES *************** 
+        ------- accounts
         CREATE TABLE accounts 
         (
             account_number INT PRIMARY KEY AUTO_INCREMENT,
@@ -42,8 +43,7 @@ using namespace std;
             initial_borrowed_money_timestamp DATETIME, 
         )AUTO_INCREMENT = 1000000000;
 
-
-       *************** CREATE transactions TABLE *************** 
+        ------- transactions
         CREATE TABLE transactions
         (
             account_number INT PRIMARY KEY AUTO_INCREMENT,
@@ -53,12 +53,30 @@ using namespace std;
             receive DECIMAL(20,5) DEFAULT 0
         )AUTO_INCREMENT = 1000000000;
 
-
-       *************** CREATE hashed_password TABLE *************** 
+       ------- hashed_password 
         CREATE TABLE hashed_password
         (
             account_number INT PRIMARY KEY,
             hashed_password VARBINARY(500)
+        );
+
+        ------- borrowal_record
+        CREATE TABLE borrowal_record
+        (
+           account_number INT PRIMARY KEY,
+           borrowed_amount DECIMAL(20, 5),
+           interest_rate DECIMAL(5,3),
+           paid INT DEFAULT 0,
+           initial_timestamp TIMESTAMP DEFAULT NULL,
+           paid_timestamp TIMESTAMP DEFAULT NULL
+        );
+
+        ------- event_schedule
+        CREATE TABLE event_schedule
+        (
+            account_number INT PRIMARY KEY,
+            scheduled_time TIMESTAMP,
+            triggered INT DEFAULT 0
         );
 
 
@@ -89,7 +107,6 @@ using namespace std;
                 END IF;
             END;
 
-
         ------- new_withdrawal
         CREATE TRIGGER new_withdrawal AFTER UPDATE ON transactions FOR EACH ROW
             BEGIN
@@ -107,10 +124,10 @@ using namespace std;
                     WHERE account_number = NEW.account_number;
                 END IF;
             END;
-
     
 
         *************** ALL THE PROCEDURES *************** 
+
         ------- update_and_log_name
         CREATE PROCEDURE update_and_log_name (IN account_number1 INT, IN new_first_name VARCHAR(255))
             BEGIN
@@ -202,13 +219,110 @@ using namespace std;
             VALUES (account_number1, hashed_password1)
             ON DUPLICATE KEY UPDATE hashed_password = hashed_password1;
         END;
+
+        ------- update_borrowed_money
+        CREATE PROCEDURE update_borrowed_money(IN account_number1 INT)
+        BEGIN
+            DECLARE borrowed_money_interest_rate DECIMAL (20,5);
+            DECLARE borrowed_money DECIMAL (20,5);
+            DECLARE time_elapsed INT;
+
+            SELECT interest_rate INTO borrowed_money_interest_rate FROM borrowal_record
+            WHERE account_number = account_number1;
+
+            SET time_elapsed = borrowed_money_interest_rate(retrieve_borrowal_initial_timestamp(account_number1));
+
+            SELECT borrowed_amount INTO borrowed_money FROM borrowal_record
+            WHERE account_number = account_number1;
+
+            SET borrowed_money = (borrowed_money_interest_rate * borrowed_money * time_elapsed) + borrowed_money;
+
+            UPDATE accounts 
+            SET borrowed_amount = borrowed_money
+            WHERE account_number = account_number1;
+        END;
+
+        ------- deduce_borrowed_money
+        CREATE PROCEDURE deduce_borrowed_money(IN account_number1 INT)
+        BEGIN
+            DECLARE updated_borrowed_money DECIMAL (20,5);
+
+            SELECT borrowed_amount INTO updated_borrowed_money FROM borrowal_record 
+            WHERE account_number = account_number1; 
+
+            UPDATE accounts SET balance = balance - updated_borrowed_money;
+            UPDATE borrowal_record SET paid = 1, paid_timestamp = NOW();
+        END;
+
+
+        *************** ALL THE FUNCTIONS ***************
+        ------- retrieve_borrowal_money_initial_timestamp (USED IN update_borrowed_money PROCEDURE)
+        CREATE FUNCTION retrieve_borrowal_monwy_initial_timestamp (acc_number INT) RETURNS TIMESTAMP 
+        READS SQL DATA
+            BEGIN
+                DECLARE init_timestamp TIMESTAMP;
+
+                SELECT initial_timestamp INTO init_timestamp FROM borrowal_money
+                WHERE account_number = acc_number;
+
+                RETURN init_timestamp;
+            END;
+
+        ------- borrowed_money_interest_rate (USED IN update_borrowed_money PROCEDURE)
+        CREATE FUNCTION borrowed_money_interest_rate(initial_timestamp TIMESTAMP) RETURNS INT
+        NO SQL
+            BEGIN
+                DECLARE time_elapsed INT;
+
+                SET time_elapsed = TIMESTAMPDIFF(HOUR, initial_timestamp, NOW());
+
+                RETURN time_elapsed;
+            END;
+
+
+        *************** ALL THE EVENTS  ***************
+        ------- check_events
+        CREATE EVENT check_events 
+        ON SCHEDULE EVERY 1 HOUR 
+        STARTS CURRENT_TIMESTAMP + INTERVAL 5 HOUR
+        DO
+            BEGIN
+                DECLARE account_number1 INT;
+                DECLARE invalid_case INT DEFAULT FALSE;
+
+                DECLARE cursor_acc CURSOR FOR 
+                SELECT account_number FROM event_schedule
+                WHERE scheduled_time <= CURRENT_TIMESTAMP AND triggered = 0;
+
+                DECLARE CONTINUE HANDLER FOR NOT FOUND SET invalid_case = TRUE;
+
+                OPEN cursor_acc;
+                    read_loop : LOOP
+
+                        FETCH cursor_acc INTO account_number1;
+
+                        IF invalid_case THEN
+                            LEAVE read_loop;
+                        END IF;
+
+                        UPDATE event_schedule_table SET triggered = 1
+                        WHERE account_number = account_number1;
+
+                        CALL update_borrowed_money(account_number1);
+                        CALL deduce_borrowed_money(account_number1);
+
+                    END LOOP read_loop;
+                CLOSE cursor_acc;
+
+            END;
+
 */
 
 // TODO LIST
-// Borrow / Lend Class which will increase the borrowed / lent money to pay the Bank according the duration
 // In case someone forgets his/she password, use his/her national ID to change the password to a new one. Create a Function.
-// Finish the Bank Class which will be responsible to manage the createD accounts
-// Check and resolve the memory leaks problem
+// Record Transaction for Borrowed Money
+// Finish the Bank Class which will be responsible to manage the created accounts
+// Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
 // Review the code and make it the simplest way it can be
 // Create the GUI for a more user friendly
@@ -240,6 +354,27 @@ sql :: Connection *connection_setup(connection_details *ID)
         return NULL;
     }
 }
+
+// class BANK : public Account
+// {   
+//     public :
+
+//     vector <Account> created_accounts;
+
+//     sql :: SQLString retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, int account_number);
+
+//     int calculate_interest_rate_time_elapsed(sql :: Connection *connection, sql :: SQLString initial_timestamp);
+
+//     void apply_interest_rate_to_balance (sql :: Connection *connection, int account_number);    
+
+//     void retrieve_borrowal_initial_timestamp (sql :: Connection *connection, int account_number);
+
+//     void calculate_borrowal_time_elapsed (sql :: Connection *connection, sql :: SQLString initial_timestamp);
+
+//     void apply_interest_rate_to_borrowed_money(sql :: Connection *connection, int account_number);
+
+//     void deduce_borrowed_money(sql :: Connection *connection, int account_number, double amount_to_be_deduced);
+// };
 
 double check_balance(sql :: Connection *connection, int account_number)
 {
@@ -566,11 +701,11 @@ int calculate_interest_rate_time_elapsed(sql :: Connection *connection, sql :: S
     sql :: SQLString current_time;
     if (result->next()) current_time = result->getString("time_now");
 
-    prep_statement = connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, '" + initial_timestamp + "', '" +current_time+ "') AS time_elapsed;");
+    prep_statement = connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, " + initial_timestamp + ", " +current_time+ ") AS time_elapsed;");
 
     result = prep_statement->executeQuery();
     
-    int time_elapsed = 0;
+    int time_elapsed;
 
     if (result->next()) time_elapsed = result->getInt("time_elapsed");
 
@@ -613,35 +748,6 @@ void apply_interest_rate_to_balance (sql :: Connection *connection, int account_
     delete result;
 }
 
-class BANK : public Account
-{   
-    public :
-
-    vector <Account> created_accounts;
-
-};
-
-void retrieve_borrowal_initial_timestamp (sql :: Connection *connection, int account_number)
-{
-
-    // on hold
-
-}
-
-void calculate_borrowal_time_elapsed (sql :: Connection *connection, sql :: SQLString initial_timestamp)
-{
-
-    // on hold  
-
-}
-
-void apply_interest_rate_to_borrowed_money(sql :: Connection *connection, int account_number)
-{
-
-    // on hold  
-
-}
-
 int main(int argc, const char* argv[])
 {
     try
@@ -668,7 +774,7 @@ int main(int argc, const char* argv[])
 
         int phone_number, new_phone_number, account_number, account_number1, account_number2;
 
-        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate;
+        double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate, amount_to_borrow, amount_to_return, borrowal_interest_rate;
 
         stack <int> main_menu;
 
@@ -745,11 +851,11 @@ int main(int argc, const char* argv[])
 
                         cout << "1. Balance = 100 ---> Interest Rate = 0" << endl;
 
-                        cout << "2. 500 > Balance > 100 ---> Interest Rate = 5%" << endl;
+                        cout << "2. 500 > Balance > 100 ---> Interest Rate = 2%" << endl;
 
-                        cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 7%" << endl;
+                        cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 5%" << endl;
 
-                        cout << "4. Balance > 1000 ---> Interest Rate = 10%" << endl;
+                        cout << "4. Balance > 1000 ---> Interest Rate = 7%" << endl;
 
                         cin >> balance;
 
@@ -757,11 +863,11 @@ int main(int argc, const char* argv[])
 
                     if (balance == 100) interest_rate = 0;
 
-                    else if (balance > 100 && balance < 500) interest_rate = 0.05;
+                    else if (balance > 100 && balance < 500) interest_rate = 0.02;
 
-                    else if (balance < 1000 && balance >= 500) interest_rate = 0.07;
+                    else if (balance < 1000 && balance >= 500) interest_rate = 0.05;
 
-                    else interest_rate = 0.1;
+                    else interest_rate = 0.07;
 
                     cout << "Password: ";
                     cin >> password;
@@ -798,11 +904,15 @@ int main(int argc, const char* argv[])
 
                         cout << "4. Money Transfer" << endl;
 
-                        cout << "5. Edit Account Information" << endl;
+                        cout << "5. Borrow Money" << endl;
 
-                        cout << "6. Transaction History" << endl;
+                        cout << "6. Return Borrowed Money" << endl;
 
-                        cout << "7. Delete Account" << endl;
+                        cout << "7. Edit Account Information" << endl;
+
+                        cout << "8. Transaction History" << endl;
+
+                        cout << "9. Delete Account" << endl;
 
                         cout << "0. Back to the Previous Menu" << endl;
 
@@ -959,7 +1069,154 @@ int main(int argc, const char* argv[])
 
                             break;
 
-                            case 5: // Edit Account Information
+                            case 5: // Borrow Money
+                                cout << "What is your Account Number: ";
+                                cin >> account_number;
+                                cout << endl;
+
+                                cout << "What is the amount you would like to Borrow: " << endl;
+                                cout << "Interest Rate Scale on Borrowed Amount " << endl;
+                                cout << endl;
+
+                                cout << "1. Borrowed Amount = 100 ---> Interest Rate = 0.1%. PS: TO BE RETURN WITHIN 1 DAY OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                cout << "2. 500 > Borrowed Amount > 100 ---> Interest Rate = 5% PS: TO BE RETURN WITHIN 2 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                cout << "3. 1000 > Borrowed Amount >= 500 ---> Interest Rate = 7% PS: TO BE RETURN WITHIN 3 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                cin >> amount_to_borrow;
+                                cout << endl;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+
+                                hash_password = retrieve_hashed_password(account_number, connection);
+
+                                if (verifying_password(password, hash_password))
+                                {
+                                    if (amount_to_borrow == 100) 
+                                    {
+                                        borrowal_interest_rate = 0.001;
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
+                                        prep_statement->setInt(1, account_number);
+                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        prep_statement->setDouble(3, borrowal_interest_rate);
+
+                                        prep_statement->executeUpdate();
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);");
+                                        prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+                                    }
+
+                                    else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
+                                    {
+                                        borrowal_interest_rate = 0.05;
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
+                                        prep_statement->setInt(1, account_number);
+                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        prep_statement->setDouble(3, borrowal_interest_rate);
+
+                                        prep_statement->executeUpdate();
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);");
+                                        prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+                                    }
+
+                                    else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
+                                    {
+                                        borrowal_interest_rate = 0.07;
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
+                                        prep_statement->setInt(1, account_number);
+                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        prep_statement->setDouble(3, borrowal_interest_rate);
+
+                                        prep_statement->executeUpdate();
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);");
+                                        prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+                                    }
+
+                                    else 
+                                    {
+                                        borrowal_interest_rate = 0.1;
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
+                                        prep_statement->setInt(1, account_number);
+                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        prep_statement->setDouble(3, borrowal_interest_rate);
+
+                                        prep_statement->executeUpdate();
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);");
+                                        prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+                                    }
+                                }
+
+                            break;
+
+                            case 6: // Return Borrowed Money
+                                cout << "What is your Account Number: ";
+                                cin >> account_number;
+                                cout << endl;
+
+                                cout << "What is your Password: ";
+                                cin >> password;
+
+                                hash_password = retrieve_hashed_password(account_number, connection);
+
+                                if (verifying_password(password, hash_password))
+                                {
+                                    prep_statement = connection->prepareStatement("CALL update_borrowed_money(?);");
+                                    prep_statement->setInt(1, account_number);
+
+                                    prep_statement->executeUpdate();
+
+                                    cout << "The Amount that you have to return is: ";
+                                    prep_statement = connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;");
+                                    prep_statement->setInt(1, account_number);
+
+                                    result = prep_statement->executeQuery();
+                                    
+                                    double due_returned;
+                                    if (result->next())
+                                    {
+                                        due_returned = result->getDouble("borrowed_amount");
+                                        cout << due_returned << endl;
+                                    }
+
+                                    cout << "Please Enter the exact amount to be returned and not less";
+                                    cout << amount_to_return;
+                                    cout << endl;
+
+                                    do
+                                    {
+                                        cout << "The amount You've entered is less than the due_amount so Please Enter the exact amount" << endl;
+                                        cin >> amount_to_return;
+                                        cout << endl;
+                                    } while (due_returned != amount_to_return);
+                                    
+                                    prep_statement = connection->prepareStatement("UPDATE borrowal_record SET paid = 1, paid_timestamp = CURRENT_TIMESTAMP WHERE account_number = ?;");
+                                    prep_statement->setInt(1, account_number);
+
+                                    prep_statement->executeUpdate();
+                                }
+
+                            break;
+
+                            case 7: // Edit Account Information
                                 do
                                 {
                                     cout << "Choose among the options below, what best suits your requirements" << endl;
@@ -1192,7 +1449,7 @@ int main(int argc, const char* argv[])
 
                             break;
 
-                            case 6: // Transaction History
+                            case 8: // Transaction History
                                 cout << "Enter Your Account Number: ";
                                 cin >> account_number;
                                 cout << endl;
@@ -1213,7 +1470,7 @@ int main(int argc, const char* argv[])
 
                             break;
 
-                            case 7: // Delete an Account
+                            case 9: // Delete an Account
                                 cout << "Enter Your Account Number: ";
                                 cin >> account_number;
                                 cout << endl;

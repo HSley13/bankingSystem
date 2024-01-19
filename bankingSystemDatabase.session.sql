@@ -1,1 +1,1 @@
-SHOW TRIGGERS;
+SELECT * FROM event_schedule;
