@@ -1111,6 +1111,14 @@ int main(int argc, const char* argv[])
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
+
+                                        string table_name = "NO";
+                                        table_name.append(to_string(account_number));
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" (transaction_details) VALUES (?); ");
+                                        prep_statement->setString(1, "100 Dollars Borrowed");
+
+                                        prep_statement->executeUpdate();
                                     }
 
                                     else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
@@ -1126,6 +1134,15 @@ int main(int argc, const char* argv[])
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);");
                                         prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+
+                                        string table_name = "NO";
+                                        table_name.append(to_string(account_number));
+                                        
+                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCATE (?, ?), NOW() ); ");
+                                        prep_statement->setInt(1, amount_to_borrow);
+                                        prep_statement->setString(1, "Dollars : New Money Borrowed");
 
                                         prep_statement->executeUpdate();
                                     }
@@ -1145,6 +1162,15 @@ int main(int argc, const char* argv[])
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
+
+                                        string table_name = "NO";
+                                        table_name.append(to_string(account_number));
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCATE (?, ?), NOW() ); ");
+                                        prep_statement->setInt(1, amount_to_borrow);
+                                        prep_statement->setString(1, "Dollars : New Money Borrowed");
+
+                                        prep_statement->executeUpdate();
                                     }
 
                                     else 
@@ -1160,6 +1186,15 @@ int main(int argc, const char* argv[])
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);");
                                         prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+
+                                        string table_name = "NO";
+                                        table_name.append(to_string(account_number));
+
+                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCATE (?, ?), NOW() ); ");
+                                        prep_statement->setInt(1, amount_to_borrow);
+                                        prep_statement->setString(1, "Dollars : New Money Borrowed");
 
                                         prep_statement->executeUpdate();
                                     }
@@ -1210,6 +1245,15 @@ int main(int argc, const char* argv[])
                                     
                                     prep_statement = connection->prepareStatement("UPDATE borrowal_record SET paid = 1, paid_timestamp = CURRENT_TIMESTAMP WHERE account_number = ?;");
                                     prep_statement->setInt(1, account_number);
+
+                                    prep_statement->executeUpdate();
+
+                                    string table_name = "NO";
+                                    table_name.append(to_string(account_number));
+                                    
+                                    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCATE (?, ?), NOW() ); ");
+                                    prep_statement->setInt(1, amount_to_return);
+                                    prep_statement->setString(1, "Dollars : New Money Returned");
 
                                     prep_statement->executeUpdate();
                                 }
