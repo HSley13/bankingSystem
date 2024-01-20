@@ -1,1 +1,1 @@
-SELECT * FROM accounts;
+SELECT * FROM borrowal_record;

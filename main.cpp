@@ -318,7 +318,6 @@ using namespace std;
 */
 
 // TODO LIST
-// Use Smart Pointers instead of the Raw ones
 // Finish the Bank Class which will be responsible to manage the created accounts
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
@@ -356,26 +355,49 @@ unique_ptr <sql :: Connection> connection_setup(connection_details *ID)
 
 double check_balance(sql :: Connection *connection, const int account_number) 
 {
-    double balance = 0.0;
+    try
+    {
+        double balance = 0.0;
 
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
 
-    unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
+        unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
 
-    if (result->next())  balance = result->getDouble("balance");
+        if (result->next()) balance = result->getDouble("balance");
 
-    return balance;
+        return balance;
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        return 0.0;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return 0.0;
+    } 
 }
-
 
 void call_insert_or_update_hashed_password(sql :: Connection *connection, const int account_number, const std::string hash_password) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);"));
-    prep_statement->setInt(1, account_number);
-    prep_statement->setString(2, hash_password);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->setString(2, hash_password);
 
-    prep_statement->executeUpdate();
+        prep_statement->executeUpdate();
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    } 
 }
 
 class Transactions 
@@ -409,28 +431,50 @@ void Transactions :: log_transactions(sql :: Connection *connection, const int a
 
 void Transactions :: deposit(sql :: Connection *connection, const double amount_to_deposit, const int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("UPDATE transactions SET deposit = ? WHERE account_number = ?;"));
-    prep_statement->setDouble(1, amount_to_deposit);
-    prep_statement->setInt(2, account_number);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("UPDATE transactions SET deposit = ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_deposit);
+        prep_statement->setInt(2, account_number);
 
-    prep_statement->executeUpdate();
+        prep_statement->executeUpdate();
 
-    cout << "You have deposited " << amount_to_deposit << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << "You have deposited " << amount_to_deposit << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
 
-    log_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
+        log_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }   
 }
 
 void Transactions :: withdrawal(sql :: Connection *connection, const double amount_to_withdraw, const int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("UPDATE transactions SET withdrawal = ? WHERE account_number = ?;"));
-    prep_statement->setDouble(1, amount_to_withdraw);
-    prep_statement->setInt(2, account_number);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("UPDATE transactions SET withdrawal = ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_withdraw);
+        prep_statement->setInt(2, account_number);
 
-    prep_statement->executeUpdate();
+        prep_statement->executeUpdate();
 
-    cout << "You have withdrawn " << amount_to_withdraw << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << "You have withdrawn " << amount_to_withdraw << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
 
-    log_transactions(connection, account_number, "New Money Withdrawn, Sum of ", amount_to_withdraw);
+        log_transactions(connection, account_number, "New Money Withdrawn, Sum of ", amount_to_withdraw);
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }  
 }
 
 void Transactions :: transfer(sql :: Connection *connection, const double amount_to_transfer, const int account_number1, const int account_number2) 
@@ -455,105 +499,151 @@ void Transactions :: transfer(sql :: Connection *connection, const double amount
     } 
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Transaction Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
     }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }  
 }
-
 
 void Transactions :: transactions_history(sql :: Connection *connection, const int account_number) 
 {
-    string table_name = "NO";
-    table_name.append(to_string(account_number));
+    try
+    {
+        string table_name = "NO";
+        table_name.append(to_string(account_number));
 
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM " + table_name + ";"));
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM " + table_name + ";"));
 
-    unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
+        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-    while (result->next()) cout << "Transaction_details: " << result->getString("transaction_details") << "  Date & Time: " << result->getString("date_time") << endl;  
+        while (result->next()) cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date_time") << endl;
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }   
 }
-
 
 void Transactions :: log_borrowal(sql :: Connection *connection, const int account_number, const double amount_to_borrow, const double borrowal_interest_rate) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);"));
-    prep_statement->setInt(1, account_number);
-    prep_statement->setDouble(2, amount_to_borrow);
-    prep_statement->setDouble(3, borrowal_interest_rate);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->setDouble(2, amount_to_borrow);
+        prep_statement->setDouble(3, borrowal_interest_rate);
 
-    prep_statement->executeUpdate();
+        prep_statement->executeUpdate();
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    } 
 }
 
 class Account 
 {
     public :
 
-    static void create_account(unique_ptr <sql :: Connection> &connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password);
+    static void create_account(sql :: Connection *connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password);
 
     static void remove_accounts(sql :: Connection *connection, const int account_number);
 };
 
-void Account::create_account(unique_ptr <sql :: Connection> &connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password) 
+void Account::create_account(sql :: Connection *connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"));
-    prep_statement->setString(1, national_ID);
-    prep_statement->setString(2, first_name);
-    prep_statement->setString(3, last_name);
-    prep_statement->setString(4, date_birth);
-    prep_statement->setInt(5, phone_number);
-    prep_statement->setString(6, email);
-    prep_statement->setString(7, address);
-    prep_statement->setDouble(8, balance);
-    prep_statement->setDouble(9, interest_rate);
-
-    prep_statement->executeUpdate();
-
-    cout << "This is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future:  ";
-
-    prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("SELECT account_number FROM accounts WHERE national_ID = ?;"));
-    prep_statement->setString(1, national_ID);
-
-    unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
-
-    if (result->next()) 
+    try
     {
-        account_number = result->getInt("account_number");
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"));
+        prep_statement->setString(1, national_ID);
+        prep_statement->setString(2, first_name);
+        prep_statement->setString(3, last_name);
+        prep_statement->setString(4, date_birth);
+        prep_statement->setInt(5, phone_number);
+        prep_statement->setString(6, email);
+        prep_statement->setString(7, address);
+        prep_statement->setDouble(8, balance);
+        prep_statement->setDouble(9, interest_rate);
 
-        cout << account_number << endl;
-
-        string table_name = "NO";
-        table_name.append(to_string(account_number));
-
-        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
         prep_statement->executeUpdate();
 
-        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
-        prep_statement->setString(1, "Account Created");
-        prep_statement->executeUpdate();
+        cout << "This is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future:  ";
+
+        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("SELECT account_number FROM accounts WHERE national_ID = ?;"));
+        prep_statement->setString(1, national_ID);
+
+        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
+
+        if (result->next()) 
+        {
+            account_number = result->getInt("account_number");
+
+            cout << account_number << endl;
+
+            string table_name = "NO";
+            table_name.append(to_string(account_number));
+
+            prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+            prep_statement->executeUpdate();
+
+            prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+            prep_statement->setString(1, "Account Created");
+            prep_statement->executeUpdate();
+        }
+
+        call_insert_or_update_hashed_password(connection, account_number, hash_password);
     }
-
-    call_insert_or_update_hashed_password(connection.get(), account_number, hash_password);
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    } 
 }
 
 void Account :: remove_accounts(sql :: Connection *connection, const int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
-    prep_statement->executeUpdate();
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
 
-    prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("DELETE FROM password_security WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
-    prep_statement->executeUpdate();
+        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("DELETE FROM password_security WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
 
-    prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("DELETE FROM transactions WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
-    prep_statement->executeUpdate();
+        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("DELETE FROM transactions WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
 
-    string table_name = "NO";
-    table_name.append(to_string(account_number));
+        string table_name = "NO";
+        table_name.append(to_string(account_number));
 
-    prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
-    prep_statement->setString(1, "Account Deleted");
-    prep_statement->executeUpdate();
+        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement->setString(1, "Account Deleted");
+        prep_statement->executeUpdate();
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }
 }
 
 class BANK : private Account, Transactions 
@@ -579,175 +669,262 @@ class BANK : private Account, Transactions
 
 string BANK :: generate_random_salt(size_t len) 
 {
-    const string valid_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    try
+    {
+        const string valid_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    random_device rd;
-    mt19937 generator(rd());
+        random_device rd;
+        mt19937 generator(rd());
 
-    uniform_int_distribution<> distribution(0, valid_chars.size() - 1);
+        uniform_int_distribution<> distribution(0, valid_chars.size() - 1);
 
-    string salt;
-    for (size_t i = 0; i < len; i++) salt.push_back(valid_chars[distribution(generator)]);
-    
-    return salt;
+        string salt;
+        for (size_t i = 0; i < len; i++) salt.push_back(valid_chars[distribution(generator)]);
+
+        return salt;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return "";
+    }
 }
 
 string BANK :: hashing_password(const string &password) 
 {
-    const size_t SALT_LENGTH = 32;
-
-    string salt = generate_random_salt(SALT_LENGTH);
-
-    const uint32_t t_cost = 2;
-    const uint32_t m_cost = 32;
-    const uint32_t parallelism = 1;
-    const uint32_t hash_length = 32;
-
-    string hash;
-    hash.resize(hash_length);
-
-    int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), salt.c_str(), salt.length(), &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
-
-    if (result != ARGON2_OK) 
+    try
     {
-        cout << "Error Hashing Password" << endl;
-        exit(1);
+        const size_t SALT_LENGTH = 32;
+
+        string salt = generate_random_salt(SALT_LENGTH);
+
+        const uint32_t t_cost = 2;
+        const uint32_t m_cost = 32;
+        const uint32_t parallelism = 1;
+        const uint32_t hash_length = 32;
+
+        string hash;
+        hash.resize(hash_length);
+
+        int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), salt.c_str(), salt.length(), &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
+
+        if (result != ARGON2_OK) 
+        {
+            cout << "Error Hashing Password" << endl;
+            exit(1);
+        }
+
+        string hashed_password = salt + hash;
+
+        return hashed_password;
     }
-
-    string hashed_password = salt + hash;
-
-    return hashed_password;
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return "";
+    } 
 }
 
 string BANK :: retrieve_hashed_password(sql :: Connection *connection, int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?"));
-    prep_statement->setInt(1, account_number);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?"));
+        prep_statement->setInt(1, account_number);
 
-    unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
+        unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
 
-    std::string hashed_password;
+        std::string hashed_password;
 
-    if (result->next()) hashed_password = result->getString("hashed_password");
-    
-    return hashed_password;
+        if (result->next()) hashed_password = result->getString("hashed_password");
+
+        return hashed_password;
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        return "";
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return "";
+    }
 }
 
 bool BANK :: verifying_password(const string password, const string &hashed_password) 
 {
-    const uint32_t t_cost = 2;
-    const uint32_t m_cost = 32;
-    const uint32_t parallelism = 1;
-    const uint32_t hash_length = 32;
-
-    const size_t SALT_LENGTH = hashed_password.length() - hash_length;
-
-    string hash;
-    hash.resize(hash_length);
-
-    int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), hashed_password.c_str(), SALT_LENGTH, &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
-
-    if (result != ARGON2_OK) 
+    try
     {
-        cout << "Error Verifying Password" << endl;
-        exit(1);
-    }
+        const uint32_t t_cost = 2;
+        const uint32_t m_cost = 32;
+        const uint32_t parallelism = 1;
+        const uint32_t hash_length = 32;
 
-    return !hashed_password.substr(SALT_LENGTH, hash_length).compare(hash);
+        const size_t SALT_LENGTH = hashed_password.length() - hash_length;
+
+        string hash;
+        hash.resize(hash_length);
+
+        int result = argon2_hash(t_cost, m_cost, parallelism, password.c_str(), password.length(), hashed_password.c_str(), SALT_LENGTH, &hash[0], hash.length(), NULL, 0, Argon2_id, ARGON2_VERSION_NUMBER);
+
+        if (result != ARGON2_OK) 
+        {
+            cout << "Error Verifying Password" << endl;
+            exit(1);
+        }
+
+        return !hashed_password.substr(SALT_LENGTH, hash_length).compare(hash);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << endl;
+        return false;
+    }
 }
 
 sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, const int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement(connection->prepareStatement("SELECT initial_timestamp FROM accounts WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement(connection->prepareStatement("SELECT initial_timestamp FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
 
-    unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
+        unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
 
-    sql::SQLString initial_timestamp;
+        sql::SQLString initial_timestamp;
 
-    if (result->next()) initial_timestamp = result->getString("initial_timestamp");
+        if (result->next()) initial_timestamp = result->getString("initial_timestamp");
 
-    return initial_timestamp;
+        return initial_timestamp;
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        return "";
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return "";
+    }
 }
 
 int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, const sql::SQLString initial_timestamp) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement_now (connection->prepareStatement("SELECT NOW() AS time_now;"));
-    unique_ptr <sql :: ResultSet> result_now (prep_statement_now->executeQuery());
+    try
+    {
+        unique_ptr <sql :: PreparedStatement> prep_statement_now (connection->prepareStatement("SELECT NOW() AS time_now;"));
+        unique_ptr <sql :: ResultSet> result_now (prep_statement_now->executeQuery());
 
-    sql::SQLString current_time;
-    if (result_now->next()) current_time = result_now->getString("time_now");
+        sql::SQLString current_time;
+        if (result_now->next()) current_time = result_now->getString("time_now");
 
-    unique_ptr <sql :: PreparedStatement> prep_statement_diff (connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, ?, ?) AS time_elapsed;"));
-    prep_statement_diff->setString(1, initial_timestamp);
-    prep_statement_diff->setString(2, current_time);
+        unique_ptr <sql :: PreparedStatement> prep_statement_diff (connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, ?, ?) AS time_elapsed;"));
+        prep_statement_diff->setString(1, initial_timestamp);
+        prep_statement_diff->setString(2, current_time);
 
-    unique_ptr <sql :: ResultSet> result_diff(prep_statement_diff->executeQuery());
+        unique_ptr <sql :: ResultSet> result_diff(prep_statement_diff->executeQuery());
 
-    int time_elapsed = 0;
+        int time_elapsed = 0;
 
-    if (result_diff->next()) time_elapsed = result_diff->getInt("time_elapsed");
+        if (result_diff->next()) time_elapsed = result_diff->getInt("time_elapsed");
 
-    return time_elapsed;
+        return time_elapsed;
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        return 1;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return 1;
+    }
 }
 
 void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, const int account_number) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement_interest (connection->prepareStatement("SELECT interest_rate FROM accounts WHERE account_number = ?;"));
-    prep_statement_interest->setInt(1, account_number);
-
-    unique_ptr <sql :: ResultSet> result_interest (prep_statement_interest->executeQuery());
-
-    if (!result_interest->next()) 
+    try
     {
-        cout << "Error retrieving interest rate for account number: " << account_number << endl;
-        return;
+        unique_ptr <sql :: PreparedStatement> prep_statement_interest (connection->prepareStatement("SELECT interest_rate FROM accounts WHERE account_number = ?;"));
+        prep_statement_interest->setInt(1, account_number);
+
+        unique_ptr <sql :: ResultSet> result_interest (prep_statement_interest->executeQuery());
+
+        if (!result_interest->next()) 
+        {
+            cout << "Error retrieving interest rate for account number: " << account_number << endl;
+            return;
+        }
+
+        double interest_rate = result_interest->getDouble("interest_rate");
+
+        int time_elapsed = calculate_interest_rate_time_elapsed(connection, retrieve_interest_rate_initial_timestamp(connection, account_number));
+
+        unique_ptr <sql :: PreparedStatement> prep_statement_balance (connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
+        prep_statement_balance->setInt(1, account_number);
+
+        unique_ptr <sql :: ResultSet> result_balance (prep_statement_balance->executeQuery());
+
+        if (!result_balance->next()) 
+        {
+            cout << "Error retrieving balance for account number: " << account_number << endl;
+            return;
+        }
+
+        double balance = result_balance->getDouble("balance");
+
+        double interest_rate_plus_balance = (interest_rate * balance * time_elapsed) + balance;
+
+        unique_ptr <sql :: PreparedStatement> prep_statement_update (connection->prepareStatement("UPDATE accounts SET balance = ? WHERE account_number = ?;"));
+        prep_statement_update->setDouble(1, interest_rate_plus_balance);
+        prep_statement_update->setInt(2, account_number);
+
+        prep_statement_update->executeUpdate();
     }
-
-    double interest_rate = result_interest->getDouble("interest_rate");
-
-    int time_elapsed = calculate_interest_rate_time_elapsed(connection, retrieve_interest_rate_initial_timestamp(connection, account_number));
-
-    unique_ptr <sql :: PreparedStatement> prep_statement_balance (connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
-    prep_statement_balance->setInt(1, account_number);
-
-    unique_ptr <sql :: ResultSet> result_balance (prep_statement_balance->executeQuery());
-
-    if (!result_balance->next()) 
+    catch (const sql :: SQLException &e) 
     {
-        cout << "Error retrieving balance for account number: " << account_number << endl;
-        return;
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
     }
-
-    double balance = result_balance->getDouble("balance");
-
-    double interest_rate_plus_balance = (interest_rate * balance * time_elapsed) + balance;
-
-    unique_ptr <sql :: PreparedStatement> prep_statement_update (connection->prepareStatement("UPDATE accounts SET balance = ? WHERE account_number = ?;"));
-    prep_statement_update->setDouble(1, interest_rate_plus_balance);
-    prep_statement_update->setInt(2, account_number);
-
-    prep_statement_update->executeUpdate();
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+    }
 }
 
 bool BANK :: authentification_check(sql :: Connection *connection, const int account_number, const string national_ID, const string date_birth) 
 {
-    unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT national_ID, date_birth FROM accounts WHERE account_number = ?;"));
-    prep_statement->setInt(1, account_number);
-
-    unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
-
-    string national_ID1, date_birth1;
-
-    if (result->next())
+    try
     {
-        national_ID1 = result->getString("national_ID");
-        date_birth1 = result->getString("date_birth");
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT national_ID, date_birth FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
+
+        string national_ID1, date_birth1;
+
+        if (result->next())
+        {
+            national_ID1 = result->getString("national_ID");
+            date_birth1 = result->getString("date_birth");
+        }
+
+        if (national_ID1.compare(national_ID) && date_birth1.compare(date_birth)) return false;
+
+        else return true;
     }
-
-    if (national_ID1.compare(national_ID) && date_birth1.compare(date_birth)) return false;
-
-    else return true;
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        return false;
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << e.what() << endl;
+        return false;
+    }
 }
 
 int main(int argc, const char* argv[]) 
@@ -768,7 +945,7 @@ int main(int argc, const char* argv[])
         unique_ptr <sql :: Connection> connection = connection_setup(&ID);
         if (!connection) 
         {
-            cerr << "Failed to establish a database connection." << endl;
+            cerr << "Failed to establish the Database connection." << endl;
             return 1;
         }
 
@@ -886,7 +1063,7 @@ int main(int argc, const char* argv[])
 
                     hash_password = BANK :: hashing_password(password);
 
-                    Account :: create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
+                    Account :: create_account(connection.get(), account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
 
                     password.clear();
                     password_confirmation.clear();
@@ -1264,7 +1441,7 @@ int main(int argc, const char* argv[])
                                                 cout << "2. Edit email" << endl;
 
                                                 cout << "3. Edit address" << endl;
-                                                
+
                                                 cout << "4. Edit Phone Number" << endl;
 
                                                 cout << "0. Back to the Previous Menu" << endl;
