@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-o",
+                "${workspaceFolder}/main",
+                "${workspaceFolder}/main.cpp",
+                "-L/usr/local/mysql-connector-c++-8.2.0/lib64",
+                "-lmysqlcppconn",
+                "-lssl",
+                "-lcrypto",
+                "-rpath",
+                "/usr/local/mysql-connector-c++-8.2.0/lib64",
+                "-L/opt/homebrew/lib",
+                "-largon2",
+                "-rpath",
+                "/opt/homebrew/lib"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-// g++ -o main main.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
+// g++ -o try try.cpp -L/usr/local/mysql-connector-c++-8.2.0/lib64 -lmysqlcppconn -lssl -lcrypto -rpath /usr/local/mysql-connector-c++-8.2.0/lib64  -L/opt/homebrew/lib -largon2 -rpath /opt/homebrew/lib
 
 // BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABASE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
 
@@ -318,7 +318,6 @@ using namespace std;
 */
 
 // TODO LIST
-// Use Smart Pointers instead of the Raw ones
 // Finish the Bank Class which will be responsible to manage the created accounts
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
@@ -826,7 +825,6 @@ int main(int argc, const char* argv[])
 
                     cout << "Last Name: ";
                     cin >> last_name;
-                    cout << endl;
 
                     cout << "Date of Birth ( 2024-01-31 ) : ";
                     cin >> date_birth;
@@ -1097,7 +1095,6 @@ int main(int argc, const char* argv[])
 
                                 cout << "What is your Password: ";
                                 cin >> password;
-                                cout << endl;
 
                                 hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
 
@@ -1130,6 +1127,7 @@ int main(int argc, const char* argv[])
 
                                         Transactions :: log_transactions(connection.get(), account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                     }
+                                    
 
                                     else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
                                     {
@@ -1264,7 +1262,7 @@ int main(int argc, const char* argv[])
                                                 cout << "2. Edit email" << endl;
 
                                                 cout << "3. Edit address" << endl;
-                                                
+
                                                 cout << "4. Edit Phone Number" << endl;
 
                                                 cout << "0. Back to the Previous Menu" << endl;

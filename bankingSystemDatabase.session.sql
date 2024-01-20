@@ -1,1 +1,1 @@
-DELETE FROM borrowal_record WHERE account_number = 1000000011
+SELECT * FROM accounts;
