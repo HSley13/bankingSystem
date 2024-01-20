@@ -230,14 +230,14 @@ using namespace std;
             SELECT interest_rate INTO borrowed_money_interest_rate FROM borrowal_record
             WHERE account_number = account_number1;
 
-            SET time_elapsed = borrowed_money_interest_rate(retrieve_borrowal_initial_timestamp(account_number1));
+            SET time_elapsed = borrowed_money_interest_rate(retrieve_borrowal_money_initial_timestamp(account_number1));
 
             SELECT borrowed_amount INTO borrowed_money FROM borrowal_record
             WHERE account_number = account_number1;
 
             SET borrowed_money = (borrowed_money_interest_rate * borrowed_money * time_elapsed) + borrowed_money;
 
-            UPDATE accounts 
+            UPDATE borrowal_record
             SET borrowed_amount = borrowed_money
             WHERE account_number = account_number1;
         END;
@@ -257,13 +257,13 @@ using namespace std;
 
         *************** ALL THE FUNCTIONS ***************
         ------- retrieve_borrowal_money_initial_timestamp (USED IN update_borrowed_money PROCEDURE)
-        CREATE FUNCTION retrieve_borrowal_monwy_initial_timestamp (acc_number INT) RETURNS TIMESTAMP 
+        CREATE FUNCTION retrieve_borrowal_money_initial_timestamp (account_number1 INT) RETURNS TIMESTAMP 
         READS SQL DATA
             BEGIN
                 DECLARE init_timestamp TIMESTAMP;
 
-                SELECT initial_timestamp INTO init_timestamp FROM borrowal_money
-                WHERE account_number = acc_number;
+                SELECT initial_timestamp INTO init_timestamp FROM borrowal_record
+                WHERE account_number = account_number1;
 
                 RETURN init_timestamp;
             END;
@@ -319,7 +319,6 @@ using namespace std;
 */
 
 // TODO LIST
-// Record Transaction for Borrowed Money
 // Finish the Bank Class which will be responsible to manage the created accounts
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
@@ -371,6 +370,17 @@ double check_balance(sql :: Connection *connection, const int account_number)
     return balance;
 }
 
+void call_insert_or_update_hashed_passeword(sql :: Connection *connection, const int account_number, const string hash_password)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);");
+    prep_statement->setInt(1, account_number);
+    prep_statement->setString(2, hash_password);
+
+    prep_statement->executeUpdate();
+
+    delete prep_statement;
+}
+
 class Transactions
 {
     public:
@@ -382,7 +392,25 @@ class Transactions
     static void transfer(sql :: Connection *connection, const double amount_to_send, const int account_number1, const int account_number2);
 
     static void transactions_history(sql :: Connection *connection, const int account_number); 
+
+    static void log_transactions (sql :: Connection *connection, const int account_number, string details, double amount);
+
+    static void log_borrowal(sql :: Connection *connection, const int account_number, const double amount_to_borrow, const double borrowal_interest_rate);
 };
+
+void Transactions :: log_transactions (sql :: Connection *connection, const int account_number, string details, double amount)
+{
+    string table_name = "NO";
+    table_name.append(to_string(account_number));
+
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
+    prep_statement->setString(1, details);
+    prep_statement->setDouble(2, amount);
+
+    prep_statement->executeUpdate();
+    
+    delete prep_statement;
+}
 
 void Transactions :: deposit (sql :: Connection *connection, const double amount_to_deposit, const int account_number)
 {
@@ -392,18 +420,11 @@ void Transactions :: deposit (sql :: Connection *connection, const double amount
 
     prep_statement->executeQuery();
 
+    delete prep_statement;
+
     cout << "You have deposit " << amount_to_deposit << " dollars and your new Balance is: " << check_balance(connection, account_number) << endl;
 
-    string table_name = "NO";
-    table_name.append(to_string(account_number));
-
-    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setString(1, "New deposit of ");
-    prep_statement->setDouble(2, amount_to_deposit);
-
-    prep_statement->executeUpdate();
-    
-    delete prep_statement;
+    Transactions :: log_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);  
 }
 
 void Transactions :: withdrawal(sql :: Connection *connection, const double amount_to_withdraw, const int account_number)
@@ -414,18 +435,11 @@ void Transactions :: withdrawal(sql :: Connection *connection, const double amou
 
     prep_statement->executeQuery();
 
+    delete prep_statement;
+
     cout << "You have withdrawn " << amount_to_withdraw << " dollars and your new Balance is: " << check_balance(connection, account_number) << endl;
 
-    string table_name = "NO";
-    table_name.append(to_string(account_number));
-
-    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setString(1, "New Withdrawal of ");
-    prep_statement->setDouble(2, amount_to_withdraw);
-
-    prep_statement->executeUpdate();
-    
-    delete prep_statement;
+    Transactions :: log_transactions(connection, account_number, "New Money Withdrawn, Sum of ", amount_to_withdraw); 
 }
 
 void Transactions :: transfer(sql :: Connection *connection, const double amount_to_transfer,int account_number1, const int account_number2)
@@ -438,31 +452,17 @@ void Transactions :: transfer(sql :: Connection *connection, const double amount
 
     cout << "You have sent " << amount_to_transfer << " dollars to the account_number :" << account_number2 << " and Your new balance is: " << check_balance(connection, account_number1) << endl;
 
+    Transactions :: log_transactions(connection, account_number1, "New MOney Transfered, Sum of ", amount_to_transfer);
+
     prep_statement = connection->prepareStatement("UPDATE transactions SET receive = ? WHERE account_number = ?;");
     prep_statement->setDouble(1, amount_to_transfer);
     prep_statement->setInt(2, account_number2);
 
     prep_statement->executeUpdate();
 
-    string table_name1 = "NO";
-    table_name1.append(to_string(account_number1));
-
-    prep_statement = connection->prepareStatement("INSERT INTO "+table_name1+" VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setString(1, "New Transfer of ");
-    prep_statement->setDouble(2, amount_to_transfer);
-
-    prep_statement->executeUpdate();
-
-    string table_name2 = "NO";
-    table_name2.append(to_string(account_number2));
-
-    prep_statement = connection->prepareStatement("INSERT INTO "+table_name2+" VALUES ( CONCAT(?, ?), NOW() );");
-    prep_statement->setString(1, "New Receive of ");
-    prep_statement->setDouble(2, amount_to_transfer);
-
-    prep_statement->executeUpdate();
-
     delete prep_statement;
+
+    Transactions :: log_transactions(connection, account_number2, "New Money Received, Sum of ", amount_to_transfer);
 }
 
 void Transactions :: transactions_history(sql :: Connection *connection, const int account_number)
@@ -482,6 +482,18 @@ void Transactions :: transactions_history(sql :: Connection *connection, const i
    delete prep_statement;
    delete result;
 }
+
+void Transactions :: log_borrowal(sql :: Connection *connection, const int account_number, const double amount_to_borrow, const double borrowal_interest_rate)
+ {                                   
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
+    prep_statement->setInt(1, account_number);
+    prep_statement->setDouble(2, amount_to_borrow);
+    prep_statement->setDouble(3, borrowal_interest_rate);
+
+    prep_statement->executeUpdate();
+
+    delete prep_statement;
+ } 
 
 class Account
 {
@@ -527,17 +539,13 @@ void Account :: create_account(int account_number, const string national_ID, con
 
         prep_statement->executeUpdate();
 
-        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" (transaction_details) VALUES (?);");
+        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES (?, NOW() );");
         prep_statement->setString(1, "Account Created");
 
         prep_statement->executeUpdate();
     }
 
-    prep_statement = connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);");
-    prep_statement->setInt(1, account_number);
-    prep_statement->setString(2, hash_password);
-
-    prep_statement->executeUpdate();
+    call_insert_or_update_hashed_passeword(connection, account_number, hash_password);
 
     delete prep_statement;
     delete result;
@@ -563,7 +571,8 @@ void Account :: remove_accounts(sql :: Connection *connection, const int account
     string table_name = "NO";
     table_name.append(to_string(account_number));
 
-    prep_statement = connection->prepareStatement("DROP TABLE "+table_name+";");
+    prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES (?, NOW() );");
+    prep_statement->setString(1, "Account Deleted");
 
     prep_statement->executeUpdate();
 
@@ -576,11 +585,11 @@ class BANK : private Account, Transactions
 
     static string generate_random_salt(size_t len);
 
-    static string hashing_password(const string &password);
+    static string hashing_password(const string password);
 
-    static bool verifying_password(const string &password, const string &hashed_password);
+    static bool verifying_password(const string password, const string &hashed_password);
 
-    static string retrieve_hashed_password(int account_number, sql :: Connection *connection);
+    static string retrieve_hashed_password(sql :: Connection *connection, int account_number);
     
     static sql :: SQLString retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, const int account_number);
 
@@ -610,7 +619,7 @@ string BANK :: generate_random_salt(size_t len)
     return salt;
 }
 
-string BANK :: hashing_password(const string &password)
+string BANK :: hashing_password(const string password)
 {
     const size_t SALT_LENGTH = 32;
 
@@ -638,7 +647,24 @@ string BANK :: hashing_password(const string &password)
     return hashed_password;
 }
 
-bool BANK :: verifying_password(const string &password, const string &hashed_password)
+string BANK :: retrieve_hashed_password(sql :: Connection *connection, int account_number)
+{
+    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?");
+    prep_statement->setInt(1, account_number);
+
+    sql :: ResultSet *result = prep_statement->executeQuery();
+
+    string hashed_password;
+
+    if(result->next()) hashed_password = result->getString("hashed_password");
+
+    delete prep_statement;
+    delete result;
+
+    return hashed_password;
+}
+
+bool BANK :: verifying_password(const string password, const string &hashed_password)
 {
     const uint32_t t_cost = 2;
     const uint32_t m_cost = 32;
@@ -659,23 +685,6 @@ bool BANK :: verifying_password(const string &password, const string &hashed_pas
     }
 
     return !hashed_password.substr(SALT_LENGH, hash_length).compare(hash);
-}
-
-string BANK :: retrieve_hashed_password(int account_number, sql :: Connection *connection)
-{
-    sql :: PreparedStatement *prep_statement = connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?");
-    prep_statement->setInt(1, account_number);
-
-    sql :: ResultSet *result = prep_statement->executeQuery();
-
-    string hashed_password;
-
-    if(result->next()) hashed_password = result->getString("hashed_password");
-
-    delete prep_statement;
-    delete result;
-
-    return hashed_password;
 }
 
 sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, const int account_number)
@@ -766,7 +775,7 @@ bool BANK :: authentification_check(sql :: Connection *connection, const int acc
     if (national_ID1.compare(national_ID) && date_birth1.compare(date_birth)) return false;
 
     else return true;
-}
+}                                  
 
 int main(int argc, const char* argv[])
 {
@@ -960,7 +969,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
@@ -988,7 +997,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
@@ -1016,7 +1025,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
@@ -1059,7 +1068,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number1, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number1);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
@@ -1088,6 +1097,9 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 5: // Borrow Money
+                                cout << "You are not allowed to borrow Money if You currently owe the Bank any amount or You will be logged out of the System Completely. Please go to the Previous and Pay what you owe before asking for any New Borrowal" << endl;
+                                cout << endl;
+
                                 cout << "What is your Account Number: ";
                                 cin >> account_number;
                                 cout << endl;
@@ -1110,7 +1122,7 @@ int main(int argc, const char* argv[])
                                 cout << "What is your Password: ";
                                 cin >> password;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password))
                                 {
@@ -1118,48 +1130,28 @@ int main(int argc, const char* argv[])
                                     {
                                         borrowal_interest_rate = 0.001;
 
-                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
-                                        prep_statement->setInt(1, account_number);
-                                        prep_statement->setDouble(2, amount_to_borrow);
-                                        prep_statement->setDouble(3, borrowal_interest_rate);
-
-                                        prep_statement->executeUpdate();
+                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);");
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
 
-                                        string table_name = "NO";
-                                        table_name.append(to_string(account_number));
-
-                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-                                        prep_statement->setString(1, "New Money Borrowed, Sum of ");
-                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                     }
 
                                     else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
                                     {
                                         borrowal_interest_rate = 0.05;
 
-                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
-                                        prep_statement->setInt(1, account_number);
-                                        prep_statement->setDouble(2, amount_to_borrow);
-                                        prep_statement->setDouble(3, borrowal_interest_rate);
-
-                                        prep_statement->executeUpdate();
+                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);");
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
 
-                                        string table_name = "NO";
-                                        table_name.append(to_string(account_number));
-
-                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-                                        prep_statement->setString(1, "New Money Borrowed, Sum of ");
-                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                     }
                                     
 
@@ -1167,48 +1159,28 @@ int main(int argc, const char* argv[])
                                     {
                                         borrowal_interest_rate = 0.07;
 
-                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
-                                        prep_statement->setInt(1, account_number);
-                                        prep_statement->setDouble(2, amount_to_borrow);
-                                        prep_statement->setDouble(3, borrowal_interest_rate);
-
-                                        prep_statement->executeUpdate();
+                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);");
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
 
-                                        string table_name = "NO";
-                                        table_name.append(to_string(account_number));
-
-                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-                                        prep_statement->setString(1, "New Money Borrowed, Sum of ");
-                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                     }
 
                                     else 
                                     {
                                         borrowal_interest_rate = 0.1;
 
-                                        prep_statement = connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);");
-                                        prep_statement->setInt(1, account_number);
-                                        prep_statement->setDouble(2, amount_to_borrow);
-                                        prep_statement->setDouble(3, borrowal_interest_rate);
-
-                                        prep_statement->executeUpdate();
+                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                         prep_statement = connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);");
                                         prep_statement->setInt(1, account_number);
 
                                         prep_statement->executeUpdate();
 
-                                        string table_name = "NO";
-                                        table_name.append(to_string(account_number));
-
-                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-                                        prep_statement->setString(1, "New Money Borrowed, Sum of ");
-                                        prep_statement->setDouble(2, amount_to_borrow);
+                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                     }
                                 }
 
@@ -1221,8 +1193,9 @@ int main(int argc, const char* argv[])
 
                                 cout << "What is your Password: ";
                                 cin >> password;
+                                cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password))
                                 {
@@ -1244,28 +1217,31 @@ int main(int argc, const char* argv[])
                                         cout << due_returned << endl;
                                     }
 
-                                    cout << "Please Enter the exact amount to be returned and not less";
-                                    cout << amount_to_return;
+                                    cout << "Please Enter the exact amount to be returned and not less" << endl;
+                                    cin >> amount_to_return;
                                     cout << endl;
 
-                                    do
+                                    while (due_returned != amount_to_return)
                                     {
                                         cout << "The amount You've entered is less than the due_amount so Please Enter the exact amount" << endl;
                                         cin >> amount_to_return;
                                         cout << endl;
-                                    } while (due_returned != amount_to_return);
+                                    }
+
+                                    cout << "Thanks, You have officially paid your debt and are now allowed to make another one" << endl;
+                                    cout << endl;
                                     
-                                    prep_statement = connection->prepareStatement("UPDATE borrowal_record SET paid = 1, paid_timestamp = CURRENT_TIMESTAMP WHERE account_number = ?;");
+                                    prep_statement = connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;");
                                     prep_statement->setInt(1, account_number);
 
                                     prep_statement->executeUpdate();
 
-                                    string table_name = "NO";
-                                        table_name.append(to_string(account_number));
+                                    prep_statement = connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;");
+                                    prep_statement->setInt(1, account_number);
 
-                                        prep_statement = connection->prepareStatement("INSERT INTO "+table_name+" VALUES ( CONCAT(?, ?), NOW() );");
-                                        prep_statement->setString(1, "New Money Returned, Sum of ");
-                                        prep_statement->setDouble(2, amount_to_borrow);
+                                    prep_statement->executeUpdate();
+
+                                    Transactions :: log_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
                                 }
 
                             break;
@@ -1343,7 +1319,7 @@ int main(int argc, const char* argv[])
                                                         cin >> password;
                                                         cout << endl;
 
-                                                        hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                                        hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                                         if (BANK :: verifying_password(password, hash_password))
                                                         {
@@ -1373,7 +1349,7 @@ int main(int argc, const char* argv[])
                                                         cin >> password;
                                                         cout << endl;
 
-                                                        hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                                        hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                                         if (BANK :: verifying_password(password, hash_password))
                                                         {
@@ -1402,7 +1378,7 @@ int main(int argc, const char* argv[])
                                                         cin >> password;
                                                         cout << endl;
 
-                                                        hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                                        hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                                         if (BANK :: verifying_password(password, hash_password))
                                                         {
@@ -1432,7 +1408,7 @@ int main(int argc, const char* argv[])
                                                         cin >> password;
                                                         cout << endl;
 
-                                                        hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                                        hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                                         if (BANK :: verifying_password(password, hash_password))
                                                         {
@@ -1467,7 +1443,7 @@ int main(int argc, const char* argv[])
                                             cin >> password;
                                             cout << endl;
 
-                                            hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                            hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                             if (BANK :: verifying_password(password, hash_password))
                                             {
@@ -1485,11 +1461,7 @@ int main(int argc, const char* argv[])
 
                                                 new_hash_password = BANK :: hashing_password(new_password);
 
-                                                prep_statement = connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);");
-                                                prep_statement->setInt(1, account_number);
-                                                prep_statement->setString(2, new_hash_password);
-
-                                                prep_statement->executeUpdate();
+                                                call_insert_or_update_hashed_passeword(connection, account_number, new_hash_password);
 
                                                 password.clear();
                                                 new_password.clear();
@@ -1531,11 +1503,7 @@ int main(int argc, const char* argv[])
 
                                                 new_hash_password = BANK :: hashing_password(new_password);
 
-                                                prep_statement = connection->prepareStatement("CALL insert_or_update_hashed_password(?, ?);");
-                                                prep_statement->setInt(1, account_number);
-                                                prep_statement->setString(2, new_hash_password);
-
-                                                prep_statement->executeUpdate();
+                                                call_insert_or_update_hashed_passeword(connection, account_number, new_hash_password);
 
                                                 new_password.clear();
                                             }
@@ -1559,7 +1527,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
@@ -1580,7 +1548,7 @@ int main(int argc, const char* argv[])
                                 cin >> password;
                                 cout << endl;
 
-                                hash_password = BANK :: retrieve_hashed_password(account_number, connection);
+                                hash_password = BANK :: retrieve_hashed_password(connection, account_number);
 
                                 if (BANK :: verifying_password(password, hash_password)) 
                                 {
