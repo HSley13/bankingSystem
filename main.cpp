@@ -324,7 +324,6 @@ using namespace std;
 // Review the code and make it the simplest way it can be
 // Create the GUI for a more user friendly
 
-
 class connection_details 
 {
     public:
@@ -332,15 +331,15 @@ class connection_details
     string server, user, password, database;
 };
 
-unique_ptr <sql :: Connection> connection_setup(connection_details *ID) 
+sql :: Connection *connection_setup(connection_details *ID) 
 {
     try 
     {
         sql :: mysql :: MySQL_Driver *driver;
-        std :: unique_ptr <sql :: Connection> connection;
+        sql :: Connection *connection;
 
         driver = sql :: mysql :: get_driver_instance();
-        connection = unique_ptr <sql :: Connection> (driver->connect(ID->server, ID->user, ID->password));
+        connection = driver->connect(ID->server, ID->user, ID->password);
 
         connection->setSchema("bankingSystemDatabase");
 
@@ -353,7 +352,7 @@ unique_ptr <sql :: Connection> connection_setup(connection_details *ID)
     }
 }
 
-double check_balance(sql :: Connection *connection, const int account_number) 
+double check_balance(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -380,7 +379,7 @@ double check_balance(sql :: Connection *connection, const int account_number)
     } 
 }
 
-void call_insert_or_update_hashed_password(sql :: Connection *connection, const int account_number, const std::string hash_password) 
+void call_insert_or_update_hashed_password(sql :: Connection *connection, int account_number, const std::string hash_password) 
 {
     try
     {
@@ -404,20 +403,20 @@ class Transactions
 {
     public :
 
-    static void deposit(sql :: Connection *connection, const double amount_to_deposit, const int account_number);
+    static void deposit(sql :: Connection *connection, const double amount_to_deposit, int account_number);
 
-    static void withdrawal(sql :: Connection *connection, const double sum_to_withdraw, const int account_number);
+    static void withdrawal(sql :: Connection *connection, const double sum_to_withdraw, int account_number);
 
-    static void transfer(sql :: Connection *connection, const double amount_to_send, const int account_number1, const int account_number2);
+    static void transfer(sql :: Connection *connection, const double amount_to_send, int account_number1, int account_number2);
 
-    static void transactions_history(sql :: Connection *connection, const int account_number);
+    static void transactions_history(sql :: Connection *connection, int account_number);
 
-    static void log_transactions(sql :: Connection *connection, const int account_number, string details, double amount);
+    static void log_transactions(sql :: Connection *connection, int account_number, string details, double amount);
 
-    static void log_borrowal(sql :: Connection *connection, const int account_number, const double amount_to_borrow, const double borrowal_interest_rate);
+    static void log_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate);
 };
 
-void Transactions :: log_transactions(sql :: Connection *connection, const int account_number, string details, double amount) 
+void Transactions :: log_transactions(sql :: Connection *connection, int account_number, string details, double amount) 
 {
     string table_name = "NO";
     table_name.append(to_string(account_number));
@@ -429,7 +428,7 @@ void Transactions :: log_transactions(sql :: Connection *connection, const int a
     prep_statement->executeUpdate();
 }
 
-void Transactions :: deposit(sql :: Connection *connection, const double amount_to_deposit, const int account_number) 
+void Transactions :: deposit(sql :: Connection *connection, const double amount_to_deposit, int account_number) 
 {
     try
     {
@@ -453,7 +452,7 @@ void Transactions :: deposit(sql :: Connection *connection, const double amount_
     }   
 }
 
-void Transactions :: withdrawal(sql :: Connection *connection, const double amount_to_withdraw, const int account_number) 
+void Transactions :: withdrawal(sql :: Connection *connection, const double amount_to_withdraw, int account_number) 
 {
     try
     {
@@ -477,7 +476,7 @@ void Transactions :: withdrawal(sql :: Connection *connection, const double amou
     }  
 }
 
-void Transactions :: transfer(sql :: Connection *connection, const double amount_to_transfer, const int account_number1, const int account_number2) 
+void Transactions :: transfer(sql :: Connection *connection, const double amount_to_transfer, int account_number1, int account_number2) 
 {
     try 
     {
@@ -507,7 +506,7 @@ void Transactions :: transfer(sql :: Connection *connection, const double amount
     }  
 }
 
-void Transactions :: transactions_history(sql :: Connection *connection, const int account_number) 
+void Transactions :: transactions_history(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -530,7 +529,7 @@ void Transactions :: transactions_history(sql :: Connection *connection, const i
     }   
 }
 
-void Transactions :: log_borrowal(sql :: Connection *connection, const int account_number, const double amount_to_borrow, const double borrowal_interest_rate) 
+void Transactions :: log_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate) 
 {
     try
     {
@@ -555,12 +554,12 @@ class Account
 {
     public :
 
-    static void create_account(sql :: Connection *connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password);
+    static void create_account(sql :: Connection *connection, int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, const double balance, const double interest_rate, string password, string hash_password);
 
-    static void remove_accounts(sql :: Connection *connection, const int account_number);
+    static void remove_accounts(sql :: Connection *connection, int account_number);
 };
 
-void Account::create_account(sql :: Connection *connection, int account_number, const string national_ID, const string first_name, const string last_name, const string date_birth, const int phone_number, const string email, const string address, const double balance, const double interest_rate, const string password, const string hash_password) 
+void Account::create_account(sql :: Connection *connection, int account_number, string national_ID, string first_name, string last_name, string date_birth, int phone_number, string email, string address, const double balance, const double interest_rate, string password, string hash_password) 
 {
     try
     {
@@ -613,7 +612,7 @@ void Account::create_account(sql :: Connection *connection, int account_number, 
     } 
 }
 
-void Account :: remove_accounts(sql :: Connection *connection, const int account_number) 
+void Account :: remove_accounts(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -652,30 +651,28 @@ class BANK : private Account, Transactions
 
     static string generate_random_salt(size_t len);
 
-    static string hashing_password(const string &password);
+    static string hashing_password(string &password);
 
-    static bool verifying_password(const string password, const string& hashed_password);
+    static bool verifying_password(string password, string& hashed_password);
 
     static string retrieve_hashed_password(sql :: Connection *connection, int account_number);
 
-    static sql::SQLString retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, const int account_number);
+    static sql::SQLString retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, int account_number);
 
     static int calculate_interest_rate_time_elapsed(sql :: Connection *connection, const sql::SQLString initial_timestamp);
 
-    static void apply_interest_rate_to_balance(sql :: Connection *connection, const int account_number);
+    static void apply_interest_rate_to_balance(sql :: Connection *connection, int account_number);
 
-    static bool authentification_check(sql :: Connection *connection, const int account_number, const string national_ID, const string date_birth);
+    static bool authentification_check(sql :: Connection *connection, int account_number, string national_ID, string date_birth);
 
-    static void password_message();
-
-    static void authentification_message(sql :: Connection *connection, int account_number, string hash_password);
+    static void authentification_message(sql :: Connection *connection, int &account_number, string &hash_password);
 };
 
 string BANK :: generate_random_salt(size_t len) 
 {
     try
     {
-        const string valid_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        string valid_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         random_device rd;
         mt19937 generator(rd());
@@ -694,7 +691,7 @@ string BANK :: generate_random_salt(size_t len)
     }
 }
 
-string BANK :: hashing_password(const string &password) 
+string BANK :: hashing_password(string &password) 
 {
     try
     {
@@ -756,7 +753,7 @@ string BANK :: retrieve_hashed_password(sql :: Connection *connection, int accou
     }
 }
 
-bool BANK :: verifying_password(const string password, const string &hashed_password) 
+bool BANK :: verifying_password(string password, string &hashed_password) 
 {
     try
     {
@@ -787,7 +784,7 @@ bool BANK :: verifying_password(const string password, const string &hashed_pass
     }
 }
 
-sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, const int account_number) 
+sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -848,7 +845,7 @@ int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, 
     }
 }
 
-void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, const int account_number) 
+void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -898,7 +895,7 @@ void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, const
     }
 }
 
-bool BANK :: authentification_check(sql :: Connection *connection, const int account_number, const string national_ID, const string date_birth) 
+bool BANK :: authentification_check(sql :: Connection *connection, int account_number, string national_ID, string date_birth) 
 {
     try
     {
@@ -931,14 +928,7 @@ bool BANK :: authentification_check(sql :: Connection *connection, const int acc
     }
 }
 
-void BANK :: password_message()
-{
-    cout << "What is your Password: " << endl;
-
-    cout << "You have 3 Chances" << endl;
-}
-
-void BANK :: authentification_message(sql :: Connection *connection, int account_number, string hash_password)
+void BANK :: authentification_message(sql :: Connection *connection, int &account_number, string &hash_password)
 {
     cout << "What is your Account Number: ";
     cin >> account_number;
@@ -966,7 +956,7 @@ int main(int argc, const char* argv[])
         ID.user = "root";
         ID.password = (argc >= 2) ? argv[1] : "";  
 
-        unique_ptr <sql :: Connection> connection = connection_setup(&ID);
+        sql :: Connection *connection = connection_setup(&ID);
         if (!connection) 
         {
             cerr << "Failed to establish the Database connection." << endl;
@@ -1089,7 +1079,7 @@ int main(int argc, const char* argv[])
 
                     hash_password = BANK :: hashing_password(password);
 
-                    Account :: create_account(connection.get(), account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
+                    Account :: create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
 
                     password.clear();
                     password_confirmation.clear();
@@ -1140,7 +1130,7 @@ int main(int argc, const char* argv[])
                         switch(options2)
                         {
                             case 1: // Balance Check
-                                BANK :: authentification_message(connection.get(), account_number, hash_password);
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1149,9 +1139,9 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password))
                                     {
-                                        BANK :: apply_interest_rate_to_balance(connection.get(), account_number);
+                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
 
-                                        cout << "Your Current Balance is: " << check_balance(connection.get(), account_number) << endl;
+                                        cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
 
                                         password.clear();
 
@@ -1168,17 +1158,11 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 2: // Deposit
-                                cout << "What is your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
                                 cout << "What is the Amount you would like to Deposit: ";
                                 cin >> amount_to_deposit;
                                 cout << endl;
 
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1187,9 +1171,9 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password)) 
                                     {
-                                        BANK :: apply_interest_rate_to_balance(connection.get(), account_number);
+                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
 
-                                        Transactions :: deposit(connection.get(), amount_to_deposit, account_number);
+                                        Transactions :: deposit(connection, amount_to_deposit, account_number);
 
                                         password.clear();
 
@@ -1206,17 +1190,11 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 3: // Withdraw
-                                cout << "What is your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
                                 cout << "What is the Amount you would like to Withdraw: ";
                                 cin >> amount_to_withdraw;
                                 cout << endl;
 
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1225,9 +1203,9 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password)) 
                                     {
-                                        BANK :: apply_interest_rate_to_balance(connection.get(), account_number);
+                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
 
-                                        balance = check_balance(connection.get(), account_number);
+                                        balance = check_balance(connection, account_number);
 
                                         while (amount_to_withdraw > balance) 
                                         {
@@ -1238,7 +1216,7 @@ int main(int argc, const char* argv[])
                                             cout << endl;
                                         }
 
-                                        Transactions :: withdrawal(connection.get(), amount_to_withdraw, account_number);
+                                        Transactions :: withdrawal(connection, amount_to_withdraw, account_number);
 
                                         password.clear();
 
@@ -1255,21 +1233,15 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 4: // Transfer
-                                cout << "What is your Account Number: ";
-                                cin >> account_number1;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number1);
-
                                 cout << "What is the Amount you would like to Transfer: ";
-                                cin >> amount_to_deposit;
+                                cin >> amount_to_transfer;
                                 cout << endl;
 
                                 cout << "What is the Account Number to receive the Money: ";
                                 cin >> account_number2;
                                 cout << endl;
 
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number1, hash_password);
 
                                 do
                                 {
@@ -1278,9 +1250,9 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password)) 
                                     {
-                                        BANK :: apply_interest_rate_to_balance(connection.get(), account_number1);
+                                        BANK :: apply_interest_rate_to_balance(connection, account_number1);
 
-                                        balance = check_balance(connection.get(), account_number1);
+                                        balance = check_balance(connection, account_number1);
 
                                         while (amount_to_transfer > balance) 
                                         {
@@ -1291,9 +1263,9 @@ int main(int argc, const char* argv[])
                                             cout << endl;
                                         }
 
-                                        BANK :: apply_interest_rate_to_balance(connection.get(), account_number2);
+                                        BANK :: apply_interest_rate_to_balance(connection, account_number2);
 
-                                        Transactions :: transfer(connection.get(), amount_to_deposit, account_number1, account_number2);    
+                                        Transactions :: transfer(connection, amount_to_transfer, account_number1, account_number2);    
 
                                         password.clear();   
 
@@ -1313,12 +1285,6 @@ int main(int argc, const char* argv[])
                                 cout << "You are not allowed to borrow Money if You currently owe the Bank any amount or You will be logged out of the System Completely. Please go to the Previous and Pay what you owe before asking for any New Borrowal" << endl;
                                 cout << endl;
 
-                                cout << "What is your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
                                 cout << "What is the amount you would like to Borrow: " << endl;
                                 cout << "Interest Rate Scale on Borrowed Amount " << endl;
                                 cout << endl;
@@ -1334,7 +1300,7 @@ int main(int argc, const char* argv[])
                                 cin >> amount_to_borrow;
                                 cout << endl;
 
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1347,56 +1313,56 @@ int main(int argc, const char* argv[])
                                         {
                                             borrowal_interest_rate = 0.001;
 
-                                            Transactions :: log_borrowal(connection.get(), account_number, amount_to_borrow, borrowal_interest_rate);
+                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                             unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);"));
                                             prep_statement->setInt(1, account_number);
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions :: log_transactions(connection.get(), account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                         }
 
                                         else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
                                         {
                                             borrowal_interest_rate = 0.05;
 
-                                            Transactions :: log_borrowal(connection.get(), account_number, amount_to_borrow, borrowal_interest_rate);
+                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                             unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);"));
                                             prep_statement->setInt(1, account_number);
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions :: log_transactions(connection.get(), account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                         }
 
                                         else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
                                         {
                                             borrowal_interest_rate = 0.07;
 
-                                            Transactions :: log_borrowal(connection.get(), account_number, amount_to_borrow, borrowal_interest_rate);
+                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                             unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);"));
                                             prep_statement->setInt(1, account_number);
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions :: log_transactions(connection.get(), account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                         }
 
                                         else 
                                         {
                                             borrowal_interest_rate = 0.1;
 
-                                            Transactions :: log_borrowal(connection.get(), account_number, amount_to_borrow, borrowal_interest_rate);
+                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                             unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
                                             prep_statement->setInt(1, account_number);
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions :: log_transactions(connection.get(), account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                         }
 
                                         break;
@@ -1412,13 +1378,7 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 6: // Return Borrowed Money
-                                cout << "What is your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1469,7 +1429,7 @@ int main(int argc, const char* argv[])
 
                                         prep_statement_delete_event->executeUpdate();
 
-                                        Transactions :: log_transactions(connection.get(), account_number, "New Money Returned, Sum of ", amount_to_return);
+                                        Transactions :: log_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
 
                                         break;
                                     }
@@ -1548,13 +1508,7 @@ int main(int argc, const char* argv[])
                                                 switch(options4)
                                                 {
                                                     case 1: // Edit Name
-                                                        cout << "Enter Your Account Number: ";
-                                                        cin >> account_number;
-                                                        cout << endl;
-
-                                                        hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                                        BANK :: password_message();
+                                                        BANK :: authentification_message(connection, account_number, hash_password);
 
                                                         do
                                                         {
@@ -1588,13 +1542,7 @@ int main(int argc, const char* argv[])
                                                     break;
 
                                                     case 2: // Edit Email
-                                                        cout << "Enter Your Account Number: ";
-                                                        cin >> account_number;
-                                                        cout << endl;
-
-                                                        hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                                        BANK :: password_message();
+                                                        BANK :: authentification_message(connection, account_number, hash_password);
 
                                                         do
                                                         {
@@ -1627,13 +1575,7 @@ int main(int argc, const char* argv[])
                                                     break;
 
                                                     case 3: // Edit address
-                                                        cout << "Enter Your Account Number: ";
-                                                        cin >> account_number;
-                                                        cout << endl;
-
-                                                        hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                                        BANK :: password_message();
+                                                        BANK :: authentification_message(connection, account_number, hash_password);
 
                                                         do
                                                         {
@@ -1667,13 +1609,7 @@ int main(int argc, const char* argv[])
                                                     break;
 
                                                     case 4: // Edit Phone Number
-                                                        cout << "Enter Your Account Number: ";
-                                                        cin >> account_number;
-                                                        cout << endl;
-
-                                                        hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                                        BANK :: password_message();
+                                                        BANK :: authentification_message(connection, account_number, hash_password);
 
                                                         do
                                                         {
@@ -1712,13 +1648,7 @@ int main(int argc, const char* argv[])
                                         break;
 
                                         case 2: // Change Password
-                                            cout << "Enter Your Account Number: ";
-                                            cin >> account_number;
-                                            cout << endl;
-
-                                            hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                            BANK :: password_message();
+                                            BANK :: authentification_message(connection, account_number, hash_password);
 
                                             do
                                             {
@@ -1741,7 +1671,7 @@ int main(int argc, const char* argv[])
 
                                                     new_hash_password = BANK :: hashing_password(new_password);
 
-                                                    call_insert_or_update_hashed_password(connection.get(), account_number, new_hash_password);
+                                                    call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
                                                     password.clear();
                                                     new_password.clear();
@@ -1774,7 +1704,7 @@ int main(int argc, const char* argv[])
                                             cin >> date_birth;
                                             cout << endl;
 
-                                            if (BANK :: authentification_check (connection.get(), account_number, national_ID, date_birth))
+                                            if (BANK :: authentification_check (connection, account_number, national_ID, date_birth))
                                             {
                                                 cout << "What is the New Password: ";
                                                 cin >> new_password;
@@ -1790,7 +1720,7 @@ int main(int argc, const char* argv[])
 
                                                 new_hash_password = BANK :: hashing_password(new_password);
 
-                                                call_insert_or_update_hashed_password(connection.get(), account_number, new_hash_password);
+                                                call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
                                                 new_password.clear();
                                             }
@@ -1805,13 +1735,7 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 8: // Transaction History
-                                cout << "Enter Your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);
 
                                 do
                                 {
@@ -1820,7 +1744,7 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password)) 
                                     {
-                                        Transactions :: transactions_history(connection.get(), account_number);
+                                        Transactions :: transactions_history(connection, account_number);
                                         password.clear();
 
                                         break;
@@ -1836,13 +1760,7 @@ int main(int argc, const char* argv[])
                             break;
 
                             case 9: // Delete an Account
-                                cout << "Enter Your Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
-
-                                hash_password = BANK :: retrieve_hashed_password(connection.get(), account_number);
-
-                                BANK :: password_message();
+                                BANK :: authentification_message(connection, account_number, hash_password);;
 
                                 do
                                 {
@@ -1851,7 +1769,7 @@ int main(int argc, const char* argv[])
 
                                     if (BANK :: verifying_password(password, hash_password)) 
                                     {
-                                        Account :: remove_accounts(connection.get(), account_number);
+                                        Account :: remove_accounts(connection, account_number);
 
                                         password.clear();
 
@@ -1975,6 +1893,9 @@ int main(int argc, const char* argv[])
             }
             
         }while (options != 0);
+
+        connection->close();
+        delete connection;
     }
     catch (sql :: SQLException *e)
     {
