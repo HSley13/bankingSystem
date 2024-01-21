@@ -21,8 +21,8 @@ using namespace std;
         ----- Change the Include Directories Path to find all the preinstalled libraries required to run this project on your PC
         ----- When Running Your Program, Pass your Database's Password as the Second Argument
         ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account 
-        -----
-        -----
+        ----- The Administrator's Account_number should be one that none of the Clients can never have like 0000 or 1111 or 1010 etc;
+        ----- 
 
         *************** ALL THE TABLES *************** 
         ------- accounts
@@ -319,9 +319,12 @@ using namespace std;
 
 // TODO LIST
 // Finish the Bank Class which will be responsible to manage the created accounts
+// Divide the Creatd Accounts into 2 categories. Admin(has access to everything, delete all accounts, view all transactions, etc) and Clients(is only allowed to create its own account and remove it, perform transactions)
+// A password will be asked to check if you are an admin or not. if You are, then you will have access to the prepared statements to view, delete, update, modify all accounts ..
+// ... Both genral and specified querries according to one's account_number
+// Admin should be able to search clients by name too 
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
-// Review the code and make it the simplest way it can be
 // Create the GUI for a more user friendly
 
 class connection_details 
@@ -347,7 +350,7 @@ sql :: Connection *connection_setup(connection_details *ID)
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
         return NULL;
     }
 }
@@ -356,7 +359,7 @@ double check_balance(sql :: Connection *connection, int account_number)
 {
     try
     {
-        double balance = 0.0;
+        double balance;
 
         unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
@@ -369,17 +372,17 @@ double check_balance(sql :: Connection *connection, int account_number)
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
         return 0.0;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return 0.0;
     } 
 }
 
-void call_insert_or_update_hashed_password(sql :: Connection *connection, int account_number, const std::string hash_password) 
+void call_insert_or_update_hashed_password(sql :: Connection *connection, int account_number, const string hash_password) 
 {
     try
     {
@@ -391,11 +394,11 @@ void call_insert_or_update_hashed_password(sql :: Connection *connection, int ac
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     } 
 }
 
@@ -439,16 +442,17 @@ void Transactions :: deposit(sql :: Connection *connection, const double amount_
         prep_statement->executeUpdate();
 
         cout << "You have deposited " << amount_to_deposit << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << endl;
 
         log_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }   
 }
 
@@ -463,16 +467,17 @@ void Transactions :: withdrawal(sql :: Connection *connection, const double amou
         prep_statement->executeUpdate();
 
         cout << "You have withdrawn " << amount_to_withdraw << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << endl;
 
         log_transactions(connection, account_number, "New Money Withdrawn, Sum of ", amount_to_withdraw);
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }  
 }
 
@@ -498,11 +503,11 @@ void Transactions :: transfer(sql :: Connection *connection, const double amount
     } 
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }  
 }
 
@@ -521,11 +526,11 @@ void Transactions :: transactions_history(sql :: Connection *connection, int acc
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }   
 }
 
@@ -542,11 +547,11 @@ void Transactions :: log_borrowal(sql :: Connection *connection, int account_num
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     } 
 }
 
@@ -604,12 +609,12 @@ void Account::create_account(sql :: Connection *connection, int account_number, 
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
-    } 
+        cerr << e.what() << endl;
+    }
 }
 
 void Account :: remove_accounts(sql :: Connection *connection, int account_number) 
@@ -637,11 +642,11 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }
 }
 
@@ -684,9 +689,9 @@ string BANK :: generate_random_salt(size_t len)
 
         return salt;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return "";
     }
 }
@@ -719,9 +724,9 @@ string BANK :: hashing_password(string &password)
 
         return hashed_password;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return "";
     } 
 }
@@ -735,7 +740,7 @@ string BANK :: retrieve_hashed_password(sql :: Connection *connection, int accou
 
         unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
 
-        std::string hashed_password;
+        string hashed_password;
 
         if (result->next()) hashed_password = result->getString("hashed_password");
 
@@ -743,12 +748,12 @@ string BANK :: retrieve_hashed_password(sql :: Connection *connection, int accou
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
         return "";
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return "";
     }
 }
@@ -777,9 +782,9 @@ bool BANK :: verifying_password(string password, string &hashed_password)
 
         return !hashed_password.substr(SALT_LENGTH, hash_length).compare(hash);
     }
-    catch(const std::exception& e)
+    catch(const exception& e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return false;
     }
 }
@@ -801,12 +806,12 @@ sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connect
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
         return "";
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return "";
     }
 }
@@ -835,12 +840,12 @@ int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, 
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl; 
         return 1;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return 1;
     }
 }
@@ -887,11 +892,11 @@ void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, int a
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
     }
 }
 
@@ -918,12 +923,12 @@ bool BANK :: authentification_check(sql :: Connection *connection, int account_n
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << " Code causing Error: " << e.getErrorCode() << endl;
+        cerr << "Connection Error: " << e.what() << endl;
         return false;
     }
-    catch(const std::exception &e)
+    catch(const exception &e)
     {
-        std::cerr << e.what() << endl;
+        cerr << e.what() << endl;
         return false;
     }
 }
@@ -963,21 +968,19 @@ int main(int argc, const char* argv[])
             return 1;
         }
 
-        int options, options2, options3, options4;
+        int adm_options, options, options1, options2, options3, options4;
     
         string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password;
 
-        int phone_number, new_phone_number, account_number, account_number1, account_number2;
+        int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate, amount_to_borrow, amount_to_return, borrowal_interest_rate;
 
         stack <int> main_menu;
 
         stack <int> sub_menu;
-
-        int k = 3;
-
-        do 
+    
+        do
         {
             cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << endl;
 
@@ -988,666 +991,288 @@ int main(int argc, const char* argv[])
             cout << "                                                 *********** Among the List below, choose what best suits You **********"                                                     << endl;
             cout << endl;
 
-            cout << "1. You are New to our Bank and Would like to Create an Account" << endl;
 
-            cout << "2. You already possess an Account and would like to process some inquiries relative to it" << endl;
+            cout << "1. Administrator" << endl;
 
-            cout << "3. Information on our Bank" << endl;
+            cout << "2. Rregular Client" << endl;
 
-            cout << "0. Quit" << endl;
+            cout << "0. QUIT" << endl;
 
             cout << endl;
 
             cin >> options;
+            cout << endl;
 
-            if (options != 0) main_menu.push(options);
+            if (options) main_menu.push(options);
 
-            switch(options)
+            switch (options)
             {
-                case 1: // Create the Account and the table History along the way
-
-                    cout << "Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information: " << endl;
-                    cout << endl;
-
-                    cout << "National ID with at least a letter within it: ";
-                    cin >> national_ID;
-                    cout << endl;
-
-                    cout << "First Name: ";
-                    cin >> first_name;
-                    cout << endl;
-
-                    cout << "Last Name: ";
-                    cin >> last_name;
-                    cout << endl;
-
-                    cout << "Date of Birth ( 2024-01-31 ) : ";
-                    cin >> date_birth;
-                    cout << endl;
-
-                    cout << "Phone Number: ";
-                    cin >> phone_number;
-                    cout << endl;
-
-                    cout << "Email: ";
-                    cin >> email;
-                    cout << endl;
-
-                    cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ) : ";
-                    cin >> address;
-                    cout << endl;
+                case 1: // Administrator
+                    BANK :: authentification_message(connection, account_number, hash_password);
 
                     do
                     {
-                        cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
+                        cin >> password;
                         cout << endl;
 
-                        cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
-                        cout << endl;
+                        if (BANK :: verifying_password(password, hash_password))
+                        {
+                            do
+                            {
+                                cout << "1. View The accounts Table" << endl;
 
-                        cout << "1. Balance = 100 ---> Interest Rate = 0" << endl;
+                                cout << "2. Select A Specific Account according to the account_number" << endl;
 
-                        cout << "2. 500 > Balance > 100 ---> Interest Rate = 2%" << endl;
+                                cout << "3. View the borrowal_record Table " << endl;
 
-                        cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 5%" << endl;
+                                cout << "4. Select A Specific borrowed_record according to the account_number" << endl;
 
-                        cout << "4. Balance > 1000 ---> Interest Rate = 7%" << endl;
+                                cout << "5. View all Transactions History for a an account_number" << endl;
 
-                        cin >> balance;
+                                cout << "6. View the event_shedule Table" << endl;
 
-                    } while (balance < 100);
+                                cout << "7. Select A Specific event_schedule according to the account_number" << endl;
 
-                    if (balance == 100) interest_rate = 0;
+                                cout << "0. Back to the Previous Menu" << endl;
 
-                    else if (balance > 100 && balance < 500) interest_rate = 0.02;
+                                cout << endl;
 
-                    else if (balance < 1000 && balance >= 500) interest_rate = 0.05;
+                                cin >> adm_options;
+                                cout << endl;
 
-                    else interest_rate = 0.07;
+                                if (adm_options) sub_menu.push(adm_options);
 
-                    cout << "Password: ";
-                    cin >> password;
-                    cout << endl;
+                                if(!adm_options && sub_menu.empty())
+                                {
+                                    adm_options = sub_menu.top();
+                                    sub_menu.pop();
 
-                    do
-                    {
-                        cout << "Passord Confirmation: ";
-                        cin >> password_confirmation;
-                        cout << endl;
+                                    break;
+                                }
 
-                    }while (password.compare(password_confirmation));
+                                switch (adm_options)
+                                {
+                                    case 1: // View accounts Table
 
-                    hash_password = BANK :: hashing_password(password);
+                                    break;
 
-                    Account :: create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
+                                    case 2: // View Specific account
 
-                    password.clear();
-                    password_confirmation.clear();
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                    case 3: // View borrowal_record Table
+
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                    case 4: // View Specific borrowal_record
+
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                    case 5: // View All Transactions History per Account
+
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                    case 6: // View event_schecule Table
+
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                    case 7: // View Specific event_schedule
+
+                                        // on hold
+                                        // on hold
+                                        // on hold
+
+                                    break;
+
+                                }
+
+                            } while (adm_options);
+  
+                            break;
+                        }
+
+                        cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                        k--;
+
+                    } while (k);
+                    
+                    k = 3;
 
                 break;
 
-                case 2: // Perform Inquiry Relative to an Existing Account 
-                    do
+                case 2: // Regular client
+                    do 
                     {
-                        cout << "Choose among the Options below, what best suits You" << endl;
-                        cout << endl;
+                        cout << "1. New to our Bank and Would like to Create an Account" << endl;
 
-                        cout << "1. Check your Balance" << endl;
+                        cout << "2. Already possess an Account and would like to process some inquiries relative to it" << endl;
 
-                        cout << "2. Deposit" << endl;
-
-                        cout << "3. Money Withdrawal " << endl;
-
-                        cout << "4. Money Transfer" << endl;
-
-                        cout << "5. Borrow Money" << endl;
-
-                        cout << "6. Return Borrowed Money" << endl;
-
-                        cout << "7. Edit Account Information / Forget Password" << endl;
-
-                        cout << "8. Transaction History" << endl;
-
-                        cout << "9. Delete Account" << endl;
+                        cout << "3. Information on our Bank" << endl;
 
                         cout << "0. Back to the Previous Menu" << endl;
 
                         cout << endl;
 
-                        cin >> options2;
-                        cout << endl;
+                        cin >> options1;
 
-                        if (options2 != 0) main_menu.push(options2);
+                        if (options1) sub_menu.push(options1);
 
-                        if (options2 == 0 && !sub_menu.empty())
+                        if (!options1 && !sub_menu.empty())
                         {
-                            options2 = sub_menu.top();
+                            options1 = sub_menu.top();
                             sub_menu.pop();
 
                             break;
                         }
 
-                        switch(options2)
+                        switch(options1)
                         {
-                            case 1: // Balance Check
-                                BANK :: authentification_message(connection, account_number, hash_password);
+                            case 1: // Create the Account and the table History along the way
+
+                                cout << "Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information: " << endl;
+                                cout << endl;
+
+                                cout << "National ID with at least a letter within it: ";
+                                cin >> national_ID;
+                                cout << endl;
+
+                                cout << "First Name: ";
+                                cin >> first_name;
+                                cout << endl;
+
+                                cout << "Last Name: ";
+                                cin >> last_name;
+                                cout << endl;
+
+                                cout << "Date of Birth ( 2024-01-31 ) : ";
+                                cin >> date_birth;
+                                cout << endl;
+
+                                cout << "Phone Number: ";
+                                cin >> phone_number;
+                                cout << endl;
+
+                                cout << "Email: ";
+                                cin >> email;
+                                cout << endl;
+
+                                cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ) : ";
+                                cin >> address;
+                                cout << endl;
 
                                 do
                                 {
-                                    cin >> password;
+                                    cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
                                     cout << endl;
 
-                                    if (BANK :: verifying_password(password, hash_password))
-                                    {
-                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
+                                    cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
+                                    cout << endl;
 
-                                        cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
+                                    cout << "1. Balance = 100 ---> Interest Rate = 0" << endl;
 
-                                        password.clear();
+                                    cout << "2. 500 > Balance > 100 ---> Interest Rate = 2%" << endl;
 
-                                        break;
-                                    }
+                                    cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 5%" << endl;
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
+                                    cout << "4. Balance > 1000 ---> Interest Rate = 7%" << endl;
 
-                                } while (k);
+                                    cin >> balance;
 
-                                k = 3;
+                                }while (balance < 100);
+
+                                if (balance == 100) interest_rate = 0;
+
+                                else if (balance > 100 && balance < 500) interest_rate = 0.02;
+
+                                else if (balance < 1000 && balance >= 500) interest_rate = 0.05;
+
+                                else interest_rate = 0.07;
+
+                                cout << "Password: ";
+                                cin >> password;
+                                cout << endl;
+
+                                do
+                                {
+                                    cout << "Passord Confirmation: ";
+                                    cin >> password_confirmation;
+                                    cout << endl;
+
+                                }while (password.compare(password_confirmation));
+
+                                hash_password = BANK :: hashing_password(password);
+
+                                Account :: create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
+
+                                password.clear();
+                                password_confirmation.clear();
 
                             break;
 
-                            case 2: // Deposit
-                                cout << "What is the Amount you would like to Deposit: ";
-                                cin >> amount_to_deposit;
-                                cout << endl;
-
-                                BANK :: authentification_message(connection, account_number, hash_password);
-
+                            case 2: // Perform Inquiry Relative to an Existing Account 
                                 do
                                 {
-                                    cin >> password;
+                                    cout << "Choose among the Options below, what best suits You" << endl;
                                     cout << endl;
 
-                                    if (BANK :: verifying_password(password, hash_password)) 
-                                    {
-                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
+                                    cout << "1. Check your Balance" << endl;
 
-                                        Transactions :: deposit(connection, amount_to_deposit, account_number);
+                                    cout << "2. Deposit" << endl;
 
-                                        password.clear();
+                                    cout << "3. Money Withdrawal " << endl;
 
-                                        break;
-                                    }
+                                    cout << "4. Money Transfer" << endl;
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
+                                    cout << "5. Borrow Money" << endl;
 
-                                }while (k);
+                                    cout << "6. Return Borrowed Money" << endl;
 
-                                k = 3;
+                                    cout << "7. Edit Account Information / Forget Password" << endl;
 
-                            break;
+                                    cout << "8. Transaction History" << endl;
 
-                            case 3: // Withdraw
-                                cout << "What is the Amount you would like to Withdraw: ";
-                                cin >> amount_to_withdraw;
-                                cout << endl;
-
-                                BANK :: authentification_message(connection, account_number, hash_password);
-
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
-
-                                    if (BANK :: verifying_password(password, hash_password)) 
-                                    {
-                                        BANK :: apply_interest_rate_to_balance(connection, account_number);
-
-                                        balance = check_balance(connection, account_number);
-
-                                        while (amount_to_withdraw > balance) 
-                                        {
-                                            cout << "Your balance is: " << balance << " which is less than the amount you want Withdraw" << endl;
-
-                                            cout << "So Please enter a reasonnable amount: ";
-                                            cin >> amount_to_withdraw;
-                                            cout << endl;
-                                        }
-
-                                        Transactions :: withdrawal(connection, amount_to_withdraw, account_number);
-
-                                        password.clear();
-
-                                        break;
-                                    }
-                                    
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
-
-                                } while (k);
-                                
-                                k = 3;
-
-                            break;
-
-                            case 4: // Transfer
-                                cout << "What is the Amount you would like to Transfer: ";
-                                cin >> amount_to_transfer;
-                                cout << endl;
-
-                                cout << "What is the Account Number to receive the Money: ";
-                                cin >> account_number2;
-                                cout << endl;
-
-                                BANK :: authentification_message(connection, account_number1, hash_password);
-
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
-
-                                    if (BANK :: verifying_password(password, hash_password)) 
-                                    {
-                                        BANK :: apply_interest_rate_to_balance(connection, account_number1);
-
-                                        balance = check_balance(connection, account_number1);
-
-                                        while (amount_to_transfer > balance) 
-                                        {
-                                            cout << "Your balance is: " << balance << " which is less than the amount you want Transfer" << endl;
-
-                                            cout << "So Please enter a reasonnable amount: ";
-                                            cin >> amount_to_transfer;
-                                            cout << endl;
-                                        }
-
-                                        BANK :: apply_interest_rate_to_balance(connection, account_number2);
-
-                                        Transactions :: transfer(connection, amount_to_transfer, account_number1, account_number2);    
-
-                                        password.clear();   
-
-                                        break;                                                      
-                                    }
-
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
-
-                                } while (k);
-
-                                k = 3;
-
-                            break;
-
-                            case 5: // Borrow Money
-                                cout << "You are not allowed to borrow Money if You currently owe the Bank any amount or You will be logged out of the System Completely. Please go to the Previous and Pay what you owe before asking for any New Borrowal" << endl;
-                                cout << endl;
-
-                                cout << "What is the amount you would like to Borrow: " << endl;
-                                cout << "Interest Rate Scale on Borrowed Amount " << endl;
-                                cout << endl;
-
-                                cout << "1. Borrowed Amount = 100 ---> Interest Rate = 0.1%. PS: TO BE RETURN WITHIN 1 DAY OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "2. 500 > Borrowed Amount > 100 ---> Interest Rate = 5% PS: TO BE RETURN WITHIN 2 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "3. 1000 > Borrowed Amount >= 500 ---> Interest Rate = 7% PS: TO BE RETURN WITHIN 3 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cin >> amount_to_borrow;
-                                cout << endl;
-
-                                BANK :: authentification_message(connection, account_number, hash_password);
-
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
-
-                                    if (BANK :: verifying_password(password, hash_password))
-                                    {
-                                        if (amount_to_borrow == 100) 
-                                        {
-                                            borrowal_interest_rate = 0.001;
-
-                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
-                                        }
-
-                                        else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
-                                        {
-                                            borrowal_interest_rate = 0.05;
-
-                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
-                                        }
-
-                                        else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
-                                        {
-                                            borrowal_interest_rate = 0.07;
-
-                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
-                                        }
-
-                                        else 
-                                        {
-                                            borrowal_interest_rate = 0.1;
-
-                                            Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
-                                        }
-
-                                        break;
-                                    }
-
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
-
-                                } while (k);
-
-                                k = 3;
-
-                            break;
-
-                            case 6: // Return Borrowed Money
-                                BANK :: authentification_message(connection, account_number, hash_password);
-
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
-
-                                    if (BANK :: verifying_password(password, hash_password))
-                                    {
-                                        unique_ptr <sql :: PreparedStatement> prep_statement_call_update (connection->prepareStatement("CALL update_borrowed_money(?);"));
-                                        prep_statement_call_update->setInt(1, account_number);
-
-                                        prep_statement_call_update->executeUpdate();
-
-                                        cout << "The Amount that you have to return is: ";
-                                        unique_ptr <sql :: PreparedStatement> prep_statement_select_borrowal (connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
-                                        prep_statement_select_borrowal->setInt(1, account_number);
-
-                                        unique_ptr <sql :: ResultSet> result (prep_statement_select_borrowal->executeQuery());
-
-                                        double due_returned;
-                                        if (result->next())
-                                        {
-                                            due_returned = result->getDouble("borrowed_amount");
-                                            cout << due_returned << endl;
-                                        }
-
-                                        cout << "Please Enter the exact amount to be returned and not less" << endl;
-                                        cin >> amount_to_return;
-                                        cout << endl;
-
-                                        while (due_returned != amount_to_return)
-                                        {
-                                            cout << "The amount You've entered is less than the due_amount so Please Enter the exact amount" << endl;
-                                            cin >> amount_to_return;
-                                            cout << endl;
-                                        }
-
-                                        cout << "Thanks, You have officially paid your debt and are now allowed to make another one" << endl;
-                                        cout << endl;
-
-                                        unique_ptr <sql :: PreparedStatement> prep_statement_delete_borrowal (connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
-                                        prep_statement_delete_borrowal->setInt(1, account_number);
-
-                                        prep_statement_delete_borrowal->executeUpdate();
-
-                                        unique_ptr <sql :: PreparedStatement> prep_statement_delete_event (connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
-                                        prep_statement_delete_event->setInt(1, account_number);
-
-                                        prep_statement_delete_event->executeUpdate();
-
-                                        Transactions :: log_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
-
-                                        break;
-                                    }
-
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
-
-                                } while (k);
-
-                                k = 3;
-
-                            break;
-
-                            case 7: // Edit Account Information
-                                do
-                                {
-                                    cout << "Choose among the options below, what best suits your requirements" << endl;
-                                    cout << endl;
-
-                                    cout << "1. Edit Personal Information" << endl;
-
-                                    cout << "2. Change Password" << endl;
-
-                                    cout << "3. Forget Password" << endl;
+                                    cout << "9. Delete Account" << endl;
 
                                     cout << "0. Back to the Previous Menu" << endl;
 
                                     cout << endl;
 
-                                    cin >> options3;
+                                    cin >> options2;
                                     cout << endl;
 
-                                    if (options3 != 0) main_menu.push(options3);
+                                    if (options2) main_menu.push(options2);
 
-                                    if (options3 == 0 && !sub_menu.empty())
+                                    if (!options2 && !sub_menu.empty())
                                     {
-                                        options3 = sub_menu.top();
+                                        options2 = sub_menu.top();
                                         sub_menu.pop();
 
                                         break;
                                     }
 
-                                    switch(options3) 
+                                    switch(options2)
                                     {
-                                        case 1: // Edit personal Information
-                                            do
-                                            {
-                                                cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
-                                                cout << endl;
-
-                                                cout << "1. Edit Name" << endl;
-
-                                                cout << "2. Edit email" << endl;
-
-                                                cout << "3. Edit address" << endl;
-
-                                                cout << "4. Edit Phone Number" << endl;
-
-                                                cout << "0. Back to the Previous Menu" << endl;
-
-                                                cout << endl;
-
-                                                cin >> options4;
-                                                cout << endl;
-
-                                                if (options4 != 0) main_menu.push(options4);
-
-                                                if (options4 == 0 && !sub_menu.empty())
-                                                {
-                                                    options4 = sub_menu.top();
-                                                    sub_menu.pop();
-
-                                                    break;
-                                                }
-
-                                                switch(options4)
-                                                {
-                                                    case 1: // Edit Name
-                                                        BANK :: authentification_message(connection, account_number, hash_password);
-
-                                                        do
-                                                        {
-                                                            cin >> password;
-                                                            cout << endl;
-
-                                                            if (BANK :: verifying_password(password, hash_password))
-                                                            {
-                                                                cout << "Enter the New First Name. PS: You can't change your Last Name: ";
-                                                                cin >> new_first_name;
-                                                                cout << endl;
-
-                                                                unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_name(?,?);"));
-                                                                prep_statement->setInt(1, account_number);
-                                                                prep_statement->setString(2, new_first_name);
-
-                                                                prep_statement->executeUpdate();
-
-                                                                password.clear();
-
-                                                                break;
-                                                            }
-
-                                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                                            k--;    
-
-                                                        } while (k);
-
-                                                        k = 3;
-
-                                                    break;
-
-                                                    case 2: // Edit Email
-                                                        BANK :: authentification_message(connection, account_number, hash_password);
-
-                                                        do
-                                                        {
-                                                            cin >> password;
-                                                            cout << endl;
-
-                                                            if (BANK :: verifying_password(password, hash_password))
-                                                            {
-                                                                cout << "Enter the New Mail: ";
-                                                                cin >> new_email;
-
-                                                                unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_email(?,?);"));
-                                                                prep_statement->setInt(1, account_number);
-                                                                prep_statement->setString(2, new_email);
-
-                                                                prep_statement->executeUpdate();
-
-                                                                password.clear();
-
-                                                                break;
-                                                            }
-
-                                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                                            k--;
-
-                                                        } while (k);
-
-                                                        k = 3;
-
-                                                    break;
-
-                                                    case 3: // Edit address
-                                                        BANK :: authentification_message(connection, account_number, hash_password);
-
-                                                        do
-                                                        {
-                                                            cin >> password;
-                                                            cout << endl;
-
-                                                            if (BANK :: verifying_password(password, hash_password))
-                                                            {
-                                                                cout << "Enter the New Address: ";
-                                                                cin >> new_address;
-                                                                cout << endl;
-
-                                                                unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_address(?,?);"));
-                                                                prep_statement->setInt(1, account_number);
-                                                                prep_statement->setString(2, new_address);
-
-                                                                prep_statement->executeUpdate();
-
-                                                                password.clear();
-
-                                                                break;
-                                                            }
-
-                                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                                            k--;
-
-                                                        } while (k);
-
-                                                        k = 3;
-
-                                                    break;
-
-                                                    case 4: // Edit Phone Number
-                                                        BANK :: authentification_message(connection, account_number, hash_password);
-
-                                                        do
-                                                        {
-                                                            cin >> password;
-                                                            cout << endl;
-
-                                                            if (BANK :: verifying_password(password, hash_password))
-                                                            {
-                                                                cout << "Enter the New Phone Number: ";
-                                                                cin >> new_phone_number;
-                                                                cout << endl;
-
-                                                                unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
-                                                                prep_statement->setInt(1, account_number);
-                                                                prep_statement->setInt(2, new_phone_number);
-
-                                                                prep_statement->executeUpdate();
-
-                                                                password.clear();
-
-                                                                break;
-                                                            }
-
-                                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                                            k--;
-
-                                                        } while (k);
-
-                                                        k = 3;
-
-                                                    break;
-                                                }
-
-                                            }while (options4 != 0);
-
-                                        break;
-
-                                        case 2: // Change Password
+                                        case 1: // Balance Check
                                             BANK :: authentification_message(connection, account_number, hash_password);
 
                                             do
@@ -1657,243 +1282,770 @@ int main(int argc, const char* argv[])
 
                                                 if (BANK :: verifying_password(password, hash_password))
                                                 {
-                                                    cout << "What is the New Password: ";
-                                                    cin >> new_password;
+                                                    BANK :: apply_interest_rate_to_balance(connection, account_number);
+
+                                                    cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
                                                     cout << endl;
 
-                                                    do
-                                                    {
-                                                        cout << "New Password Confirmation: ";
-                                                        cin >> new_password_confirmation;
-                                                        cout << endl;
-
-                                                    }while (new_password.compare(new_password_confirmation));
-
-                                                    new_hash_password = BANK :: hashing_password(new_password);
-
-                                                    call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
-
                                                     password.clear();
-                                                    new_password.clear();
 
                                                     break;
-                                                } 
+                                                }
 
                                                 cout << "Incorrect password. Chances left: " << k - 1 << endl;
                                                 k--;
 
-                                            } while (k);
+                                            }while (k);
 
                                             k = 3;
 
                                         break;
 
-                                        case 3: // Forget Password
-                                            cout << "In order to Change your password, We have to make You are the owner, so Please Provide us with the Following Information for the Authentification Process" << endl;
+                                        case 2: // Deposit
+                                            cout << "Enter Amount to Deposit: ";
+                                            cin >> amount_to_deposit;
                                             cout << endl;
 
-                                            cout << "What is your Account Number: " << endl;
-                                            cin >> account_number;
-                                            cout << endl;
+                                            BANK :: authentification_message(connection, account_number, hash_password);
 
-                                            cout << "What is your National ID Number: " << endl;
-                                            cin >> national_ID;
-                                            cout << endl;
-
-                                            cout << "What is your Date of Birth: " << endl;
-                                            cin >> date_birth;
-                                            cout << endl;
-
-                                            if (BANK :: authentification_check (connection, account_number, national_ID, date_birth))
+                                            do
                                             {
-                                                cout << "What is the New Password: ";
-                                                cin >> new_password;
+                                                cin >> password;
                                                 cout << endl;
 
-                                                do
+                                                if (BANK :: verifying_password(password, hash_password)) 
                                                 {
-                                                    cout << "New Password Confirmation: ";
-                                                    cin >> new_password_confirmation;
+                                                    BANK :: apply_interest_rate_to_balance(connection, account_number);
+
+                                                    Transactions :: deposit(connection, amount_to_deposit, account_number);
+
+                                                    password.clear();
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 3: // Withdraw
+                                            cout << "Enter Amount to Withdraw: ";
+                                            cin >> amount_to_withdraw;
+                                            cout << endl;
+
+                                            BANK :: authentification_message(connection, account_number, hash_password);
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password)) 
+                                                {
+                                                    BANK :: apply_interest_rate_to_balance(connection, account_number);
+
+                                                    balance = check_balance(connection, account_number);
+
+                                                    while (amount_to_withdraw > balance) 
+                                                    {
+                                                        cout << "Balance is: " << balance << " which is less than the Amount to Withdraw" << endl;
+
+                                                        cout << "So Please Enter a reasonnable Amount: ";
+                                                        cin >> amount_to_withdraw;
+                                                        cout << endl;
+                                                    }
+
+                                                    Transactions :: withdrawal(connection, amount_to_withdraw, account_number);
+
+                                                    password.clear();
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 4: // Transfer
+                                            cout << "Enter Amount to Transfer: ";
+                                            cin >> amount_to_transfer;
+                                            cout << endl;
+
+                                            cout << "Enter the Account Number to receive the Money: ";
+                                            cin >> account_number2;
+                                            cout << endl;
+
+                                            BANK :: authentification_message(connection, account_number1, hash_password);
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password)) 
+                                                {
+                                                    BANK :: apply_interest_rate_to_balance(connection, account_number1);
+
+                                                    balance = check_balance(connection, account_number1);
+
+                                                    while (amount_to_transfer > balance) 
+                                                    {
+                                                        cout << "Your balance is: " << balance << " which is less than the Amount to Transfer" << endl;
+
+                                                        cout << "So Please enter a reasonnable Amount: ";
+                                                        cin >> amount_to_transfer;
+                                                        cout << endl;
+                                                    }
+
+                                                    BANK :: apply_interest_rate_to_balance(connection, account_number2);
+
+                                                    Transactions :: transfer(connection, amount_to_transfer, account_number1, account_number2);    
+
+                                                    password.clear();   
+
+                                                    break;                                                      
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 5: // Borrow Money
+                                            cout << "No one is allowed to borrow Money if currently owes the Bank any amount otherwise She/He will be logged out of the System Completely. Please go to the Previous Menu and Pay what is owed before asking for any New Borrowal" << endl;
+                                            cout << endl;
+
+                                            cout << "Enter Amount to Borrow: " << endl;
+                                            cout << "Interest Rate Scale on Borrowed Amount " << endl;
+                                            cout << endl;
+
+                                            cout << "1. Borrowed Amount = 100 ---> Interest Rate = 0.1%. PS: TO BE RETURN WITHIN 1 DAY OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                            cout << "2. 500 > Borrowed Amount > 100 ---> Interest Rate = 5% PS: TO BE RETURN WITHIN 2 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                            cout << "3. 1000 > Borrowed Amount >= 500 ---> Interest Rate = 7% PS: TO BE RETURN WITHIN 3 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                            cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
+
+                                            cin >> amount_to_borrow;
+                                            cout << endl;
+
+                                            BANK :: authentification_message(connection, account_number, hash_password);
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password))
+                                                {
+                                                    if (amount_to_borrow == 100) 
+                                                    {
+                                                        borrowal_interest_rate = 0.001;
+
+                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+                                                        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);"));
+                                                        prep_statement->setInt(1, account_number);
+
+                                                        prep_statement->executeUpdate();
+
+                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                    }
+
+                                                    else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
+                                                    {
+                                                        borrowal_interest_rate = 0.05;
+
+                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+                                                        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);"));
+                                                        prep_statement->setInt(1, account_number);
+
+                                                        prep_statement->executeUpdate();
+
+                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                    }
+
+                                                    else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
+                                                    {
+                                                        borrowal_interest_rate = 0.07;
+
+                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+                                                        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);"));
+                                                        prep_statement->setInt(1, account_number);
+
+                                                        prep_statement->executeUpdate();
+
+                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                    }
+
+                                                    else 
+                                                    {
+                                                        borrowal_interest_rate = 0.1;
+
+                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+                                                        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
+                                                        prep_statement->setInt(1, account_number);
+
+                                                        prep_statement->executeUpdate();
+
+                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                    }
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 6: // Return Borrowed Money
+                                            BANK :: authentification_message(connection, account_number, hash_password);
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password))
+                                                {
+                                                    unique_ptr <sql :: PreparedStatement> prep_statement_call_update (connection->prepareStatement("CALL update_borrowed_money(?);"));
+                                                    prep_statement_call_update->setInt(1, account_number);
+
+                                                    prep_statement_call_update->executeUpdate();
+
+                                                    cout << "The Amount ought to be returned is: ";
+                                                    unique_ptr <sql :: PreparedStatement> prep_statement_select_borrowal (connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+                                                    prep_statement_select_borrowal->setInt(1, account_number);
+
+                                                    unique_ptr <sql :: ResultSet> result (prep_statement_select_borrowal->executeQuery());
+
+                                                    double due_returned;
+                                                    if (result->next())
+                                                    {
+                                                        due_returned = result->getDouble("borrowed_amount");
+                                                        cout << due_returned << endl;
+                                                    }
+
+                                                    cout << "Enter Exact Amount to be returned and not less" << endl;
+                                                    cin >> amount_to_return;
                                                     cout << endl;
 
-                                                }while (new_password.compare(new_password_confirmation));
+                                                    while (due_returned != amount_to_return)
+                                                    {
+                                                        cout << "Entered Amount is less than the one to be returned, Enter it again" << endl;
+                                                        cin >> amount_to_return;
+                                                        cout << endl;
+                                                    }
 
-                                                new_hash_password = BANK :: hashing_password(new_password);
+                                                    cout << "Thanks, You have officially paid your debt and are now allowed to make another one" << endl;
+                                                    cout << endl;
 
-                                                call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
+                                                    unique_ptr <sql :: PreparedStatement> prep_statement_delete_borrowal (connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
+                                                    prep_statement_delete_borrowal->setInt(1, account_number);
 
-                                                new_password.clear();
-                                            }
+                                                    prep_statement_delete_borrowal->executeUpdate();
 
-                                            else cout << "The Information You've provided are Incorrect" << endl;
+                                                    unique_ptr <sql :: PreparedStatement> prep_statement_delete_event (connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
+                                                    prep_statement_delete_event->setInt(1, account_number);
+
+                                                    prep_statement_delete_event->executeUpdate();
+
+                                                    Transactions :: log_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 7: // Edit Account Information
+                                            do
+                                            {
+                                                cout << "Choose among the options below, what best suits your requirements" << endl;
+                                                cout << endl;
+
+                                                cout << "1. Edit Personal Information" << endl;
+
+                                                cout << "2. Change Password" << endl;
+
+                                                cout << "3. Forget Password" << endl;
+
+                                                cout << "0. Back to the Previous Menu" << endl;
+
+                                                cout << endl;
+
+                                                cin >> options3;
+                                                cout << endl;
+
+                                                if (options3) main_menu.push(options3);
+
+                                                if (!options3 && !sub_menu.empty())
+                                                {
+                                                    options3 = sub_menu.top();
+                                                    sub_menu.pop();
+
+                                                    break;
+                                                }
+
+                                                switch(options3) 
+                                                {
+                                                    case 1: // Edit personal Information
+                                                        do
+                                                        {
+                                                            cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
+                                                            cout << endl;
+
+                                                            cout << "1. Edit Name" << endl;
+
+                                                            cout << "2. Edit email" << endl;
+
+                                                            cout << "3. Edit address" << endl;
+
+                                                            cout << "4. Edit Phone Number" << endl;
+
+                                                            cout << "0. Back to the Previous Menu" << endl;
+
+                                                            cout << endl;
+
+                                                            cin >> options4;
+                                                            cout << endl;
+
+                                                            if (options4) main_menu.push(options4);
+
+                                                            if (!options4 && !sub_menu.empty())
+                                                            {
+                                                                options4 = sub_menu.top();
+                                                                sub_menu.pop();
+
+                                                                break;
+                                                            }
+
+                                                            switch(options4)
+                                                            {
+                                                                case 1: // Edit Name
+                                                                    BANK :: authentification_message(connection, account_number, hash_password);
+
+                                                                    do
+                                                                    {
+                                                                        cin >> password;
+                                                                        cout << endl;
+
+                                                                        if (BANK :: verifying_password(password, hash_password))
+                                                                        {
+                                                                            cout << "Enter the New First Name. PS: Last Name can't be changed: ";
+                                                                            cin >> new_first_name;
+                                                                            cout << endl;
+
+                                                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_name(?,?);"));
+                                                                            prep_statement->setInt(1, account_number);
+                                                                            prep_statement->setString(2, new_first_name);
+
+                                                                            prep_statement->executeUpdate();
+
+                                                                            password.clear();
+
+                                                                            break;
+                                                                        }
+
+                                                                        cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                                        k--;    
+
+                                                                    }while (k);
+
+                                                                    k = 3;
+
+                                                                break;
+
+                                                                case 2: // Edit Email
+                                                                    BANK :: authentification_message(connection, account_number, hash_password);
+
+                                                                    do
+                                                                    {
+                                                                        cin >> password;
+                                                                        cout << endl;
+
+                                                                        if (BANK :: verifying_password(password, hash_password))
+                                                                        {
+                                                                            cout << "Enter the New Mail: ";
+                                                                            cin >> new_email;
+
+                                                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_email(?,?);"));
+                                                                            prep_statement->setInt(1, account_number);
+                                                                            prep_statement->setString(2, new_email);
+
+                                                                            prep_statement->executeUpdate();
+
+                                                                            password.clear();
+
+                                                                            break;
+                                                                        }
+
+                                                                        cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                                        k--;
+
+                                                                    }while (k);
+
+                                                                    k = 3;
+
+                                                                break;
+
+                                                                case 3: // Edit address
+                                                                    BANK :: authentification_message(connection, account_number, hash_password);
+
+                                                                    do
+                                                                    {
+                                                                        cin >> password;
+                                                                        cout << endl;
+
+                                                                        if (BANK :: verifying_password(password, hash_password))
+                                                                        {
+                                                                            cout << "Enter the New Address: ";
+                                                                            cin >> new_address;
+                                                                            cout << endl;
+
+                                                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_address(?,?);"));
+                                                                            prep_statement->setInt(1, account_number);
+                                                                            prep_statement->setString(2, new_address);
+
+                                                                            prep_statement->executeUpdate();
+
+                                                                            password.clear();
+
+                                                                            break;
+                                                                        }
+
+                                                                        cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                                        k--;
+
+                                                                    }while (k);
+
+                                                                    k = 3;
+
+                                                                break;
+
+                                                                case 4: // Edit Phone Number
+                                                                    BANK :: authentification_message(connection, account_number, hash_password);
+
+                                                                    do
+                                                                    {
+                                                                        cin >> password;
+                                                                        cout << endl;
+
+                                                                        if (BANK :: verifying_password(password, hash_password))
+                                                                        {
+                                                                            cout << "Enter the New Phone Number: ";
+                                                                            cin >> new_phone_number;
+                                                                            cout << endl;
+
+                                                                            unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
+                                                                            prep_statement->setInt(1, account_number);
+                                                                            prep_statement->setInt(2, new_phone_number);
+
+                                                                            prep_statement->executeUpdate();
+
+                                                                            password.clear();
+
+                                                                            break;
+                                                                        }
+
+                                                                        cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                                        k--;
+
+                                                                    }while (k);
+
+                                                                    k = 3;
+
+                                                                break;
+                                                            }
+
+                                                        }while (options4);
+
+                                                    break;
+
+                                                    case 2: // Change Password
+                                                        BANK :: authentification_message(connection, account_number, hash_password);
+
+                                                        do
+                                                        {
+                                                            cin >> password;
+                                                            cout << endl;
+
+                                                            if (BANK :: verifying_password(password, hash_password))
+                                                            {
+                                                                cout << "Enter the New Password: ";
+                                                                cin >> new_password;
+                                                                cout << endl;
+
+                                                                do
+                                                                {
+                                                                    cout << "Enter the New Password Confirmation: ";
+                                                                    cin >> new_password_confirmation;
+                                                                    cout << endl;
+
+                                                                }while (new_password.compare(new_password_confirmation));
+
+                                                                new_hash_password = BANK :: hashing_password(new_password);
+
+                                                                call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
+
+                                                                password.clear();
+                                                                new_password.clear();
+
+                                                                break;
+                                                            } 
+
+                                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                            k--;
+
+                                                        }while (k);
+
+                                                        k = 3;
+
+                                                    break;
+
+                                                    case 3: // Forget Password
+                                                        cout << "In order to Change the password, We shall make sure that One is Who is proclaims to be, so Please Provide us with the Following Information for the Authentification Process" << endl;
+                                                        cout << endl;
+
+                                                        cout << "Enter Account Number: " << endl;
+                                                        cin >> account_number;
+                                                        cout << endl;
+
+                                                        cout << "Enter National ID Number: " << endl;
+                                                        cin >> national_ID;
+                                                        cout << endl;
+
+                                                        cout << "Enter Date of Birth: " << endl;
+                                                        cin >> date_birth;
+                                                        cout << endl;
+
+                                                        if (BANK :: authentification_check (connection, account_number, national_ID, date_birth))
+                                                        {
+                                                            cout << "Enter New Password: ";
+                                                            cin >> new_password;
+                                                            cout << endl;
+
+                                                            do
+                                                            {
+                                                                cout << "Enter New Password Confirmation: ";
+                                                                cin >> new_password_confirmation;
+                                                                cout << endl;
+
+                                                            }while (new_password.compare(new_password_confirmation));
+
+                                                            new_hash_password = BANK :: hashing_password(new_password);
+
+                                                            call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
+
+                                                            new_password.clear();
+                                                        }
+
+                                                        else cout << "The provided Information are Incorrect" << endl;
+
+                                                    break;
+                                                }
+
+                                            }while (options3);
+
+                                        break;
+
+                                        case 8: // Transaction History
+                                            BANK :: authentification_message(connection, account_number, hash_password);
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password)) 
+                                                {
+                                                    Transactions :: transactions_history(connection, account_number);
+                                                    password.clear();
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
+
+                                        break;
+
+                                        case 9: // Delete an Account
+                                            BANK :: authentification_message(connection, account_number, hash_password);;
+
+                                            do
+                                            {
+                                                cin >> password;
+                                                cout << endl;
+
+                                                if (BANK :: verifying_password(password, hash_password)) 
+                                                {
+                                                    Account :: remove_accounts(connection, account_number);
+
+                                                    password.clear();
+
+                                                    break;
+                                                }
+
+                                                cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                k--;
+
+                                            }while (k);
+
+                                            k = 3;
 
                                         break;
                                     }
 
-                                }while (options3 != 0);
+                                }while (options2);
 
                             break;
 
-                            case 8: // Transaction History
-                                BANK :: authentification_message(connection, account_number, hash_password);
+                            case 3: // Information on the Bank
+                                cout <<  "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence"<< endl;
 
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
+                                cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK"<< endl;
+                                cout << "SECTION 1.1: Our Vision and Mission"<< endl;
+                                cout << endl;
+                                cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth."<< endl;
+                                cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction."<< endl;
+                                cout << "SECTION 1.2: Core Values"<< endl;
+                                cout << endl;
+                                cout << "Integrity: Upholding the highest ethical standards in all interactions."<< endl;
+                                cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape."<< endl;
+                                cout << "Client Satisfaction: Placing our clients at the center and ensuring their success is our success."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
 
-                                    if (BANK :: verifying_password(password, hash_password)) 
-                                    {
-                                        Transactions :: transactions_history(connection, account_number);
-                                        password.clear();
+                                cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << endl;
+                                cout << endl;
+                                cout << "SECTION 2.1: Robust Security Protocols"<< endl;
+                                cout << endl;
+                                cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information."<< endl;
+                                cout << "Regular audits and assessments to fortify our defenses against emerging threats."<< endl;
+                                cout << "SECTION 2.2: Compliance and Regulatory Adherence"<< endl;
+                                cout << endl;
+                                cout << "Strict adherence to international banking regulations and compliance standards."<< endl;
+                                cout << "Continuous training and development for staff to stay abreast of regulatory changes."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
 
-                                        break;
-                                    }
+                                cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS"<< endl;
+                                cout << endl;
+                                cout << "SECTION 3.1: Personalized Banking Solutions"<< endl;
+                                cout << endl;
+                                cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele."<< endl;
+                                cout << "Offering a wide array of accounts, investment options, and lending services."<< endl;
+                                cout << "SECTION 3.2: Global Accessibility"<< endl;
+                                cout << endl;
+                                cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
+                                cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY"<< endl;
+                                cout << endl;
+                                cout << "SECTION 4.1: Educational Initiatives"<< endl;
+                                cout << endl;
+                                cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources."<< endl;
+                                cout << "Encouraging informed decision-making and responsible financial behavior."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
 
-                                } while (k);
+                                cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY"<< endl;
+                                cout << endl;
+                                cout << "SECTION 5.1: Sustainable Banking Practices"<< endl;
+                                cout << endl;
+                                cout << "Integrating environmental and social responsibility into our business model."<< endl;
+                                cout << "Investing in eco-friendly initiatives and supporting community development projects."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
 
-                                k = 3;
+                                cout << "CHAPTER 6: THE FUTURE OF BANKING"<< endl;
+                                cout << endl;
+                                cout << "SECTION 6.1: Technological Advancements"<< endl;
+                                cout << endl;
+                                cout << "Embracing cutting-edge technology to enhance efficiency, security, and user experience."<< endl;
+                                cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking."<< endl;
+                                cout << "SECTION 6.2: Continuous Improvement"<< endl;
+                                cout << endl;
+                                cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
+
+                                cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH"<< endl;
+                                cout << endl;
+                                cout << "SECTION 7.1: Personalized Customer Service"<< endl;
+                                cout << endl;
+                                cout << "A dedicated customer support team ensuring a seamless and delightful banking experience."<< endl;
+                                cout << "Proactive resolution of issues and a commitment to exceeding client expectations."<< endl;
+                                cout << endl;
+                                cout << endl;
+                                cout << endl;
+
+                                cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK"<< endl;
+                                cout <<  endl;
+                                cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
+                                cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
+                                cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl; 
 
                             break;
 
-                            case 9: // Delete an Account
-                                BANK :: authentification_message(connection, account_number, hash_password);;
-
-                                do
-                                {
-                                    cin >> password;
-                                    cout << endl;
-
-                                    if (BANK :: verifying_password(password, hash_password)) 
-                                    {
-                                        Account :: remove_accounts(connection, account_number);
-
-                                        password.clear();
-
-                                        break;
-                                    }
-
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
-                                    k--;
-
-                                } while (k);
-
-                                k = 3;
-
-                            break;
                         }
 
-                    }while (options2 != 0);
+                    }while (options1);
 
                 break;
 
-                case 3: // Information on the Bank
-                    cout <<  "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence"<< endl;
-
-                    cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK"<< endl;
-                    cout << "SECTION 1.1: Our Vision and Mission"<< endl;
-                    cout << endl;
-                    cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth."<< endl;
-                    cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction."<< endl;
-                    cout << "SECTION 1.2: Core Values"<< endl;
-                    cout << endl;
-                    cout << "Integrity: Upholding the highest ethical standards in all interactions."<< endl;
-                    cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape."<< endl;
-                    cout << "Client Satisfaction: Placing our clients at the center and ensuring their success is our success."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << endl;
-                    cout << endl;
-                    cout << "SECTION 2.1: Robust Security Protocols"<< endl;
-                    cout << endl;
-                    cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information."<< endl;
-                    cout << "Regular audits and assessments to fortify our defenses against emerging threats."<< endl;
-                    cout << "SECTION 2.2: Compliance and Regulatory Adherence"<< endl;
-                    cout << endl;
-                    cout << "Strict adherence to international banking regulations and compliance standards."<< endl;
-                    cout << "Continuous training and development for staff to stay abreast of regulatory changes."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS"<< endl;
-                    cout << endl;
-                    cout << "SECTION 3.1: Personalized Banking Solutions"<< endl;
-                    cout << endl;
-                    cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele."<< endl;
-                    cout << "Offering a wide array of accounts, investment options, and lending services."<< endl;
-                    cout << "SECTION 3.2: Global Accessibility"<< endl;
-                    cout << endl;
-                    cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY"<< endl;
-                    cout << endl;
-                    cout << "SECTION 4.1: Educational Initiatives"<< endl;
-                    cout << endl;
-                    cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources."<< endl;
-                    cout << "Encouraging informed decision-making and responsible financial behavior."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY"<< endl;
-                    cout << endl;
-                    cout << "SECTION 5.1: Sustainable Banking Practices"<< endl;
-                    cout << endl;
-                    cout << "Integrating environmental and social responsibility into our business model."<< endl;
-                    cout << "Investing in eco-friendly initiatives and supporting community development projects."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 6: THE FUTURE OF BANKING"<< endl;
-                    cout << endl;
-                    cout << "SECTION 6.1: Technological Advancements"<< endl;
-                    cout << endl;
-                    cout << "Embracing cutting-edge technology to enhance efficiency, security, and user experience."<< endl;
-                    cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking."<< endl;
-                    cout << "SECTION 6.2: Continuous Improvement"<< endl;
-                    cout << endl;
-                    cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH"<< endl;
-                    cout << endl;
-                    cout << "SECTION 7.1: Personalized Customer Service"<< endl;
-                    cout << endl;
-                    cout << "A dedicated customer support team ensuring a seamless and delightful banking experience."<< endl;
-                    cout << "Proactive resolution of issues and a commitment to exceeding client expectations."<< endl;
-                    cout << endl;
-                    cout << endl;
-                    cout << endl;
-
-                    cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK"<< endl;
-                    cout <<  endl;
-                    cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
-                    cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
-                    cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl; 
-
-                break;
-
-                case 0:
+                case 0: // Exit
                     cout << "Thanks for having choose CROSS-CONTINENTAL TREASURY BANK, Have a Good Day" << endl;
+
                     exit(1);
 
                 break;
-            }
-            
-        }while (options != 0);
 
+            }
+
+        } while (options);
+        
         connection->close();
         delete connection;
     }
@@ -1901,7 +2053,6 @@ int main(int argc, const char* argv[])
     {
         cerr << "Connection Error: " << e->what() << "Code causing Error: " << e->getErrorCode() << endl;
     }
-
     catch (const std :: exception *e)
     {
         cout << "Error: " << e->what() << endl;
