@@ -16,13 +16,15 @@ using namespace std;
 // BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABASE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
 
 /*
-
         ----- Download Argon 2 in order to use its library for the password hashing process
         ----- Change the Include Directories Path to find all the preinstalled libraries required to run this project on your PC
         ----- When Running Your Program, Pass your Database's Password as the Second Argument
         ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account 
-        ----- The Administrator's Account_number should be one that none of the Clients can never have like 0000 or 1111 or 1010 etc;
-        ----- 
+        ----- I have also set the Interest rate according to how many days have passed since the last modification in your balance.
+        ----- If You want to apply the Interest Rate Daily or Monthly for all Accounts, I will leave an SQL Event which will help you doing so. Event Name----> apply_interest_rate_to_balance
+        ----- By appliying the Interest Rate Event to your database remember deleting or commenting the //BANK :: apply_interest_rate_to_balance()// function, everywhere I have used it throughout the program
+        -----
+        -----
 
         *************** ALL THE TABLES *************** 
         ------- accounts
@@ -66,7 +68,6 @@ using namespace std;
            account_number INT PRIMARY KEY,
            borrowed_amount DECIMAL(20, 5),
            interest_rate DECIMAL(5,3),
-           paid INT DEFAULT 0,
            initial_timestamp TIMESTAMP DEFAULT NULL,
            paid_timestamp TIMESTAMP DEFAULT NULL
         );
@@ -81,7 +82,6 @@ using namespace std;
 
 
         *************** ALL THE TRIGGERS  ***************
-
         ------- insert account
         CREATE TRIGGER insert_account AFTER INSERT ON accounts FOR EACH ROW 
             BEGIN
@@ -127,7 +127,6 @@ using namespace std;
     
 
         *************** ALL THE PROCEDURES *************** 
-
         ------- update_and_log_name
         CREATE PROCEDURE update_and_log_name (IN account_number1 INT, IN new_first_name VARCHAR(255))
             BEGIN
@@ -312,17 +311,19 @@ using namespace std;
 
                     END LOOP read_loop;
                 CLOSE cursor_acc;
-
             END;
+
+        ------- apply_interest_rate_to_balance
+        CREATE EVENT apply_interest_rate_to_balance
+        ON EVERY 1 DAY//MONTH
+        STARTS CURRENT_TIMESTAMP
+        DO
+        BEGIN
+            UPDATE accounts SET balance = (balance * interest_rate) + balance;
+        END;
 */
 
 // TODO LIST
-// Finish the Bank Class which will be responsible to manage the created accounts
-// Divide the Creatd Accounts into 2 categories. Admin(has access to everything, delete all accounts, display all transactions, etc) and Clients(is only allowed to create its own account and remove it, perform transactions)
-// A password will be asked to check if you are an admin or not. if You are, then you will have access to the prepared statements to display, delete, update, modify all accounts ..
-// ... Both genral and specified querries according to one's account_number
-// Admin should be able to search clients by name too 
-// Use sql joins to display information related to accounts, borrowal and even_schedule table
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
 // Create the GUI for a more user friendly
@@ -927,7 +928,7 @@ int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, 
         sql::SQLString current_time;
         if (result_now->next()) current_time = result_now->getString("time_now");
 
-        unique_ptr <sql :: PreparedStatement> prep_statement_diff (connection->prepareStatement("SELECT TIMESTAMPDIFF(HOUR, ?, ?) AS time_elapsed;"));
+        unique_ptr <sql :: PreparedStatement> prep_statement_diff (connection->prepareStatement("SELECT TIMESTAMPDIFF(DAY, ?, ?) AS time_elapsed;"));
         prep_statement_diff->setString(1, initial_timestamp);
         prep_statement_diff->setString(2, current_time);
 
@@ -2328,12 +2329,12 @@ int main(int argc, const char* argv[])
         connection->close();
         delete connection;
     }
-    catch (sql :: SQLException *e)
+    catch (sql :: SQLException &e)
     {
-        cerr << "SQL ERROR: " << e->what() << "Code causing Error: " << e->getErrorCode() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
-    catch (const std :: exception *e)
+    catch (const std :: exception &e)
     {
-        cout << "Error: " << e->what() << endl;
+        cout << "C++ ERROR: " << e.what() << endl;
     }  
 }
