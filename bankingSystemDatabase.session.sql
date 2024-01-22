@@ -1,1 +1,1 @@
-  ALTER TABLE borrowal_record DROP COLUMN paid_timestamp;
+ALTER TABLE borrowal_record DROP COLUMN paid;

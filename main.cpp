@@ -318,8 +318,8 @@ using namespace std;
 
 // TODO LIST
 // Finish the Bank Class which will be responsible to manage the created accounts
-// Divide the Creatd Accounts into 2 categories. Admin(has access to everything, delete all accounts, view all transactions, etc) and Clients(is only allowed to create its own account and remove it, perform transactions)
-// A password will be asked to check if you are an admin or not. if You are, then you will have access to the prepared statements to view, delete, update, modify all accounts ..
+// Divide the Creatd Accounts into 2 categories. Admin(has access to everything, delete all accounts, display all transactions, etc) and Clients(is only allowed to create its own account and remove it, perform transactions)
+// A password will be asked to check if you are an admin or not. if You are, then you will have access to the prepared statements to display, delete, update, modify all accounts ..
 // ... Both genral and specified querries according to one's account_number
 // Admin should be able to search clients by name too 
 // Use sql joins to display information related to accounts, borrowal and even_schedule table
@@ -350,7 +350,7 @@ sql :: Connection *connection_setup(connection_details *ID)
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return NULL;
     }
 }
@@ -366,13 +366,20 @@ double check_balance(sql :: Connection *connection, int account_number)
 
         unique_ptr <sql :: ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next()) balance = result->getDouble("balance");
-
-        return balance;
+        if (result->next()) 
+        {
+            balance = result->getDouble("balance");
+            return balance;
+        }
+        else 
+        {
+            cout << "Account Not Found, Verify the Number again before trying" << endl;
+            return 0.0;
+        }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return 0.0;
     }
     catch(const exception &e)
@@ -394,11 +401,11 @@ void call_insert_or_update_hashed_password(sql :: Connection *connection, int ac
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     } 
 }
 
@@ -412,23 +419,34 @@ class Transactions
 
     static void transfer(sql :: Connection *connection, const double amount_to_send, int account_number1, int account_number2);
 
-    static void transactions_history(sql :: Connection *connection, int account_number);
+    static void display_transactions_history(sql :: Connection *connection, int account_number);
 
-    static void log_transactions(sql :: Connection *connection, int account_number, string details, double amount);
+    static void insert_transactions(sql :: Connection *connection, int account_number, string details, double amount);
 
-    static void log_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate);
+    static void insert_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate);
 };
 
-void Transactions :: log_transactions(sql :: Connection *connection, int account_number, string details, double amount) 
+void Transactions :: insert_transactions(sql :: Connection *connection, int account_number, string details, double amount) 
 {
-    string table_name = "NO";
-    table_name.append(to_string(account_number));
+    try
+    {
+        string table_name = "NO";
+        table_name.append(to_string(account_number));
 
-    unique_ptr<sql::PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO " + table_name + " VALUES ( CONCAT(?, ?), NOW() );"));
-    prep_statement->setString(1, details);
-    prep_statement->setDouble(2, amount);
+        unique_ptr<sql::PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO " + table_name + " VALUES ( CONCAT(?, ?), NOW() );"));
+        prep_statement->setString(1, details);
+        prep_statement->setDouble(2, amount);
 
-    prep_statement->executeUpdate();
+        prep_statement->executeUpdate();
+    }
+    catch (const sql :: SQLException &e) 
+    {
+        cerr << "SQL ERROR: " << e.what() << endl;
+    }
+    catch(const exception &e)
+    {
+        cerr << "C++ ERROR: "<< e.what() << endl;
+    } 
 }
 
 void Transactions :: deposit(sql :: Connection *connection, const double amount_to_deposit, int account_number) 
@@ -441,18 +459,18 @@ void Transactions :: deposit(sql :: Connection *connection, const double amount_
 
         prep_statement->executeUpdate();
 
-        cout << "You have deposited " << amount_to_deposit << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << "You have deposited: $" << amount_to_deposit << ", and your new Balance is: $" << check_balance(connection, account_number) << endl;
         cout << endl;
 
-        log_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
+        insert_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }   
 }
 
@@ -466,18 +484,18 @@ void Transactions :: withdrawal(sql :: Connection *connection, const double amou
 
         prep_statement->executeUpdate();
 
-        cout << "You have withdrawn " << amount_to_withdraw << " dollars, and your new Balance is: " << check_balance(connection, account_number) << endl;
+        cout << "You have withdrawn: $" << amount_to_withdraw << ", and your new Balance is: $" << check_balance(connection, account_number) << endl;
         cout << endl;
 
-        log_transactions(connection, account_number, "New Money Withdrawn, Sum of ", amount_to_withdraw);
+        insert_transactions(connection, account_number, "New Money Withdrawn, Sum of: $", amount_to_withdraw);
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }  
 }
 
@@ -490,28 +508,28 @@ void Transactions :: transfer(sql :: Connection *connection, const double amount
         prep_statement_sender->setInt(2, account_number1);
         prep_statement_sender->executeUpdate();
 
-        log_transactions(connection, account_number1, "Money Transferred to " + to_string(account_number2) + ", Amount: ", amount_to_transfer);
+        insert_transactions(connection, account_number1, "Money Transferred to " + to_string(account_number2) + ", Amount of: $", amount_to_transfer);
 
         unique_ptr <sql :: PreparedStatement> prep_statement_receiver (connection->prepareStatement("UPDATE transactions SET receive = ? WHERE account_number = ?;"));
         prep_statement_receiver->setDouble(1, amount_to_transfer);
         prep_statement_receiver->setInt(2, account_number2);
         prep_statement_receiver->executeUpdate();
 
-        log_transactions(connection, account_number2, "Money Received from " + to_string(account_number1) + ", Amount: ", amount_to_transfer);
+        insert_transactions(connection, account_number2, "Money Received from " + to_string(account_number1) + ", Amount of: $", amount_to_transfer);
 
-        cout << "You have sent " << amount_to_transfer << " dollars to the account number: " << account_number2 << " and Your new balance is: " << check_balance(connection, account_number1) << endl;
+        cout << "You have sent: $" << amount_to_transfer << " to the account number: " << account_number2 << " and Your new balance is: $" << check_balance(connection, account_number1) << endl;
     } 
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }  
 }
 
-void Transactions :: transactions_history(sql :: Connection *connection, int account_number) 
+void Transactions :: display_transactions_history(sql :: Connection *connection, int account_number) 
 {
     try
     {
@@ -522,26 +540,31 @@ void Transactions :: transactions_history(sql :: Connection *connection, int acc
 
         unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-        while (result->next()) 
+        if (result->isBeforeFirst())
         {
-            cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date_time") << endl;
+             while (result->next()) 
+            {
+                cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date_time") << endl;
+                cout << endl;
+            }
+
+            cout << endl;
             cout << endl;
         }
+        else cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl; 
 
-        cout << endl;
-        cout << endl;
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }   
 }
 
-void Transactions :: log_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate) 
+void Transactions :: insert_borrowal(sql :: Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate) 
 {
     try
     {
@@ -554,11 +577,11 @@ void Transactions :: log_borrowal(sql :: Connection *connection, int account_num
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     } 
 }
 
@@ -616,11 +639,11 @@ void Account::create_account(sql :: Connection *connection, int account_number, 
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
@@ -628,7 +651,18 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
 {
     try
     {
-        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;"));
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
+
+        if (result->isBeforeFirst())
+        {
+            cout << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << endl;
+            return;
+        }
+
+        prep_statement = unique_ptr <sql :: PreparedStatement> (connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
         prep_statement->executeUpdate();
 
@@ -649,11 +683,11 @@ void Account :: remove_accounts(sql :: Connection *connection, int account_numbe
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
@@ -683,18 +717,13 @@ class BANK : public Account, public Transactions
 
     static void create_adm(sql :: Connection *connection, int account_number, string hash_password);
 
-    static void view_accounts_table(sql :: Connection *connection);
+    static void display_accounts_table(sql :: Connection *connection);
 
-    static void view_specific_accounts(sql :: Connection *connection, int account_number);
+    static void display_specific_accounts(sql :: Connection *connection, int account_number);
 
-    static void view_borrowal_record_table(sql :: Connection *connection);
+    static void display_people_in_debt(sql :: Connection *connection);
 
-    static void view_specific_borrowal_record_accounts(sql :: Connection *connection, int account_number);
-
-    static void view_event_schedule_table(sql :: Connection *connection);
-
-    static void view_specific_event_schedule_account(sql :: Connection *connection, int account_number);
-
+    static void display_specific_accounts_in_debt(sql :: Connection *connection, int account_number);
 };
 
 string BANK :: generate_random_salt(size_t len) 
@@ -741,7 +770,7 @@ string BANK :: hashing_password(string &password)
         if (result != ARGON2_OK) 
         {
             cout << "Error Hashing Password" << endl;
-            exit(1);
+            return "";
         }
 
         string hashed_password = salt + hash;
@@ -766,13 +795,20 @@ string BANK :: retrieve_hashed_password(sql :: Connection *connection, int accou
 
         string hashed_password;
 
-        if (result->next()) hashed_password = result->getString("hashed_password");
-
-        return hashed_password;
+        if (result->next())
+        {
+            hashed_password = result->getString("hashed_password");
+            return hashed_password;
+        }
+        else 
+        {
+            cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl; 
+            return "";
+        }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return "";
     }
     catch(const exception &e)
@@ -793,13 +829,20 @@ string BANK :: retrieve_adm_hashed_password(sql :: Connection *connection, int a
 
         string hashed_password;
 
-        if (result->next()) hashed_password = result->getString("hashed_password");
-
-        return hashed_password;
+        if (result->next())
+        {
+            hashed_password = result->getString("hashed_password");
+            return hashed_password;
+        }
+        else 
+        {
+            cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl; 
+            return "";
+        }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return "";
     }
     catch(const exception &e)
@@ -828,7 +871,7 @@ bool BANK :: verifying_password(string password, string &hashed_password)
         if (result != ARGON2_OK) 
         {
             cout << "Error Verifying Password" << endl;
-            exit(1);
+            return false;
         }
 
         return !hashed_password.substr(SALT_LENGTH, hash_length).compare(hash);
@@ -851,13 +894,20 @@ sql :: SQLString BANK :: retrieve_interest_rate_initial_timestamp(sql :: Connect
 
         sql::SQLString initial_timestamp;
 
-        if (result->next()) initial_timestamp = result->getString("initial_timestamp");
-
-        return initial_timestamp;
+        if (result->next()) 
+        {
+            initial_timestamp = result->getString("initial_timestamp");
+            return initial_timestamp;
+        }
+        else 
+        {
+            cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl; ;
+            return "";
+        }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return "";
     }
     catch(const exception &e)
@@ -883,7 +933,7 @@ int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, 
 
         unique_ptr <sql :: ResultSet> result_diff(prep_statement_diff->executeQuery());
 
-        int time_elapsed = 0;
+        int time_elapsed;
 
         if (result_diff->next()) time_elapsed = result_diff->getInt("time_elapsed");
 
@@ -891,7 +941,7 @@ int BANK :: calculate_interest_rate_time_elapsed(sql :: Connection *connection, 
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl; 
+        cerr << "SQL ERROR: " << e.what() << endl; 
         return 1;
     }
     catch(const exception &e)
@@ -912,7 +962,7 @@ void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, int a
 
         if (!result_interest->next()) 
         {
-            cout << "Error retrieving interest rate for account number: " << account_number << endl;
+            cout << "Error retrieving interest rate for account number: " << account_number << "Cause it not Found" << endl;
             return;
         }
 
@@ -927,7 +977,7 @@ void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, int a
 
         if (!result_balance->next()) 
         {
-            cout << "Error retrieving balance for account number: " << account_number << endl;
+            cout << "Error retrieving balance for account number: " << account_number << "Cause it not Found" <<  endl;
             return;
         }
 
@@ -943,11 +993,11 @@ void BANK :: apply_interest_rate_to_balance(sql :: Connection *connection, int a
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
@@ -974,12 +1024,12 @@ bool BANK :: authentification_check(sql :: Connection *connection, int account_n
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
         return false;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: " << e.what() << endl;
         return false;
     }
 }
@@ -1008,15 +1058,15 @@ void BANK :: create_adm(sql :: Connection *connection, int account_number, strin
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
-void BANK :: view_accounts_table(sql :: Connection *connection)
+void BANK :: display_accounts_table(sql :: Connection *connection)
 {
     try
     {
@@ -1024,30 +1074,33 @@ void BANK :: view_accounts_table(sql :: Connection *connection)
         
         unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-        while(result->next())
+        if (result->isBeforeFirst())
         {
-            cout << "National ID: " << result->getString("national_ID") <<" | Account Number: " << result->getInt("account_number") << " | First Name: " << result->getString("first_name");
+            while(result->next())
+            {
+                cout << "National ID: " << result->getString("national_ID") <<" | Account Number: " << result->getInt("account_number") << " | First Name: " << result->getString("first_name");
 
-            cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
+                cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
 
-            cout << " | Email: " << result->getString("email") << " | Address: " << result->getString("address") << " | Balance: " << result->getDouble("balance") << " | Interest Rate: " << result->getDouble("interest_rate");
+                cout << " | Email: " << result->getString("email") << " | Address: " << result->getString("address") << " | Balance: " << result->getDouble("balance") << " | Interest Rate: " << result->getDouble("interest_rate");
 
-            cout << " | Initial Timestamp: " << result->getString("initial_timestamp") << endl;
-            cout << endl;
-            cout << endl;
+                cout << " | Initial Timestamp: " << result->getString("initial_timestamp") << endl;
+                cout << endl;
+                cout << endl;
+            }
         }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
-void BANK :: view_specific_accounts(sql :: Connection *connection, int account_number)
+void BANK :: display_specific_accounts(sql :: Connection *connection, int account_number)
 {
     try
     {
@@ -1056,9 +1109,8 @@ void BANK :: view_specific_accounts(sql :: Connection *connection, int account_n
         
         unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-        while(result->next())
+        if(result->next())
         {
-
             cout << "National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name");
 
             cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
@@ -1068,116 +1120,81 @@ void BANK :: view_specific_accounts(sql :: Connection *connection, int account_n
             cout << " | Initial Timestamp: " << result->getString("initial_timestamp") << endl;
             cout << endl;
         }
+        else cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl;    
+
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }
 }
 
-void BANK :: view_borrowal_record_table(sql :: Connection *connection)
+void BANK :: display_people_in_debt(sql :: Connection *connection)
 {
     try
     {
-        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM borrowal_record;"));
-        
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
+      
         unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-        while(result->next())
+        if (result->isBeforeFirst())
         {
-            cout << "Account Number: " << result->getInt("account_number") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Interest Rate: " << result->getDouble("interest_rate");
-            cout  << "Initial Timestamp: " << result->getString("initial_timestamp") << endl;
-            cout << endl;
+            while(result->next())
+            {
+                cout << "Account Number: " << result->getInt("A") << " | National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
+
+                cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
+
+                cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << endl;
+                cout << endl;
+                cout << endl;
+            }
         }
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
-    }
-}
-
-void BANK :: view_specific_borrowal_record_accounts(sql :: Connection *connection, int account_number)
-{
-    try
-    {
-        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM borrowal_record WHERE account_number = ?;"));
-        prep_statement->setInt(1, account_number);
-        
-        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
-
-        while(result->next())
-        {
-            cout <<"Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Interest Rate: " << result->getDouble("interest_rate");
-            cout << "Initial Timestamp: " << result->getString("initial_timestamp") << endl;
-            cout << endl;
-        }
-    }
-    catch (const sql :: SQLException &e) 
-    {
-        cerr << "Connection Error: " << e.what() << endl;
-    }
-    catch(const exception &e)
-    {
-        cerr << e.what() << endl;
-    }
-}
-
-void BANK :: view_event_schedule_table(sql :: Connection *connection)
-{
-    try
-    {
-        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM event_schedule;"));
-        
-        unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
-
-        while(result->next())
-        {
-            cout << "Account Number: " << result->getInt("account_number") << " | Scheduled Time: " << result->getString("scheduled_time") << " | Triggered: " << result->getInt("triggered") << endl;
-            cout << endl;
-            cout << endl;
-        }
-    }
-    catch (const sql :: SQLException &e) 
-    {
-        cerr << "Connection Error: " << e.what() << endl;
-    }
-    catch(const exception &e)
-    {
-        cerr << e.what() << endl;
+        cerr << "C++ ERROR: "<< e.what() << endl;
     }   
 }
 
-void BANK :: view_specific_event_schedule_account(sql :: Connection *connection, int account_number)
+void BANK :: display_specific_accounts_in_debt(sql :: Connection *connection, int account_number)
 {
     try
     {
-        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT * FROM event_schedule WHERE account_number = ?;"));
+        unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("SELECT national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number WHERE accounts.account_number = ?;"));
         prep_statement->setInt(1, account_number);
-        
+
         unique_ptr <sql :: ResultSet> result (prep_statement->executeQuery());
 
-        while(result->next())
+        if(result->next())
         {
-            cout <<"Scheduled Time: " << result->getString("scheduled_time") << " | Triggered: " << result->getInt("triggered") << endl;
+            cout <<"National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
+
+            cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
+
+            cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << endl;
+            cout << endl;
             cout << endl;
         }
+       else cout << "Account " << account_number << " Not Found, Verify the Number and try again" << endl; 
+        
     }
     catch (const sql :: SQLException &e) 
     {
-        cerr << "Connection Error: " << e.what() << endl;
+        cerr << "SQL ERROR: " << e.what() << endl;
     }
     catch(const exception &e)
     {
-        cerr << e.what() << endl;
-    }   
+        cerr << "C++ ERROR: "<< e.what() << endl;
+    }  
 }
 
 int main(int argc, const char* argv[]) 
@@ -1228,7 +1245,7 @@ int main(int argc, const char* argv[])
 
             cout << "1. Administrator" << endl;
 
-            cout << "2. Rregular Client" << endl;
+            cout << "2. Regular Client" << endl;
 
             cout << "0. QUIT" << endl;
 
@@ -1263,30 +1280,19 @@ int main(int argc, const char* argv[])
                             {
                                 cout << "1. Create an Administrator" << endl;
 
-                                cout << "2. View The accounts Table" << endl;
+                                cout << "2. Display The Accounts Table" << endl;
 
-                                cout << "3. Select A Specific Account according to the account_number" << endl;
+                                cout << "3. Display Specific Account through the Account_number" << endl;
 
-                                cout << "4. View the borrowal_record Table " << endl;
+                                cout << "4. Display People in Debt " << endl;
 
-                                cout << "5. Select A Specific borrowed_record according to the account_number" << endl;
+                                cout << "5. Display Specific Person in Debt through the Account_number" << endl;
 
-                                cout << "6. View all Transactions History for a an account_number" << endl;
+                                cout << "6. Display all Transactions History for an Account_number" << endl;
 
-                                cout << "7. View the event_shedule Table" << endl;
+                                cout << "7. Remove Accounts through the Account_number" << endl;
 
-                                cout << "8. Select A Specific event_schedule according to the account_number" << endl;
-
-                                cout << "9. Remove an Account" << endl;
-
-                                // cout << "9. accounts / borrowal_record INNER JOIN -->  View all account_number, national_ID, first_name, last_name of people who borrowed Money " << endl;
-
-                                // // cout << "9. accounts / event_schedule INNER JOIN " << endl;
-
-                                // cout << "10. borrowal_record / event_schedule INNER JOIN" << endl;
-
-                                cout << "0. Back to the Previous Menu" << endl;
-
+                                cout << "0. Return to the Previous Menu" << endl;
                                 cout << endl;
 
                                 cin >> adm_options;
@@ -1330,61 +1336,46 @@ int main(int argc, const char* argv[])
 
                                     break;
 
-                                    case 2: // View accounts Table
+                                    case 2: // Display Accounts Table
 
-                                        BANK :: view_accounts_table(connection);
+                                        BANK :: display_accounts_table(connection);
 
                                     break;
 
-                                    case 3: // View Specific account
-                                        cout << "Enter The Account Number To be viewed" << endl;
+                                    case 3: // Display Specific Account
+                                        cout << "Enter The Account Number To be displayed" << endl;
                                         cin >> account_number;
                                         cout << endl;
 
-                                        BANK :: view_specific_accounts(connection, account_number);
+                                        BANK :: display_specific_accounts(connection, account_number);
 
                                     break;
 
-                                    case 4: // View borrowal_record Table
+                                    case 4: // Display People in Debt
 
-                                        BANK :: view_borrowal_record_table(connection);
+                                        BANK :: display_people_in_debt(connection);
 
                                     break;
 
-                                    case 5: // View Specific borrowal_record
-                                        cout << "Enter The Account Number To be viewed" << endl;
+                                    case 5: // Display Specific Accounts in Debt
+                                        cout << "Enter The Account Number's in Debt To be displayed" << endl;
                                         cin >> account_number;
                                         cout << endl;
 
-                                        BANK :: view_specific_borrowal_record_accounts(connection, account_number);
+                                        BANK :: display_specific_accounts_in_debt(connection, account_number);
 
                                     break;
 
-                                    case 6: // View All Transactions History per Account
-                                        cout << "Enter The Account Number To be viewed" << endl;
+                                    case 6: // Display Transactions History 
+                                        cout << "Enter The Account Number's Transactions History To be displayed" << endl;
                                         cin >> account_number;
                                         cout << endl;
 
-                                        BANK :: transactions_history(connection, account_number);
+                                        BANK :: display_transactions_history(connection, account_number);
 
                                     break;
 
-                                    case 7: // View event_schecule Table
-
-                                        BANK :: view_event_schedule_table(connection);
-
-                                    break;
-
-                                    case 8: // View Specific event_schedule
-                                        cout << "Enter The Account Number To be viewed" << endl;
-                                        cin >> account_number;
-                                        cout << endl;
-
-                                        BANK :: view_specific_event_schedule_account(connection, account_number);
-
-                                    break;
-
-                                    case 9: // Remove Account
+                                    case 7: // Remove Account
                                         cout << "Enter The Account Number To be removed" << endl;
                                         cin >> account_number;
                                         cout << endl;
@@ -1417,7 +1408,7 @@ int main(int argc, const char* argv[])
 
                         cout << "3. Information on our Bank" << endl;
 
-                        cout << "0. Back to the Previous Menu" << endl;
+                        cout << "0. Return to the Previous Menu" << endl;
 
                         cout << endl;
 
@@ -1541,7 +1532,7 @@ int main(int argc, const char* argv[])
 
                                     cout << "9. Delete Account" << endl;
 
-                                    cout << "0. Back to the Previous Menu" << endl;
+                                    cout << "0. Return to the Previous Menu" << endl;
 
                                     cout << endl;
 
@@ -1745,56 +1736,56 @@ int main(int argc, const char* argv[])
                                                     {
                                                         borrowal_interest_rate = 0.001;
 
-                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+                                                        Transactions :: insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                                         unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);"));
                                                         prep_statement->setInt(1, account_number);
 
                                                         prep_statement->executeUpdate();
 
-                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                        Transactions :: insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                                     }
 
                                                     else if (amount_to_borrow > 100 && amount_to_borrow < 500) 
                                                     {
                                                         borrowal_interest_rate = 0.05;
 
-                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+                                                        Transactions :: insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                                         unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);"));
                                                         prep_statement->setInt(1, account_number);
 
                                                         prep_statement->executeUpdate();
 
-                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                        Transactions :: insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                                     }
 
                                                     else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
                                                     {
                                                         borrowal_interest_rate = 0.07;
 
-                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+                                                        Transactions :: insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                                         unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);"));
                                                         prep_statement->setInt(1, account_number);
 
                                                         prep_statement->executeUpdate();
 
-                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                        Transactions :: insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                                     }
 
                                                     else 
                                                     {
                                                         borrowal_interest_rate = 0.1;
 
-                                                        Transactions :: log_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+                                                        Transactions :: insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
                                                         unique_ptr <sql :: PreparedStatement> prep_statement (connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
                                                         prep_statement->setInt(1, account_number);
 
                                                         prep_statement->executeUpdate();
 
-                                                        Transactions :: log_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                                        Transactions :: insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
                                                     }
 
                                                     break;
@@ -1861,7 +1852,7 @@ int main(int argc, const char* argv[])
 
                                                     prep_statement_delete_event->executeUpdate();
 
-                                                    Transactions :: log_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
+                                                    Transactions :: insert_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
 
                                                     break;
                                                 }
@@ -1887,7 +1878,7 @@ int main(int argc, const char* argv[])
 
                                                 cout << "3. Forget Password" << endl;
 
-                                                cout << "0. Back to the Previous Menu" << endl;
+                                                cout << "0. Return to the Previous Menu" << endl;
 
                                                 cout << endl;
 
@@ -1920,7 +1911,7 @@ int main(int argc, const char* argv[])
 
                                                             cout << "4. Edit Phone Number" << endl;
 
-                                                            cout << "0. Back to the Previous Menu" << endl;
+                                                            cout << "0. Return to the Previous Menu" << endl;
 
                                                             cout << endl;
 
@@ -2176,7 +2167,7 @@ int main(int argc, const char* argv[])
 
                                                 if (BANK :: verifying_password(password, hash_password)) 
                                                 {
-                                                    Transactions :: transactions_history(connection, account_number);
+                                                    Transactions :: display_transactions_history(connection, account_number);
                                                     password.clear();
 
                                                     break;
@@ -2339,7 +2330,7 @@ int main(int argc, const char* argv[])
     }
     catch (sql :: SQLException *e)
     {
-        cerr << "Connection Error: " << e->what() << "Code causing Error: " << e->getErrorCode() << endl;
+        cerr << "SQL ERROR: " << e->what() << "Code causing Error: " << e->getErrorCode() << endl;
     }
     catch (const std :: exception *e)
     {
