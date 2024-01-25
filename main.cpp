@@ -4,10 +4,10 @@
 #include <stack>
 #include <vector>
 
-#include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_driver.h>
-#include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/mysql_connection.h>
-#include </usr/local/mysql-connector-c++-8.2.0/include/jdbc/cppconn/prepared_statement.h>
-#include </opt/homebrew/include/argon2.h>
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/prepared_statement.h>
+#include <argon2.h>
 
 using namespace std;
 
