@@ -329,7 +329,7 @@ using namespace std;
 class connection_details
 {
 public:
-    string server, user, password, database;
+    string server, user, password;
 };
 
 sql ::Connection *connection_setup(connection_details *ID)
@@ -340,7 +340,7 @@ sql ::Connection *connection_setup(connection_details *ID)
         sql ::Connection *connection;
 
         driver = sql ::mysql ::get_driver_instance();
-        connection = driver->connect(ID->server, ID->user, ID->password);
+        connection = driver->connect(ID->server, ID->user);
 
         connection->setSchema("bankingSystemDatabase");
 
