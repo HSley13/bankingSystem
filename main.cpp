@@ -340,7 +340,7 @@ sql ::Connection *connection_setup(connection_details *ID)
         sql ::Connection *connection;
 
         driver = sql ::mysql ::get_driver_instance();
-        connection = driver->connect(ID->server, ID->user);
+        connection = driver->connect(ID->server, ID->user, ID->password);
 
         connection->setSchema("bankingSystemDatabase");
 
