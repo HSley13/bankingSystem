@@ -683,6 +683,8 @@ adminlibrary_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/time.h \
 	/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/CMakeLists.txt \
+	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_database.cpp \
+	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_database.h \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main_window.h \

@@ -1,5 +1,4 @@
 #include "main_window.h"
-#include "database.h"
 #include <adm_main_window.h>
 #include <client_main_window.h>
 #include <info_main_window.h>

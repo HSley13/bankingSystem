@@ -1255,7 +1255,7 @@ int main(int argc, const char **argv)
             cout << endl;
 
             if (options)
-                main_menu.push(options);
+                sub_menu.push(options);
 
             switch (options)
             {

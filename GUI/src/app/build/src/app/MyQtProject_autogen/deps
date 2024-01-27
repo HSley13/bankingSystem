@@ -747,8 +747,6 @@ MyQtProject_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
 	/Users/test/Documents/banking_system/GUI/src/app/CMakeLists.txt \
 	/Users/test/Documents/banking_system/GUI/src/app/build/src/app/MyQtProject_autogen/moc_predefs.h \
-	/Users/test/Documents/banking_system/GUI/src/app/database.cpp \
-	/Users/test/Documents/banking_system/GUI/src/app/database.h \
 	/Users/test/Documents/banking_system/GUI/src/app/main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/app/main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/app/main_window.h \

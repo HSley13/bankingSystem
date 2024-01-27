@@ -1,4 +1,4 @@
-#include "database.h"
+#include "adm_database.h"
 #include <iostream>
 #include <QWidget>
 #include <mysql_driver.h>
