@@ -34,8 +34,8 @@ main_window::main_window(QWidget *parent)
     connect(information, &QPushButton::clicked, this, &main_window::bank_info_button_clicked);
 
     vbox = new QVBoxLayout(central_widget);
-    vbox->addWidget(name, 0, Qt ::AlignCenter);
-    vbox->addWidget(welcome, 0, Qt ::AlignCenter);
+    vbox->addWidget(name, 2, Qt ::AlignCenter);
+    vbox->addWidget(welcome, 2, Qt ::AlignCenter);
     vbox->addWidget(admin, Qt ::AlignLeft);
     vbox->addWidget(client, Qt ::AlignLeft);
     vbox->addWidget(information, Qt ::AlignLeft);

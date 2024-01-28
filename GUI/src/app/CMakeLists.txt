@@ -3,6 +3,14 @@ qt_add_executable(MyQtProject
         main_window.cpp 
 )
 
-target_link_libraries(MyQtProject PRIVATE Qt6::Core Qt6::Widgets databaselib adminlibrary clientlibrary infolibrary)
+target_link_libraries(MyQtProject PRIVATE 
+                                Qt6::Core 
+                                Qt6::Widgets 
+                                database_library 
+                                adm_library 
+                                adm_option_library 
+                                client_library 
+                                info_library
+                        )
 
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)

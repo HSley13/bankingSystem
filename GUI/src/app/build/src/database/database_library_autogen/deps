@@ -1,0 +1,5 @@
+database_library_autogen/timestamp: \
+	/Users/test/Documents/banking_system/GUI/src/database/CMakeLists.txt \
+	/Users/test/Documents/banking_system/GUI/src/database/database.cpp \
+	/Users/test/Documents/banking_system/GUI/src/database/database.h \
+	/opt/homebrew/Cellar/cmake/3.28.1/bin/cmake

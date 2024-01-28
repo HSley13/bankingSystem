@@ -1,4 +1,4 @@
-adminlibrary_autogen/timestamp: \
+adm_library_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/Availability.h \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/AvailabilityInternal.h \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/AvailabilityInternalLegacy.h \
@@ -686,7 +686,7 @@ adminlibrary_autogen/timestamp: \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/adm_window/adm_main_window.h \
-	/Users/test/Documents/banking_system/GUI/src/app/build/src/adm_window/adminlibrary_autogen/moc_predefs.h \
+	/Users/test/Documents/banking_system/GUI/src/app/build/src/adm_window/adm_library_autogen/moc_predefs.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20functional.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20memory.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20type_traits.h \

@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QVBoxLayout>
 
 adm_main_window ::adm_main_window(QWidget *parent)
     : QMainWindow(parent)
@@ -25,6 +26,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
 
     adm_password = new QLabel("Enter ADM Password?");
     insert_adm_password = new QLineEdit(this);
+    insert_adm_password->setEchoMode(QLineEdit::Password);
 
     hbox2 = new QHBoxLayout();
     hbox2->addWidget(adm_password);
@@ -33,6 +35,8 @@ adm_main_window ::adm_main_window(QWidget *parent)
     button = new QPushButton("Confirm", this);
 
     vbox = new QVBoxLayout(central_widget);
+    vbox->setAlignment(Qt::AlignCenter);
+
     vbox->addLayout(hbox1);
     vbox->addLayout(hbox2);
     vbox->addWidget(button);

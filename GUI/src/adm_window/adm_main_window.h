@@ -4,10 +4,9 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>
-#include <QTextEdit>
+#include <QVBoxLayout>
 
 class adm_main_window : public QMainWindow
 {
@@ -21,10 +20,10 @@ private:
     QLabel *adm_password;
     QLineEdit *insert_adm_account_number;
     QLineEdit *insert_adm_password;
-    QVBoxLayout *vbox;
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;
     QPushButton *button;
+    QVBoxLayout *vbox;
 
 private slots:
     // void confirmed_login();
