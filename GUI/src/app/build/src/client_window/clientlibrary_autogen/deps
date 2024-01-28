@@ -747,8 +747,6 @@ clientlibrary_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
 	/Users/test/Documents/banking_system/GUI/src/app/build/src/client_window/clientlibrary_autogen/moc_predefs.h \
 	/Users/test/Documents/banking_system/GUI/src/client_window/CMakeLists.txt \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_database.cpp \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_database.h \
 	/Users/test/Documents/banking_system/GUI/src/client_window/client_main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/client_window/client_main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/client_window/client_main_window.h \

@@ -30,7 +30,7 @@ main_window::main_window(QWidget *parent)
     client = new QPushButton("2. Regular Client", this);
     connect(client, &QPushButton::clicked, this, &main_window::client_button_clicked);
 
-    information = new QPushButton("Information on our Bank", this);
+    information = new QPushButton("3. Information on our Bank", this);
     connect(information, &QPushButton::clicked, this, &main_window::bank_info_button_clicked);
 
     vbox = new QVBoxLayout(central_widget);

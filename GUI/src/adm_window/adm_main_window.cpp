@@ -1,8 +1,4 @@
 #include "adm_main_window.h"
-#include "adm_database.h"
-#include <mysql_driver.h>
-#include <mysql_connection.h>
-#include <argon2.h>
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>

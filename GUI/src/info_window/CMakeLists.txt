@@ -5,4 +5,5 @@ qt_add_library(infolibrary STATIC
 )
 
 target_link_libraries(infolibrary PRIVATE Qt6::Core Qt6::Widgets)
+
 target_include_directories(infolibrary INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
