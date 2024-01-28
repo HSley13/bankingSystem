@@ -11,5 +11,3 @@ target_link_directories(BankingSystem PRIVATE /usr/local/mysql-connector-c++-8.2
 
 target_include_directories(BankingSystem PRIVATE /opt/homebrew/include)
 target_include_directories(BankingSystem PRIVATE /usr/local/mysql-connector-c++-8.2.0/include/jdbc)
-
-install(TARGETS BankingSystem DESTINATION bin)

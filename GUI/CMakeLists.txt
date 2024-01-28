@@ -7,6 +7,7 @@ find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 qt_standard_project_setup()
 
 add_subdirectory(src/app)
+add_subdirectory(src/database)
 add_subdirectory(src/adm_window)
 add_subdirectory(src/client_window)
 add_subdirectory(src/info_window)
