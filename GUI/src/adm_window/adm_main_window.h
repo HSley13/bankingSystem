@@ -26,5 +26,5 @@ private:
     QVBoxLayout *vbox;
 
 private slots:
-    // void confirmed_login();
+    void confirm_login();
 };

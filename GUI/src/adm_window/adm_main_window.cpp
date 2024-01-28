@@ -1,4 +1,6 @@
 #include "adm_main_window.h"
+#include <adm_option_main_window.h>
+#include <database.h>
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
@@ -7,6 +9,12 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QMessageBox>
+
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/prepared_statement.h>
+#include <argon2.h>
 
 adm_main_window ::adm_main_window(QWidget *parent)
     : QMainWindow(parent)
@@ -33,7 +41,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
     hbox2->addWidget(insert_adm_password);
 
     button = new QPushButton("Confirm", this);
-
+    connect(button, &QPushButton::clicked, this, &adm_main_window::confirm_login);
     vbox = new QVBoxLayout(central_widget);
     vbox->setAlignment(Qt::AlignCenter);
 
@@ -42,7 +50,35 @@ adm_main_window ::adm_main_window(QWidget *parent)
     vbox->addWidget(button);
 }
 
-// void adm_main_window::confirmed_login()
-// {
+void adm_main_window::confirm_login()
+{
+    int account_number = insert_adm_account_number->text().toInt();
 
-// }
+    std ::string password = insert_adm_password->text().toStdString();
+
+    connection_details ID;
+    ID.server = "localhost";
+    ID.user = "root";
+    ID.password = "sleyHortes1312";
+
+    sql ::Connection *connection = connection_setup(&ID);
+
+    std ::string hashed_password = BANK ::retrieve_adm_hashed_password(connection, account_number);
+
+    if (BANK ::verifying_password(password, hashed_password))
+    {
+        QMessageBox *message1 = new QMessageBox(this);
+        message1->information(this, "login Succeed", "login succeed");
+        hide();
+
+        adm_option_main_window *new_window = new adm_option_main_window;
+
+        new_window->show();
+    }
+    else
+    {
+        QMessageBox *message = new QMessageBox(this);
+        message->warning(this, "login failed", "login failed");
+        connection->close();
+    }
+}

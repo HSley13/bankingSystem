@@ -11,6 +11,16 @@ target_link_libraries(adm_library PRIVATE
                                 database_library 
                         )
 
+target_link_directories(adm_library PRIVATE 
+                                /opt/homebrew/lib 
+                                /usr/local/mysql-connector-c++-8.2.0/lib64
+                        )
+
+target_include_directories(adm_library PRIVATE 
+                                /opt/homebrew/include
+                                /usr/local/mysql-connector-c++-8.2.0/include/jdbc
+                            )
+
 target_include_directories(adm_library INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 

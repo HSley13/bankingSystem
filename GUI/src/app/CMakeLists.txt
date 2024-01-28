@@ -6,11 +6,27 @@ qt_add_executable(MyQtProject
 target_link_libraries(MyQtProject PRIVATE 
                                 Qt6::Core 
                                 Qt6::Widgets 
-                                database_library 
+                                argon2 
+                                ssl 
+                                crypto 
+                                mysqlcppconn
                                 adm_library 
                                 adm_option_library 
                                 client_library 
                                 info_library
                         )
+
+
+
+target_link_directories(MyQtProject PRIVATE 
+                                /opt/homebrew/lib 
+                                /usr/local/mysql-connector-c++-8.2.0/lib64
+                        )
+
+
+target_include_directories(MyQtProject PRIVATE 
+                                /opt/homebrew/include
+                                /usr/local/mysql-connector-c++-8.2.0/include/jdbc
+                            )                      
 
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)
