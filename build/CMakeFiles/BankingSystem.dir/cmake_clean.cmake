@@ -1,6 +1,11 @@
 file(REMOVE_RECURSE
+  "BankingSystem_autogen"
+  "CMakeFiles/BankingSystem_autogen.dir/AutogenUsed.txt"
+  "CMakeFiles/BankingSystem_autogen.dir/ParseCache.txt"
   "BankingSystem"
   "BankingSystem.pdb"
+  "CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.o"
+  "CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/BankingSystem.dir/main.cpp.o"
   "CMakeFiles/BankingSystem.dir/main.cpp.o.d"
 )

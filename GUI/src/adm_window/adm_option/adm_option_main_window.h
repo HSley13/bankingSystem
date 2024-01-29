@@ -61,4 +61,5 @@ private slots:
     void display_people_in_debt();
     void display_specific_accounts_in_debt();
     void display_transactions_history();
+    void delete_accounts();
 };

@@ -129,6 +129,290 @@ BankingSystem/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/build
 .PHONY : BankingSystem/fast
 
+#=============================================================================
+# Target rules for targets named BankingSystem_autogen_timestamp_deps
+
+# Build rule for target.
+BankingSystem_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BankingSystem_autogen_timestamp_deps
+.PHONY : BankingSystem_autogen_timestamp_deps
+
+# fast build rule for target.
+BankingSystem_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem_autogen_timestamp_deps.dir/build.make CMakeFiles/BankingSystem_autogen_timestamp_deps.dir/build
+.PHONY : BankingSystem_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named BankingSystem_autogen
+
+# Build rule for target.
+BankingSystem_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BankingSystem_autogen
+.PHONY : BankingSystem_autogen
+
+# fast build rule for target.
+BankingSystem_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem_autogen.dir/build.make CMakeFiles/BankingSystem_autogen.dir/build
+.PHONY : BankingSystem_autogen/fast
+
+#=============================================================================
+# Target rules for targets named MyQtProject
+
+# Build rule for target.
+MyQtProject: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MyQtProject
+.PHONY : MyQtProject
+
+# fast build rule for target.
+MyQtProject/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/app/CMakeFiles/MyQtProject.dir/build.make GUI/src/app/CMakeFiles/MyQtProject.dir/build
+.PHONY : MyQtProject/fast
+
+#=============================================================================
+# Target rules for targets named MyQtProject_autogen_timestamp_deps
+
+# Build rule for target.
+MyQtProject_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MyQtProject_autogen_timestamp_deps
+.PHONY : MyQtProject_autogen_timestamp_deps
+
+# fast build rule for target.
+MyQtProject_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/app/CMakeFiles/MyQtProject_autogen_timestamp_deps.dir/build.make GUI/src/app/CMakeFiles/MyQtProject_autogen_timestamp_deps.dir/build
+.PHONY : MyQtProject_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named MyQtProject_autogen
+
+# Build rule for target.
+MyQtProject_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MyQtProject_autogen
+.PHONY : MyQtProject_autogen
+
+# fast build rule for target.
+MyQtProject_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/app/CMakeFiles/MyQtProject_autogen.dir/build.make GUI/src/app/CMakeFiles/MyQtProject_autogen.dir/build
+.PHONY : MyQtProject_autogen/fast
+
+#=============================================================================
+# Target rules for targets named database_library
+
+# Build rule for target.
+database_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 database_library
+.PHONY : database_library
+
+# fast build rule for target.
+database_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/database/CMakeFiles/database_library.dir/build.make GUI/src/database/CMakeFiles/database_library.dir/build
+.PHONY : database_library/fast
+
+#=============================================================================
+# Target rules for targets named database_library_autogen_timestamp_deps
+
+# Build rule for target.
+database_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 database_library_autogen_timestamp_deps
+.PHONY : database_library_autogen_timestamp_deps
+
+# fast build rule for target.
+database_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/database/CMakeFiles/database_library_autogen_timestamp_deps.dir/build.make GUI/src/database/CMakeFiles/database_library_autogen_timestamp_deps.dir/build
+.PHONY : database_library_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named database_library_autogen
+
+# Build rule for target.
+database_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 database_library_autogen
+.PHONY : database_library_autogen
+
+# fast build rule for target.
+database_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/database/CMakeFiles/database_library_autogen.dir/build.make GUI/src/database/CMakeFiles/database_library_autogen.dir/build
+.PHONY : database_library_autogen/fast
+
+#=============================================================================
+# Target rules for targets named adm_library
+
+# Build rule for target.
+adm_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_library
+.PHONY : adm_library
+
+# fast build rule for target.
+adm_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/CMakeFiles/adm_library.dir/build.make GUI/src/adm_window/CMakeFiles/adm_library.dir/build
+.PHONY : adm_library/fast
+
+#=============================================================================
+# Target rules for targets named adm_library_autogen_timestamp_deps
+
+# Build rule for target.
+adm_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_library_autogen_timestamp_deps
+.PHONY : adm_library_autogen_timestamp_deps
+
+# fast build rule for target.
+adm_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/CMakeFiles/adm_library_autogen_timestamp_deps.dir/build.make GUI/src/adm_window/CMakeFiles/adm_library_autogen_timestamp_deps.dir/build
+.PHONY : adm_library_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named adm_library_autogen
+
+# Build rule for target.
+adm_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_library_autogen
+.PHONY : adm_library_autogen
+
+# fast build rule for target.
+adm_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/CMakeFiles/adm_library_autogen.dir/build.make GUI/src/adm_window/CMakeFiles/adm_library_autogen.dir/build
+.PHONY : adm_library_autogen/fast
+
+#=============================================================================
+# Target rules for targets named adm_option_library
+
+# Build rule for target.
+adm_option_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_option_library
+.PHONY : adm_option_library
+
+# fast build rule for target.
+adm_option_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library.dir/build.make GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library.dir/build
+.PHONY : adm_option_library/fast
+
+#=============================================================================
+# Target rules for targets named adm_option_library_autogen_timestamp_deps
+
+# Build rule for target.
+adm_option_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_option_library_autogen_timestamp_deps
+.PHONY : adm_option_library_autogen_timestamp_deps
+
+# fast build rule for target.
+adm_option_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen_timestamp_deps.dir/build.make GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen_timestamp_deps.dir/build
+.PHONY : adm_option_library_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named adm_option_library_autogen
+
+# Build rule for target.
+adm_option_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 adm_option_library_autogen
+.PHONY : adm_option_library_autogen
+
+# fast build rule for target.
+adm_option_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen.dir/build.make GUI/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen.dir/build
+.PHONY : adm_option_library_autogen/fast
+
+#=============================================================================
+# Target rules for targets named client_library
+
+# Build rule for target.
+client_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client_library
+.PHONY : client_library
+
+# fast build rule for target.
+client_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/CMakeFiles/client_library.dir/build.make GUI/src/client_window/CMakeFiles/client_library.dir/build
+.PHONY : client_library/fast
+
+#=============================================================================
+# Target rules for targets named client_library_autogen_timestamp_deps
+
+# Build rule for target.
+client_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client_library_autogen_timestamp_deps
+.PHONY : client_library_autogen_timestamp_deps
+
+# fast build rule for target.
+client_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/CMakeFiles/client_library_autogen_timestamp_deps.dir/build.make GUI/src/client_window/CMakeFiles/client_library_autogen_timestamp_deps.dir/build
+.PHONY : client_library_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named client_library_autogen
+
+# Build rule for target.
+client_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client_library_autogen
+.PHONY : client_library_autogen
+
+# fast build rule for target.
+client_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/CMakeFiles/client_library_autogen.dir/build.make GUI/src/client_window/CMakeFiles/client_library_autogen.dir/build
+.PHONY : client_library_autogen/fast
+
+#=============================================================================
+# Target rules for targets named info_library
+
+# Build rule for target.
+info_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library
+.PHONY : info_library
+
+# fast build rule for target.
+info_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library.dir/build.make GUI/src/info_window/CMakeFiles/info_library.dir/build
+.PHONY : info_library/fast
+
+#=============================================================================
+# Target rules for targets named info_library_autogen_timestamp_deps
+
+# Build rule for target.
+info_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library_autogen_timestamp_deps
+.PHONY : info_library_autogen_timestamp_deps
+
+# fast build rule for target.
+info_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir/build.make GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir/build
+.PHONY : info_library_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named info_library_autogen
+
+# Build rule for target.
+info_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library_autogen
+.PHONY : info_library_autogen
+
+# fast build rule for target.
+info_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library_autogen.dir/build.make GUI/src/info_window/CMakeFiles/info_library_autogen.dir/build
+.PHONY : info_library_autogen/fast
+
+BankingSystem_autogen/mocs_compilation.o: BankingSystem_autogen/mocs_compilation.cpp.o
+.PHONY : BankingSystem_autogen/mocs_compilation.o
+
+# target to build an object file
+BankingSystem_autogen/mocs_compilation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.o
+.PHONY : BankingSystem_autogen/mocs_compilation.cpp.o
+
+BankingSystem_autogen/mocs_compilation.i: BankingSystem_autogen/mocs_compilation.cpp.i
+.PHONY : BankingSystem_autogen/mocs_compilation.i
+
+# target to preprocess a source file
+BankingSystem_autogen/mocs_compilation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.i
+.PHONY : BankingSystem_autogen/mocs_compilation.cpp.i
+
+BankingSystem_autogen/mocs_compilation.s: BankingSystem_autogen/mocs_compilation.cpp.s
+.PHONY : BankingSystem_autogen/mocs_compilation.s
+
+# target to generate assembly for a file
+BankingSystem_autogen/mocs_compilation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.s
+.PHONY : BankingSystem_autogen/mocs_compilation.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -161,7 +445,30 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... BankingSystem_autogen"
+	@echo "... BankingSystem_autogen_timestamp_deps"
+	@echo "... MyQtProject_autogen"
+	@echo "... MyQtProject_autogen_timestamp_deps"
+	@echo "... adm_library_autogen"
+	@echo "... adm_library_autogen_timestamp_deps"
+	@echo "... adm_option_library_autogen"
+	@echo "... adm_option_library_autogen_timestamp_deps"
+	@echo "... client_library_autogen"
+	@echo "... client_library_autogen_timestamp_deps"
+	@echo "... database_library_autogen"
+	@echo "... database_library_autogen_timestamp_deps"
+	@echo "... info_library_autogen"
+	@echo "... info_library_autogen_timestamp_deps"
 	@echo "... BankingSystem"
+	@echo "... MyQtProject"
+	@echo "... adm_library"
+	@echo "... adm_option_library"
+	@echo "... client_library"
+	@echo "... database_library"
+	@echo "... info_library"
+	@echo "... BankingSystem_autogen/mocs_compilation.o"
+	@echo "... BankingSystem_autogen/mocs_compilation.i"
+	@echo "... BankingSystem_autogen/mocs_compilation.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

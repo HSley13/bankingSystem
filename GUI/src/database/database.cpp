@@ -379,6 +379,12 @@ void Account ::remove_accounts(sql ::Connection *connection, int account_number)
         if (result->isBeforeFirst())
         {
             std ::cout << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std ::endl;
+
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
+
+            delete message;
+
             return;
         }
 
@@ -1041,7 +1047,7 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
                       << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
                       << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
                       << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("schedule_time")));
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
 
                 table->insertRow(row);
 
@@ -1141,7 +1147,7 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
                   << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("schedule_time")));
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
 
             table->insertRow(row);
 

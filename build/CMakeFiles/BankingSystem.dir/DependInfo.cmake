@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/test/Documents/banking_system/build/BankingSystem_autogen/mocs_compilation.cpp" "CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/BankingSystem.dir/BankingSystem_autogen/mocs_compilation.cpp.o.d"
   "/Users/test/Documents/banking_system/main.cpp" "CMakeFiles/BankingSystem.dir/main.cpp.o" "gcc" "CMakeFiles/BankingSystem.dir/main.cpp.o.d"
   )
 

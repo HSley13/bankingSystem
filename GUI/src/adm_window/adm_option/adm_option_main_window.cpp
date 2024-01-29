@@ -209,8 +209,24 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_7 = new QWidget();
         wid_7->setWindowTitle("Remove Accounts through the Account_number");
 
+        QLabel *wid_7_label = new QLabel("Enter the Account You want to delete", this);
+        wid_7_account_number = new QLineEdit(this);
+        QHBoxLayout *wid_7_hbox = new QHBoxLayout();
+        wid_7_hbox->addWidget(wid_7_label);
+        wid_7_hbox->addWidget(wid_7_account_number);
+
+        QPushButton *wid_7_button = new QPushButton("Confirm", this);
+        connect(wid_7_button, &QPushButton::clicked, this, &adm_option_main_window::delete_accounts);
+
         back_button7 = new QPushButton("Previous Menu");
         connect(back_button7, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_7_vbox = new QVBoxLayout();
+        wid_7_vbox->addLayout(wid_7_hbox);
+        wid_7_vbox->addWidget(wid_7_button, Qt::AlignCenter);
+        wid_7_vbox->addWidget(back_button5, Qt::AlignCenter | Qt::AlignBottom);
+
+        wid_7->setLayout(wid_7_vbox);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -327,4 +343,18 @@ void adm_option_main_window::display_transactions_history()
         int account_number = wid_6_account_number->text().toInt();
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
+}
+
+void adm_option_main_window::delete_accounts()
+{
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        int account_number = wid_7_account_number->text().toInt();
+
+        Account::remove_accounts(connection, account_number);
 }
