@@ -3,7 +3,9 @@ qt_add_library(database_library STATIC
                     database.h
                 )
 
-target_link_directories(database_library PRIVATE 
+target_link_libraries(database_library PRIVATE
+                            Qt6::Core 
+                            Qt6::Widgets
                             argon2 
                             ssl 
                             crypto 

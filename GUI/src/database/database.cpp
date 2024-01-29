@@ -5,6 +5,16 @@
 #include <stack>
 #include <vector>
 
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QStackedWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QHBoxLayout>
+#include <QMessageBox>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/prepared_statement.h>
@@ -725,6 +735,78 @@ void BANK ::display_accounts_table(sql ::Connection *connection)
     }
 }
 
+void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
+{
+    try
+    {
+        QTableWidget *table = new QTableWidget();
+
+        table->setRowCount(0);
+        table->setColumnCount(11);
+        table->setHorizontalHeaderLabels(QStringList() << "Account Number"
+                                                       << "National ID"
+                                                       << "First Name"
+                                                       << "Last Name"
+                                                       << "Date of Birth"
+                                                       << "Phone Number"
+                                                       << "Email"
+                                                       << "Adress"
+                                                       << "Balance"
+                                                       << "Interes Rate"
+                                                       << "Itinial Timestamp");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM accounts;"));
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (result->isBeforeFirst())
+        {
+            int row = table->rowCount();
+
+            while (result->next())
+            {
+                QList<QTableWidgetItem *> items;
+                items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+                      << new QTableWidgetItem(QString::number(result->getInt("account_number")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
+                      << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
+
+                table->insertRow(row);
+                for (int i = 0; i < items.size(); i++)
+                    table->setItem(row, i, items[i]);
+
+                items.clear();
+
+                row++;
+            }
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->show();
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void BANK ::display_specific_accounts(sql ::Connection *connection, int account_number)
 {
     try
@@ -747,6 +829,73 @@ void BANK ::display_specific_accounts(sql ::Connection *connection, int account_
         }
         else
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        QTableWidget *table = new QTableWidget();
+
+        table->setRowCount(0);
+        table->setColumnCount(10);
+        table->setHorizontalHeaderLabels(QStringList() << "National ID"
+                                                       << "First Name"
+                                                       << "Last Name"
+                                                       << "Date of Birth"
+                                                       << "Phone Number"
+                                                       << "Email"
+                                                       << "Adress"
+                                                       << "Balance"
+                                                       << "Interes Rate"
+                                                       << "Itinial Timestamp");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
+
+        if (result->next())
+        {
+            items << new QTableWidgetItem(QString::number(result->getInt("national_ID")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
+                  << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
+
+            table->insertRow(row);
+
+            for (int i = 0; i < items.size(); i++)
+                table->setItem(row, i, items[i]);
+
+            items.clear();
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->show();
     }
     catch (const sql ::SQLException &e)
     {
@@ -790,6 +939,76 @@ void BANK ::display_people_in_debt(sql ::Connection *connection)
     }
 }
 
+void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
+{
+    try
+    {
+        QTableWidget *table = new QTableWidget();
+        table->setRowCount(0);
+        table->setColumnCount(9);
+
+        table->setHorizontalHeaderLabels(QStringList() << "Account Number"
+                                                       << "National ID"
+                                                       << "First Name"
+                                                       << "Last Name"
+                                                       << "Balance"
+                                                       << "Account Inerest Rate"
+                                                       << "Borrowed Amount"
+                                                       << "Borrowed Amount Interest Rate"
+                                                       << "Borrowed Amount Initial Timestamp"
+                                                       << "Schedule Time");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
+
+        if (result->isBeforeFirst())
+        {
+            while (result->next())
+            {
+                items << new QTableWidgetItem(QString::number(result->getInt("A")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borowed_amount"))))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("D")));
+
+                table->insertRow(row);
+
+                for (int i = 0; i < items.size(); i++)
+                    table->setItem(row, i, items[i]);
+
+                items.clear();
+
+                row++;
+            }
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->show();
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void BANK ::display_specific_accounts_in_debt(sql ::Connection *connection, int account_number)
 {
     try
@@ -811,6 +1030,70 @@ void BANK ::display_specific_accounts_in_debt(sql ::Connection *connection, int 
         }
         else
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        QTableWidget *table = new QTableWidget();
+        table->setRowCount(0);
+        table->setColumnCount(9);
+
+        table->setHorizontalHeaderLabels(QStringList() << "National ID"
+                                                       << "First Name"
+                                                       << "Last Name"
+                                                       << "Balance"
+                                                       << "Account Inerest Rate"
+                                                       << "Borrowed Amount"
+                                                       << "Borrowed Amount Interest Rate"
+                                                       << "Borrowed Amount Initial Timestamp"
+                                                       << "Schedule Time");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number WHERE accounts.account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
+
+        if (result->next())
+        {
+            items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borowed_amount"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("D")));
+
+            table->insertRow(row);
+
+            for (int i = 0; i < items.size(); i++)
+                table->setItem(row, i, items[i]);
+
+            items.clear();
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->show();
     }
     catch (const sql ::SQLException &e)
     {

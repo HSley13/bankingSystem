@@ -4,6 +4,7 @@
 #include <random>
 #include <stack>
 #include <vector>
+#include <QWidget>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -76,9 +77,17 @@ public:
 
     static void display_accounts_table(sql ::Connection *connection);
 
+    static void Qt_display_accounts_table(sql ::Connection *connection);
+
     static void display_specific_accounts(sql ::Connection *connection, int account_number);
+
+    static void Qt_display_specific_accounts(sql ::Connection *connection, int account_number);
 
     static void display_people_in_debt(sql ::Connection *connection);
 
+    static void Qt_display_people_in_debt(sql ::Connection *connection);
+
     static void display_specific_accounts_in_debt(sql ::Connection *connection, int account_number);
+
+    static void Qt_display_specific_accounts_in_debt(sql ::Connection *connection, int account_number);
 };

@@ -6,10 +6,6 @@ qt_add_executable(MyQtProject
 target_link_libraries(MyQtProject PRIVATE 
                                 Qt6::Core 
                                 Qt6::Widgets 
-                                argon2 
-                                ssl 
-                                crypto 
-                                mysqlcppconn
                                 adm_library 
                                 adm_option_library 
                                 client_library 

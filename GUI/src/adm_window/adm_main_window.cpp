@@ -77,8 +77,10 @@ void adm_main_window::confirm_login()
     }
     else
     {
+        QString message1 = "Login Failed! The Account number :" + QString::number(account_number) + " is not Found, correct it and try again";
+
         QMessageBox *message = new QMessageBox(this);
-        message->warning(this, "login failed", "login failed");
+        message->warning(this, message1, message1);
         connection->close();
     }
 }

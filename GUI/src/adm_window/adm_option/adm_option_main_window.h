@@ -43,4 +43,5 @@ private:
 private slots:
     void back_button();
     void wid_1_conf();
+    void display_accounts_table();
 };
