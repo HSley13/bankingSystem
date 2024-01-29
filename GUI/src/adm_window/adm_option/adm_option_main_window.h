@@ -32,6 +32,14 @@ private:
     QWidget *wid_6;
     QWidget *wid_7;
 
+    QPushButton *back_button1;
+    QPushButton *back_button2;
+    QPushButton *back_button3;
+    QPushButton *back_button4;
+    QPushButton *back_button5;
+    QPushButton *back_button6;
+    QPushButton *back_button7;
+
     QVBoxLayout *vbox;
 
     QStackedWidget *window_stack;
@@ -40,8 +48,17 @@ private:
     QLineEdit *new_adm_password;
     QLineEdit *new_adm_password_confirmation;
 
+    QLineEdit *wid_3_account_number;
+    QLineEdit *wid_5_account_number;
+    QLineEdit *wid_6_account_number;
+    QLineEdit *wid_7_account_number;
+
 private slots:
-    void back_button();
+    void back_function();
     void wid_1_conf();
     void display_accounts_table();
+    void display_specific_accounts_table();
+    void display_people_in_debt();
+    void display_specific_accounts_in_debt();
+    void display_transactions_history();
 };

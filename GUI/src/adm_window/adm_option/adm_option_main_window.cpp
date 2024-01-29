@@ -35,23 +35,23 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         connect(button2, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(2); });
 
-        button3 = new QPushButton("3. Create Administrator", this);
+        button3 = new QPushButton("3. Display Specific Account through the Account number", this);
         connect(button3, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(3); });
 
-        button4 = new QPushButton("4. Create Administrator", this);
+        button4 = new QPushButton("4. Display People in Debt", this);
         connect(button4, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(4); });
 
-        button5 = new QPushButton("5. Create Administrator", this);
+        button5 = new QPushButton("5. Display Specific Person in Debt through the Account_number", this);
         connect(button5, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(5); });
 
-        button6 = new QPushButton("6. Create Administrator", this);
+        button6 = new QPushButton("6. Display all Transactions History for an Account_number", this);
         connect(button6, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(6); });
 
-        button7 = new QPushButton("7. Create Administrator", this);
+        button7 = new QPushButton("7. Remove Accounts through the Account_number", this);
         connect(button7, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(7); });
 
@@ -67,7 +67,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         vbox->addWidget(button7);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        wid_1 = new QWidget(this);
+        wid_1 = new QWidget();
         wid_1->setWindowTitle("Create Administrator");
 
         QLabel *message1 = new QLabel("Enter your Desired Account Number", this);
@@ -92,46 +92,127 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QPushButton *wid_1_confirm_button = new QPushButton("Confirm", this);
         connect(wid_1_confirm_button, &QPushButton::clicked, this, &adm_option_main_window::wid_1_conf);
 
-        QPushButton *back = new QPushButton("Previous Menu", this);
-        connect(back, &QPushButton::clicked, this, &adm_option_main_window::back_button);
+        back_button1 = new QPushButton("Previous Menu");
+        connect(back_button1, &QPushButton::clicked, this, &adm_option_main_window::back_function);
 
         QVBoxLayout *wid1_vbox = new QVBoxLayout();
         wid1_vbox->addLayout(wid_1_hbox1, Qt::AlignCenter);
         wid1_vbox->addLayout(wid_1_hbox2, Qt::AlignCenter);
         wid1_vbox->addLayout(wid_1_hbox3, Qt::AlignCenter);
+        wid1_vbox->addWidget(wid_1_confirm_button);
+        wid1_vbox->addWidget(back_button1, Qt::AlignCenter, Qt::AlignBottom);
 
         wid_1->setLayout(wid1_vbox);
-        wid_1->layout()->addWidget(wid_1_confirm_button);
-        wid_1->layout()->addWidget(back);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        wid_2 = new QWidget(this);
+        wid_2 = new QWidget();
         wid_2->setWindowTitle("Display The Accounts Table");
 
-        QPushButton *wid_2_button = new QPushButton("Click on this Button to display The Account Table", this);
+        QPushButton *wid_2_button = new QPushButton("Confirm", this);
         connect(wid_2_button, &QPushButton::clicked, this, &adm_option_main_window::display_accounts_table);
 
-        QVBoxLayout *wid_2_vbox = new QVBoxLayout(this);
-        wid_2_vbox->addWidget(wid_2_button, Qt::AlignCenter | Qt::AlignTop);
+        back_button2 = new QPushButton("Previous Menu");
+        connect(back_button2, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_2_vbox = new QVBoxLayout();
+        wid_2_vbox->addWidget(wid_2_button, Qt::AlignCenter);
+        wid_2_vbox->addWidget(back_button2, Qt::AlignCenter | Qt::AlignBottom);
 
         wid_2->setLayout(wid_2_vbox);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        wid_3 = new QWidget(this);
-        wid_3->setWindowTitle("Display Specific Account through the Account_number");
+        wid_3 = new QWidget();
+        wid_3->setWindowTitle("Display Specific Account through the Account number");
 
-        wid_4 = new QWidget(this);
+        QLabel *wid_3_label = new QLabel("Enter the Account You want to display", this);
+        wid_3_account_number = new QLineEdit(this);
+        QHBoxLayout *wid_3_hbox = new QHBoxLayout();
+        wid_3_hbox->addWidget(wid_3_label);
+        wid_3_hbox->addWidget(wid_3_account_number);
+
+        QPushButton *wid_3_button = new QPushButton("Confirm", this);
+        connect(wid_3_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_table);
+
+        back_button3 = new QPushButton("Previous Menu");
+        connect(back_button3, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_3_vbox = new QVBoxLayout();
+        wid_3_vbox->addLayout(wid_3_hbox);
+        wid_3_vbox->addWidget(wid_3_button);
+        wid_3_vbox->addWidget(back_button3, Qt::AlignCenter | Qt::AlignBottom);
+
+        wid_3->setLayout(wid_3_vbox);
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        wid_4 = new QWidget();
         wid_4->setWindowTitle("Display People in Debt");
 
-        wid_5 = new QWidget(this);
+        QPushButton *wid_4_button = new QPushButton("Confirm", this);
+        connect(wid_4_button, &QPushButton::clicked, this, &adm_option_main_window::display_people_in_debt);
+
+        back_button4 = new QPushButton("Previous Menu");
+        connect(back_button4, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_4_vbox = new QVBoxLayout();
+        wid_4_vbox->addWidget(wid_4_button, Qt::AlignCenter);
+        wid_4_vbox->addWidget(back_button4, Qt::AlignCenter | Qt::AlignBottom);
+
+        wid_4->setLayout(wid_4_vbox);
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        wid_5 = new QWidget();
         wid_5->setWindowTitle("Display Specific Person in Debt through the Account_number");
 
-        wid_6 = new QWidget(this);
-        wid_6->setWindowTitle("Display all Transactions History for an Account_number ");
+        QLabel *wid_5_label = new QLabel("Enter the Account You want to display to see their debt", this);
+        wid_5_account_number = new QLineEdit(this);
+        QHBoxLayout *wid_5_hbox = new QHBoxLayout();
+        wid_5_hbox->addWidget(wid_5_label);
+        wid_5_hbox->addWidget(wid_5_account_number);
 
-        wid_7 = new QWidget(this);
+        QPushButton *wid_5_button = new QPushButton("Confirm", this);
+        connect(wid_5_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_in_debt);
+
+        back_button5 = new QPushButton("Previous Menu");
+        connect(back_button5, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_5_vbox = new QVBoxLayout();
+        wid_5_vbox->addLayout(wid_5_hbox);
+        wid_5_vbox->addWidget(wid_5_button, Qt::AlignCenter);
+        wid_5_vbox->addWidget(back_button5, Qt::AlignCenter | Qt::AlignBottom);
+
+        wid_5->setLayout(wid_5_vbox);
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        wid_6 = new QWidget();
+        wid_6->setWindowTitle("Display all Transactions History for an Account_number");
+
+        QLabel *wid_6_label = new QLabel("Enter the Account You want to Display all Transactions History for", this);
+        wid_6_account_number = new QLineEdit(this);
+        QHBoxLayout *wid_6_hbox = new QHBoxLayout();
+        wid_6_hbox->addWidget(wid_6_label);
+        wid_6_hbox->addWidget(wid_6_account_number);
+
+        QPushButton *wid_6_button = new QPushButton("6", this);
+        connect(wid_6_button, &QPushButton::clicked, this, &adm_option_main_window::display_transactions_history);
+
+        back_button6 = new QPushButton("Previous Menu");
+        connect(back_button6, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        QVBoxLayout *wid_6_vbox = new QVBoxLayout();
+        wid_6_vbox->addLayout(wid_6_hbox);
+        wid_6_vbox->addWidget(wid_6_button, Qt::AlignCenter);
+        wid_6_vbox->addWidget(back_button6, Qt::AlignCenter | Qt::AlignBottom);
+
+        wid_6->setLayout(wid_6_vbox);
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        wid_7 = new QWidget();
         wid_7->setWindowTitle("Remove Accounts through the Account_number");
+
+        back_button7 = new QPushButton("Previous Menu");
+        connect(back_button7, &QPushButton::clicked, this, &adm_option_main_window::back_function);
+
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         window_stack->addWidget(central_widget);
         window_stack->addWidget(wid_1);
@@ -143,18 +224,26 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         window_stack->addWidget(wid_7);
 }
 
+void adm_option_main_window::back_function()
+{
+        int current_index = window_stack->currentIndex();
+
+        if (current_index)
+                window_stack->setCurrentIndex(0);
+}
+
 void adm_option_main_window::wid_1_conf()
 {
-        int account_number = new_adm_account_number->text().toInt();
-        std ::string password = new_adm_password->text().toStdString();
-        std ::string password_confirmation = new_adm_password_confirmation->text().toStdString();
-
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
         sql ::Connection *connection = connection_setup(&ID);
+
+        int account_number = new_adm_account_number->text().toInt();
+        std ::string password = new_adm_password->text().toStdString();
+        std ::string password_confirmation = new_adm_password_confirmation->text().toStdString();
 
         if (password.compare(password_confirmation))
         {
@@ -186,10 +275,56 @@ void adm_option_main_window::display_accounts_table()
         BANK ::Qt_display_accounts_table(connection);
 }
 
-void adm_option_main_window::back_button()
+void adm_option_main_window::display_specific_accounts_table()
 {
-        int current_index = window_stack->currentIndex();
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
 
-        if (current_index)
-                window_stack->setCurrentIndex(0);
+        sql ::Connection *connection = connection_setup(&ID);
+
+        int account_number = wid_3_account_number->text().toInt();
+
+        BANK ::Qt_display_specific_accounts(connection, account_number);
+}
+
+void adm_option_main_window::display_people_in_debt()
+{
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        BANK ::Qt_display_people_in_debt(connection);
+}
+
+void adm_option_main_window::display_specific_accounts_in_debt()
+{
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        int account_number = wid_5_account_number->text().toInt();
+
+        BANK ::Qt_display_specific_accounts_in_debt(connection, account_number);
+}
+
+void adm_option_main_window::display_transactions_history()
+{
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        int account_number = wid_6_account_number->text().toInt();
+
+        Transactions ::Qt_display_transactions_history(connection, account_number);
 }

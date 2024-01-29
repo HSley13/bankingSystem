@@ -235,6 +235,63 @@ void Transactions ::display_transactions_history(sql ::Connection *connection, i
     }
 }
 
+void Transactions ::Qt_display_transactions_history(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        QTableWidget *table = new QTableWidget();
+        table->setRowCount(0);
+        table->setColumnCount(2);
+
+        table->setHorizontalHeaderLabels(QStringList() << "Transaction Details"
+                                                       << "Date & Time");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + ";"));
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
+
+        if (result->isBeforeFirst())
+        {
+            while (result->next())
+            {
+                items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
+
+                table->insertRow(row);
+                table->setItem(row, 0, items[0]);
+                table->setItem(row, 1, items[1]);
+
+                row++;
+
+                items.clear();
+            }
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->show();
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void Transactions ::insert_borrowal(sql ::Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate)
 {
     try
@@ -784,6 +841,7 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
                       << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
 
                 table->insertRow(row);
+
                 for (int i = 0; i < items.size(); i++)
                     table->setItem(row, i, items[i]);
 
@@ -874,7 +932,7 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
 
         if (result->next())
         {
-            items << new QTableWidgetItem(QString::number(result->getInt("national_ID")))
+            items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
                   << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
                   << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
                   << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
@@ -980,9 +1038,10 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
                       << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
                       << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
                       << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borowed_amount"))))
+                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
                       << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("D")));
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("schedule_time")));
 
                 table->insertRow(row);
 
@@ -1079,9 +1138,10 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
                   << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borowed_amount"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("D")));
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("schedule_time")));
 
             table->insertRow(row);
 

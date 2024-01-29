@@ -40,35 +40,51 @@ namespace {
 struct qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS_t {};
 static constexpr auto qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS = QtMocHelpers::stringData(
     "adm_option_main_window",
-    "back_button",
+    "back_function",
     "",
     "wid_1_conf",
-    "display_accounts_table"
+    "display_accounts_table",
+    "display_specific_accounts_table",
+    "display_people_in_debt",
+    "display_specific_accounts_in_debt",
+    "display_transactions_history"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS_t {
-    uint offsetsAndSizes[10];
+    uint offsetsAndSizes[18];
     char stringdata0[23];
-    char stringdata1[12];
+    char stringdata1[14];
     char stringdata2[1];
     char stringdata3[11];
     char stringdata4[23];
+    char stringdata5[32];
+    char stringdata6[23];
+    char stringdata7[34];
+    char stringdata8[29];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS_t::offsetsAndSizes) + ofs), len 
 Q_CONSTINIT static const qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS_t qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS = {
     {
         QT_MOC_LITERAL(0, 22),  // "adm_option_main_window"
-        QT_MOC_LITERAL(23, 11),  // "back_button"
-        QT_MOC_LITERAL(35, 0),  // ""
-        QT_MOC_LITERAL(36, 10),  // "wid_1_conf"
-        QT_MOC_LITERAL(47, 22)   // "display_accounts_table"
+        QT_MOC_LITERAL(23, 13),  // "back_function"
+        QT_MOC_LITERAL(37, 0),  // ""
+        QT_MOC_LITERAL(38, 10),  // "wid_1_conf"
+        QT_MOC_LITERAL(49, 22),  // "display_accounts_table"
+        QT_MOC_LITERAL(72, 31),  // "display_specific_accounts_table"
+        QT_MOC_LITERAL(104, 22),  // "display_people_in_debt"
+        QT_MOC_LITERAL(127, 33),  // "display_specific_accounts_in_..."
+        QT_MOC_LITERAL(161, 28)   // "display_transactions_history"
     },
     "adm_option_main_window",
-    "back_button",
+    "back_function",
     "",
     "wid_1_conf",
-    "display_accounts_table"
+    "display_accounts_table",
+    "display_specific_accounts_table",
+    "display_people_in_debt",
+    "display_specific_accounts_in_debt",
+    "display_transactions_history"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -80,7 +96,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSadm_option_main_windowENDCLASS[]
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -88,11 +104,19 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSadm_option_main_windowENDCLASS[]
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   32,    2, 0x08,    1 /* Private */,
-       3,    0,   33,    2, 0x08,    2 /* Private */,
-       4,    0,   34,    2, 0x08,    3 /* Private */,
+       1,    0,   56,    2, 0x08,    1 /* Private */,
+       3,    0,   57,    2, 0x08,    2 /* Private */,
+       4,    0,   58,    2, 0x08,    3 /* Private */,
+       5,    0,   59,    2, 0x08,    4 /* Private */,
+       6,    0,   60,    2, 0x08,    5 /* Private */,
+       7,    0,   61,    2, 0x08,    6 /* Private */,
+       8,    0,   62,    2, 0x08,    7 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -109,11 +133,19 @@ Q_CONSTINIT const QMetaObject adm_option_main_window::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSadm_option_main_windowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<adm_option_main_window, std::true_type>,
-        // method 'back_button'
+        // method 'back_function'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'wid_1_conf'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'display_accounts_table'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'display_specific_accounts_table'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'display_people_in_debt'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'display_specific_accounts_in_debt'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'display_transactions_history'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -125,9 +157,13 @@ void adm_option_main_window::qt_static_metacall(QObject *_o, QMetaObject::Call _
         auto *_t = static_cast<adm_option_main_window *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->back_button(); break;
+        case 0: _t->back_function(); break;
         case 1: _t->wid_1_conf(); break;
         case 2: _t->display_accounts_table(); break;
+        case 3: _t->display_specific_accounts_table(); break;
+        case 4: _t->display_people_in_debt(); break;
+        case 5: _t->display_specific_accounts_in_debt(); break;
+        case 6: _t->display_transactions_history(); break;
         default: ;
         }
     }
@@ -153,13 +189,13 @@ int adm_option_main_window::qt_metacall(QMetaObject::Call _c, int _id, void **_a
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 7;
     }
     return _id;
 }
