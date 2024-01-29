@@ -4,7 +4,7 @@ qt_add_library(client_library STATIC
     client_main_window.h
 )
 
-target_link_libraries(client_library PRIVATE 
+target_link_libraries(client_library PRIVATE
                             Qt6::Core
                             Qt6::Widgets
                             database_library

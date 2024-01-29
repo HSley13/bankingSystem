@@ -11,18 +11,6 @@ target_link_libraries(MyQtProject PRIVATE
                                 client_library 
                                 info_library
                         )
-
-
-
-target_link_directories(MyQtProject PRIVATE 
-                                /opt/homebrew/lib 
-                                /usr/local/mysql-connector-c++-8.2.0/lib64
-                        )
-
-
-target_include_directories(MyQtProject PRIVATE 
-                                /opt/homebrew/include
-                                /usr/local/mysql-connector-c++-8.2.0/include/jdbc
-                            )                      
+                   
 
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)

@@ -7,13 +7,7 @@ find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 qt_standard_project_setup()
 
 add_executable(BankingSystem main.cpp)
-target_link_libraries(BankingSystem database_library Qt6::Core Qt6::Widgets)
-
-target_link_directories(BankingSystem PRIVATE /opt/homebrew/lib)
-target_link_directories(BankingSystem PRIVATE /usr/local/mysql-connector-c++-8.2.0/lib64)
-
-target_include_directories(BankingSystem PRIVATE /opt/homebrew/include)
-target_include_directories(BankingSystem PRIVATE /usr/local/mysql-connector-c++-8.2.0/include/jdbc)
+target_link_libraries(BankingSystem PRIVATE database_library Qt6::Core Qt6::Widgets)
 
 add_subdirectory(GUI/src/app)
 add_subdirectory(GUI/src/database)
