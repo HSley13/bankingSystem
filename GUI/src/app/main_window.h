@@ -21,12 +21,11 @@ private:
     QLabel *welcome;
     QPushButton *admin;
     QPushButton *client;
-    QPushButton *information;
     QVBoxLayout *vbox;
     QHBoxLayout *hbox;
+    QMessageBox *message;
 
 private slots:
     void adm_button_clicked();
     void client_button_clicked();
-    void bank_info_button_clicked();
 };

@@ -1,7 +1,6 @@
 #include "main_window.h"
 #include <adm_main_window.h>
 #include <client_main_window.h>
-#include <info_main_window.h>
 #include <iostream>
 #include <QMainWindow>
 #include <QWidget>
@@ -30,37 +29,30 @@ main_window::main_window(QWidget *parent)
     client = new QPushButton("2. Regular Client", this);
     connect(client, &QPushButton::clicked, this, &main_window::client_button_clicked);
 
-    information = new QPushButton("3. Information on our Bank", this);
-    connect(information, &QPushButton::clicked, this, &main_window::bank_info_button_clicked);
-
     vbox = new QVBoxLayout(central_widget);
     vbox->addWidget(name, 2, Qt ::AlignCenter);
     vbox->addWidget(welcome, 2, Qt ::AlignCenter);
     vbox->addWidget(admin, Qt ::AlignLeft);
     vbox->addWidget(client, Qt ::AlignLeft);
-    vbox->addWidget(information, Qt ::AlignLeft);
+    vbox->setAlignment(Qt::AlignCenter);
 }
 
 void main_window::adm_button_clicked()
 {
+    message = new QMessageBox(this);
+    message->information(this, "Redirecting...", "You are about to be redirected to the Administrator's Authentification Page");
+
     adm_main_window *new_window = new adm_main_window;
-    hide();
 
     new_window->show();
 }
 
 void main_window::client_button_clicked()
 {
+    message = new QMessageBox(this);
+    message->information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
+
     client_main_window *new_window = new client_main_window;
-    hide();
-
-    new_window->show();
-}
-
-void main_window::bank_info_button_clicked()
-{
-    info_main_window *new_window = new info_main_window;
-    hide();
 
     new_window->show();
 }

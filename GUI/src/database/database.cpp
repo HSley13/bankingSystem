@@ -200,6 +200,31 @@ void Transactions ::transfer(sql ::Connection *connection, const double amount_t
     }
 }
 
+void Transactions ::borrow(sql ::Connection *connection, const double amount_to_borrow, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("Update accounts set balance = balance + ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_borrow);
+        prep_statement->setInt(2, account_number);
+
+        prep_statement->executeUpdate();
+
+        std ::cout << "You have borrowed: $" << amount_to_borrow << ", and your new Balance is: $" << check_balance(connection, account_number) << std ::endl;
+        std ::cout << std ::endl;
+
+        insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void Transactions ::display_transactions_history(sql ::Connection *connection, int account_number)
 {
     try
@@ -210,6 +235,12 @@ void Transactions ::display_transactions_history(sql ::Connection *connection, i
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + ";"));
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result)
+        {
+            std ::cout << "The Account Number entered is not registered in out Database" << std ::endl;
+            return;
+        }
 
         if (result->isBeforeFirst())
         {
@@ -261,7 +292,7 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (!result->next())
+        if (!result)
         {
             QMessageBox *message = new QMessageBox();
             message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
@@ -292,6 +323,13 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
     }
     catch (const sql ::SQLException &e)
     {
+        QMessageBox *message = new QMessageBox();
+        message->warning(nullptr, "Warning!", "The Account you entered doesn't exist in our data. Check and try again");
+        message->show();
+
+        delete message;
+        return;
+
         std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
     }
     catch (const std ::exception &e)

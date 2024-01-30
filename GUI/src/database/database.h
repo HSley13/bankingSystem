@@ -33,6 +33,8 @@ public:
 
     static void transfer(sql ::Connection *connection, const double amount_to_send, int account_number1, int account_number2);
 
+    static void borrow(sql ::Connection *connection, const double amount_to_borrow, int account_number);
+
     static void display_transactions_history(sql ::Connection *connection, int account_number);
 
     static void Qt_display_transactions_history(sql ::Connection *connection, int account_number);

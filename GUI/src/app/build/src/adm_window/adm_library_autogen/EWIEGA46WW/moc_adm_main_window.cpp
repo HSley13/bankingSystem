@@ -40,14 +40,14 @@ namespace {
 struct qt_meta_stringdata_CLASSadm_main_windowENDCLASS_t {};
 static constexpr auto qt_meta_stringdata_CLASSadm_main_windowENDCLASS = QtMocHelpers::stringData(
     "adm_main_window",
-    "confirm_login",
+    "confirm_login_func",
     ""
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSadm_main_windowENDCLASS_t {
     uint offsetsAndSizes[6];
     char stringdata0[16];
-    char stringdata1[14];
+    char stringdata1[19];
     char stringdata2[1];
 };
 #define QT_MOC_LITERAL(ofs, len) \
@@ -55,11 +55,11 @@ struct qt_meta_stringdata_CLASSadm_main_windowENDCLASS_t {
 Q_CONSTINIT static const qt_meta_stringdata_CLASSadm_main_windowENDCLASS_t qt_meta_stringdata_CLASSadm_main_windowENDCLASS = {
     {
         QT_MOC_LITERAL(0, 15),  // "adm_main_window"
-        QT_MOC_LITERAL(16, 13),  // "confirm_login"
-        QT_MOC_LITERAL(30, 0)   // ""
+        QT_MOC_LITERAL(16, 18),  // "confirm_login_func"
+        QT_MOC_LITERAL(35, 0)   // ""
     },
     "adm_main_window",
-    "confirm_login",
+    "confirm_login_func",
     ""
 };
 #undef QT_MOC_LITERAL
@@ -97,7 +97,7 @@ Q_CONSTINIT const QMetaObject adm_main_window::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSadm_main_windowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<adm_main_window, std::true_type>,
-        // method 'confirm_login'
+        // method 'confirm_login_func'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -109,7 +109,7 @@ void adm_main_window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         auto *_t = static_cast<adm_main_window *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->confirm_login(); break;
+        case 0: _t->confirm_login_func(); break;
         default: ;
         }
     }

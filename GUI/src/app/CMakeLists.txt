@@ -9,7 +9,6 @@ target_link_libraries(MyQtProject PRIVATE
                                 adm_library 
                                 adm_option_library 
                                 client_library 
-                                info_library
                         )
                    
 

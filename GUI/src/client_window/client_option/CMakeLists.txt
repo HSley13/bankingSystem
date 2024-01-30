@@ -1,13 +1,12 @@
-qt_add_library(client_library STATIC
-    client_main.cpp
-    client_main_window.cpp
-    client_main_window.h
+qt_add_library(client_option_library STATIC
+    client_option_main.cpp
+    client_option_main_window.cpp
+    client_option_main_window.h
 )
 
-target_link_libraries(client_library PRIVATE
+target_link_libraries(client_option_library PRIVATE
                             Qt6::Core
                             Qt6::Widgets
-                            info_library
                             database_library
                     )
 

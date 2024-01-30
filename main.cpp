@@ -587,7 +587,7 @@ int main(int argc, const char **argv)
                         cin >> email;
                         cout << endl;
 
-                        cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ) : ";
+                        cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ";
                         cin >> address;
                         cout << endl;
 
@@ -880,7 +880,7 @@ int main(int argc, const char **argv)
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions ::insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
                                         }
 
                                         else if (amount_to_borrow > 100 && amount_to_borrow < 500)
@@ -894,7 +894,7 @@ int main(int argc, const char **argv)
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions ::insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
                                         }
 
                                         else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
@@ -908,7 +908,7 @@ int main(int argc, const char **argv)
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions ::insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
                                         }
 
                                         else
@@ -922,7 +922,7 @@ int main(int argc, const char **argv)
 
                                             prep_statement->executeUpdate();
 
-                                            Transactions ::insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
                                         }
 
                                         break;

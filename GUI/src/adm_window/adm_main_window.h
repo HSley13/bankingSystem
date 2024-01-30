@@ -1,12 +1,14 @@
 #pragma once
 
-#include <QWidget>
 #include <QMainWindow>
-#include <QPushButton>
+#include <QWidget>
 #include <QLabel>
-#include <QHBoxLayout>
+#include <QPushButton>
 #include <QLineEdit>
+#include <QTextEdit>
+#include <QMessageBox>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
 class adm_main_window : public QMainWindow
 {
@@ -18,13 +20,19 @@ public:
 private:
     QLabel *adm_account_number;
     QLabel *adm_password;
+
     QLineEdit *insert_adm_account_number;
     QLineEdit *insert_adm_password;
+
+    QPushButton *confirm_login;
+
+    QMessageBox *message;
+
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;
-    QPushButton *button;
+
     QVBoxLayout *vbox;
 
 private slots:
-    void confirm_login();
+    void confirm_login_func();
 };

@@ -1,15 +1,15 @@
 #include "adm_main_window.h"
 #include <adm_option_main_window.h>
 #include <database.h>
+#include <QMainWindow>
 #include <QWidget>
-#include <QPushButton>
 #include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QPushButton>
 #include <QLineEdit>
 #include <QTextEdit>
-#include <QVBoxLayout>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -32,7 +32,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
     hbox1->addWidget(adm_account_number);
     hbox1->addWidget(insert_adm_account_number);
 
-    adm_password = new QLabel("Enter ADM Password?");
+    adm_password = new QLabel("Enter ADM Password: ");
     insert_adm_password = new QLineEdit(this);
     insert_adm_password->setEchoMode(QLineEdit::Password);
 
@@ -40,18 +40,18 @@ adm_main_window ::adm_main_window(QWidget *parent)
     hbox2->addWidget(adm_password);
     hbox2->addWidget(insert_adm_password);
 
-    button = new QPushButton("Confirm", this);
-    connect(button, &QPushButton::clicked, this, &adm_main_window::confirm_login);
+    confirm_login = new QPushButton("Confirm", this);
+    connect(confirm_login, &QPushButton::clicked, this, &adm_main_window::confirm_login_func);
 
     vbox = new QVBoxLayout(central_widget);
     vbox->setAlignment(Qt::AlignCenter);
 
     vbox->addLayout(hbox1);
     vbox->addLayout(hbox2);
-    vbox->addWidget(button);
+    vbox->addWidget(confirm_login);
 }
 
-void adm_main_window::confirm_login()
+void adm_main_window::confirm_login_func()
 {
     int account_number = insert_adm_account_number->text().toInt();
 
@@ -68,9 +68,8 @@ void adm_main_window::confirm_login()
 
     if (BANK ::verifying_password(password, hashed_password))
     {
-        QMessageBox *message1 = new QMessageBox(this);
-        message1->information(this, "Information", "Login succeed");
-        hide();
+        message = new QMessageBox(this);
+        message->information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
 
         adm_option_main_window *new_window = new adm_option_main_window;
 
@@ -78,9 +77,9 @@ void adm_main_window::confirm_login()
     }
     else
     {
-        QString message1 = "Login Failed! The Account number: " + QString::number(account_number) + " is not Found, correct it and try again";
+        QString message1 = "Login Failed! The Account number: " + QString::number(account_number) + " is not Found or Your Password is Incorrect, check and try again";
 
-        QMessageBox *message = new QMessageBox(this);
+        message = new QMessageBox(this);
         message->warning(this, "Warning!", message1);
     }
 }
