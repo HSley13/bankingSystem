@@ -7,8 +7,9 @@ qt_add_library(client_library STATIC
 target_link_libraries(client_library PRIVATE
                             Qt6::Core
                             Qt6::Widgets
-                            info_library
                             database_library
+                            option_library
                     )
 
 target_include_directories(client_library INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+

@@ -1,4 +1,4 @@
-#include "client_option_main_window.h"
+#include "option_main_window.h"
 #include <database.h>
 #include <iostream>
 #include <QMainWindow>
@@ -18,10 +18,10 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-client_option_main_window::client_option_main_window(QWidget *parent)
+option_main_window::option_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindowTitle("Administrator");
+    setWindowTitle("Client Inquiry Window");
     resize(600, 600);
 
     central_widget = new QWidget(this);

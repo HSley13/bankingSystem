@@ -12,12 +12,12 @@
 #include <QStackedWidget>
 #include <QTableWidgetItem>
 
-class client_option_main_window : public QMainWindow
+class option_main_window : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    client_option_main_window(QWidget *parent = nullptr);
+    option_main_window(QWidget *parent = nullptr);
 
 private:
     QWidget *central_widget;

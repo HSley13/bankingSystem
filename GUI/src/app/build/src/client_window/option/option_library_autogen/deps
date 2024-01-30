@@ -1,4 +1,4 @@
-client_option_library_autogen/timestamp: \
+option_library_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/Availability.h \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/AvailabilityInternal.h \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/AvailabilityInternalLegacy.h \
@@ -682,11 +682,11 @@ client_option_library_autogen/timestamp: \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/sys/qos.h \
 	/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include/time.h \
 	/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
-	/Users/test/Documents/banking_system/GUI/src/app/build/src/client_window/client_option/client_option_library_autogen/moc_predefs.h \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_option/CMakeLists.txt \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_option/client_option_main.cpp \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_option/client_option_main_window.cpp \
-	/Users/test/Documents/banking_system/GUI/src/client_window/client_option/client_option_main_window.h \
+	/Users/test/Documents/banking_system/GUI/src/app/build/src/client_window/option/option_library_autogen/moc_predefs.h \
+	/Users/test/Documents/banking_system/GUI/src/client_window/option/CMakeLists.txt \
+	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main.cpp \
+	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.cpp \
+	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20functional.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20memory.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20type_traits.h \

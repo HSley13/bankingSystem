@@ -41,8 +41,6 @@ private:
     QLabel *password;
     QLabel *password_confirmation;
 
-    QTextEdit *balance_info;
-
     QLineEdit *insert_national_ID;
     QLineEdit *insert_first_name;
     QLineEdit *insert_last_name;
@@ -50,10 +48,11 @@ private:
     QLineEdit *insert_phone_number;
     QLineEdit *insert_email;
     QLineEdit *insert_address;
+    QLineEdit *insert_balance;
     QLineEdit *insert_password;
     QLineEdit *insert_password_confirmation;
-    QLineEdit *insert_balance;
 
+    QMessageBox *message1;
     QMessageBox *message2;
 
     QHBoxLayout *hbox1;

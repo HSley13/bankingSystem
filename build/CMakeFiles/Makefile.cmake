@@ -12,8 +12,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Users/test/Documents/banking_system/GUI/src/adm_window/adm_option/CMakeLists.txt"
   "/Users/test/Documents/banking_system/GUI/src/app/CMakeLists.txt"
   "/Users/test/Documents/banking_system/GUI/src/client_window/CMakeLists.txt"
+  "/Users/test/Documents/banking_system/GUI/src/client_window/option/CMakeLists.txt"
   "/Users/test/Documents/banking_system/GUI/src/database/CMakeLists.txt"
-  "/Users/test/Documents/banking_system/GUI/src/info_window/CMakeLists.txt"
   "CMakeFiles/3.28.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.28.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.28.1/CMakeSystem.cmake"
@@ -289,8 +289,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "GUI/src/adm_window/adm_option/CMakeFiles/CMakeDirectoryInformation.cmake"
   "GUI/src/client_window/CMakeFiles/client_library_autogen.dir/AutogenInfo.json"
   "GUI/src/client_window/CMakeFiles/CMakeDirectoryInformation.cmake"
-  "GUI/src/info_window/CMakeFiles/info_library_autogen.dir/AutogenInfo.json"
-  "GUI/src/info_window/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "GUI/src/client_window/option/CMakeFiles/option_library_autogen.dir/AutogenInfo.json"
+  "GUI/src/client_window/option/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
@@ -313,7 +313,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "GUI/src/client_window/CMakeFiles/client_library.dir/DependInfo.cmake"
   "GUI/src/client_window/CMakeFiles/client_library_autogen_timestamp_deps.dir/DependInfo.cmake"
   "GUI/src/client_window/CMakeFiles/client_library_autogen.dir/DependInfo.cmake"
-  "GUI/src/info_window/CMakeFiles/info_library.dir/DependInfo.cmake"
-  "GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir/DependInfo.cmake"
-  "GUI/src/info_window/CMakeFiles/info_library_autogen.dir/DependInfo.cmake"
+  "GUI/src/client_window/option/CMakeFiles/option_library.dir/DependInfo.cmake"
+  "GUI/src/client_window/option/CMakeFiles/option_library_autogen_timestamp_deps.dir/DependInfo.cmake"
+  "GUI/src/client_window/option/CMakeFiles/option_library_autogen.dir/DependInfo.cmake"
   )

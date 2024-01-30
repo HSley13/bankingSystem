@@ -28,8 +28,8 @@
 /Users/test/Documents/banking_system/build/GUI/src/client_window/CMakeFiles/rebuild_cache.dir
 /Users/test/Documents/banking_system/build/GUI/src/client_window/CMakeFiles/client_library_autogen_timestamp_deps.dir
 /Users/test/Documents/banking_system/build/GUI/src/client_window/CMakeFiles/client_library_autogen.dir
-/Users/test/Documents/banking_system/build/GUI/src/info_window/CMakeFiles/info_library.dir
-/Users/test/Documents/banking_system/build/GUI/src/info_window/CMakeFiles/edit_cache.dir
-/Users/test/Documents/banking_system/build/GUI/src/info_window/CMakeFiles/rebuild_cache.dir
-/Users/test/Documents/banking_system/build/GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir
-/Users/test/Documents/banking_system/build/GUI/src/info_window/CMakeFiles/info_library_autogen.dir
+/Users/test/Documents/banking_system/build/GUI/src/client_window/option/CMakeFiles/option_library.dir
+/Users/test/Documents/banking_system/build/GUI/src/client_window/option/CMakeFiles/edit_cache.dir
+/Users/test/Documents/banking_system/build/GUI/src/client_window/option/CMakeFiles/rebuild_cache.dir
+/Users/test/Documents/banking_system/build/GUI/src/client_window/option/CMakeFiles/option_library_autogen_timestamp_deps.dir
+/Users/test/Documents/banking_system/build/GUI/src/client_window/option/CMakeFiles/option_library_autogen.dir

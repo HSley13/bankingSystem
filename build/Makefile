@@ -351,43 +351,43 @@ client_library_autogen/fast:
 .PHONY : client_library_autogen/fast
 
 #=============================================================================
-# Target rules for targets named info_library
+# Target rules for targets named option_library
 
 # Build rule for target.
-info_library: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library
-.PHONY : info_library
+option_library: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 option_library
+.PHONY : option_library
 
 # fast build rule for target.
-info_library/fast:
-	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library.dir/build.make GUI/src/info_window/CMakeFiles/info_library.dir/build
-.PHONY : info_library/fast
+option_library/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/option/CMakeFiles/option_library.dir/build.make GUI/src/client_window/option/CMakeFiles/option_library.dir/build
+.PHONY : option_library/fast
 
 #=============================================================================
-# Target rules for targets named info_library_autogen_timestamp_deps
+# Target rules for targets named option_library_autogen_timestamp_deps
 
 # Build rule for target.
-info_library_autogen_timestamp_deps: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library_autogen_timestamp_deps
-.PHONY : info_library_autogen_timestamp_deps
+option_library_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 option_library_autogen_timestamp_deps
+.PHONY : option_library_autogen_timestamp_deps
 
 # fast build rule for target.
-info_library_autogen_timestamp_deps/fast:
-	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir/build.make GUI/src/info_window/CMakeFiles/info_library_autogen_timestamp_deps.dir/build
-.PHONY : info_library_autogen_timestamp_deps/fast
+option_library_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/option/CMakeFiles/option_library_autogen_timestamp_deps.dir/build.make GUI/src/client_window/option/CMakeFiles/option_library_autogen_timestamp_deps.dir/build
+.PHONY : option_library_autogen_timestamp_deps/fast
 
 #=============================================================================
-# Target rules for targets named info_library_autogen
+# Target rules for targets named option_library_autogen
 
 # Build rule for target.
-info_library_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 info_library_autogen
-.PHONY : info_library_autogen
+option_library_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 option_library_autogen
+.PHONY : option_library_autogen
 
 # fast build rule for target.
-info_library_autogen/fast:
-	$(MAKE) $(MAKESILENT) -f GUI/src/info_window/CMakeFiles/info_library_autogen.dir/build.make GUI/src/info_window/CMakeFiles/info_library_autogen.dir/build
-.PHONY : info_library_autogen/fast
+option_library_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f GUI/src/client_window/option/CMakeFiles/option_library_autogen.dir/build.make GUI/src/client_window/option/CMakeFiles/option_library_autogen.dir/build
+.PHONY : option_library_autogen/fast
 
 BankingSystem_autogen/mocs_compilation.o: BankingSystem_autogen/mocs_compilation.cpp.o
 .PHONY : BankingSystem_autogen/mocs_compilation.o
@@ -457,15 +457,15 @@ help:
 	@echo "... client_library_autogen_timestamp_deps"
 	@echo "... database_library_autogen"
 	@echo "... database_library_autogen_timestamp_deps"
-	@echo "... info_library_autogen"
-	@echo "... info_library_autogen_timestamp_deps"
+	@echo "... option_library_autogen"
+	@echo "... option_library_autogen_timestamp_deps"
 	@echo "... BankingSystem"
 	@echo "... MyQtProject"
 	@echo "... adm_library"
 	@echo "... adm_option_library"
 	@echo "... client_library"
 	@echo "... database_library"
-	@echo "... info_library"
+	@echo "... option_library"
 	@echo "... BankingSystem_autogen/mocs_compilation.o"
 	@echo "... BankingSystem_autogen/mocs_compilation.i"
 	@echo "... BankingSystem_autogen/mocs_compilation.s"

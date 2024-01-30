@@ -1,5 +1,5 @@
 #include "client_main_window.h"
-#include <info_main_window.h>
+#include <option_main_window.h>
 #include <database.h>
 #include <iostream>
 #include <QMainWindow>
@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QTextEdit>
+#include <QGroupBox>
+#include <QString>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -93,6 +95,37 @@ client_main_window ::client_main_window(QWidget *parent)
     hbox7->addWidget(address);
     hbox7->addWidget(insert_address);
 
+    QString info_text = "Your Account should have at least $100 when creating it, so please enter those $100 and not less.\n\n"
+                        "Interest Rate Scale according to your First Deposit, which can't be changed.\n\n"
+                        "1. Balance = $100 ---> Interest Rate = 0%\n"
+                        "2. $500 > Balance > $100 ---> Interest Rate = 2%\n"
+                        "3. $1000 > Balance >= $500 ---> Interest Rate = 5%\n"
+                        "4. Balance > $1000 ---> Interest Rate = 7%\n";
+
+    QTextEdit *interest_rate_info = new QTextEdit(this);
+    interest_rate_info->setPlainText(info_text);
+    interest_rate_info->setReadOnly(true);
+    insert_balance = new QLineEdit(this);
+
+    hbox8 = new QHBoxLayout(this);
+    hbox8->addWidget(interest_rate_info);
+    hbox8->addWidget(insert_balance);
+    QGroupBox *grp_balance = new QGroupBox(this);
+    grp_balance->setLayout(hbox8);
+
+    password = new QLabel("Enter Password: ", this);
+    insert_password = new QLineEdit(this);
+    hbox9 = new QHBoxLayout();
+    hbox9->addWidget(password);
+    hbox9->addWidget(insert_password);
+
+    password_confirmation = new QLabel("Enter Password Confirmation: ", this);
+    insert_password_confirmation = new QLineEdit(this);
+    insert_password_confirmation->setEchoMode(QLineEdit::Password);
+    hbox10 = new QHBoxLayout();
+    hbox10->addWidget(password_confirmation);
+    hbox10->addWidget(insert_password_confirmation);
+
     confirm_button = new QPushButton("Confirm", this);
     connect(confirm_button, &QPushButton::clicked, this, &client_main_window::confirm_button_func);
 
@@ -108,11 +141,13 @@ client_main_window ::client_main_window(QWidget *parent)
     VBOX->addLayout(hbox5, Qt::AlignCenter);
     VBOX->addLayout(hbox6, Qt::AlignCenter);
     VBOX->addLayout(hbox7, Qt::AlignCenter);
+    VBOX->addWidget(grp_balance, Qt::AlignCenter);
+    VBOX->addLayout(hbox9, Qt::AlignCenter);
+    VBOX->addLayout(hbox10, Qt::AlignCenter);
     VBOX->addWidget(confirm_button, Qt::AlignCenter);
     VBOX->addWidget(back_button, Qt::AlignCenter);
 
     create_account_widget->setLayout(VBOX);
-
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     bank_info_widget = new QWidget();
     bank_info_widget->setWindowTitle("Bank Info");
@@ -233,9 +268,39 @@ void client_main_window::back_button_func()
 
 void client_main_window::confirm_button_func()
 {
+    double balance = insert_balance->text().toDouble();
+
+    std ::string password1 = password->text().toStdString();
+    std ::string password_confirmation1 = password_confirmation->text().toStdString();
+
+    if (balance < 100 || password1.compare(password_confirmation1))
+    {
+        if (balance < 100)
+        {
+            message1 = new QMessageBox(this);
+            message1->warning(this, "Balance XXX", "Unsufficient Balance, Enter an amount >= 100");
+
+            return;
+        }
+        else
+        {
+            message1 = new QMessageBox(this);
+            message1->warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
+
+            return;
+        }
+    }
+
+    message1 = new QMessageBox(this);
+    message1->information(this, "All Right", "All the info are OK");
 }
 
 void client_main_window::account_inquiry_func()
 {
-    std ::cout << "try" << std ::endl;
+    message1 = new QMessageBox(this);
+    message1->information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
+
+    option_main_window *new_window = new option_main_window;
+
+    new_window->show();
 }
