@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QStackedWidget>
+#include <QTextEdit>
 
 class client_main_window : public QMainWindow
 {
@@ -26,6 +27,8 @@ private:
     QPushButton *create_account;
     QPushButton *account_inquiry;
     QPushButton *bank_info;
+    QPushButton *confirm_button;
+    QPushButton *back_button;
 
     QLabel *message;
     QLabel *national_ID;
@@ -37,7 +40,8 @@ private:
     QLabel *address;
     QLabel *password;
     QLabel *password_confirmation;
-    QLabel *balance;
+
+    QTextEdit *balance_info;
 
     QLineEdit *insert_national_ID;
     QLineEdit *insert_first_name;
@@ -66,6 +70,7 @@ private:
     QVBoxLayout *vbox;
 
 private slots:
-    void confirm_balance_func();
+    void back_button_func();
+    void confirm_button_func();
     void account_inquiry_func();
 };

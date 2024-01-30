@@ -19,8 +19,11 @@ public:
 private:
     QLabel *name;
     QLabel *welcome;
+
     QPushButton *admin;
     QPushButton *client;
+    QPushButton *information;
+
     QVBoxLayout *vbox;
     QHBoxLayout *hbox;
     QMessageBox *message;

@@ -8,7 +8,7 @@ target_link_libraries(MyQtProject PRIVATE
                                 Qt6::Widgets 
                                 adm_library 
                                 adm_option_library 
-                                client_library 
+                                client_library
                         )
                    
 

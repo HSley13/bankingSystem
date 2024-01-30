@@ -200,8 +200,8 @@ GUI/src/info_window/clean: GUI/src/info_window/CMakeFiles/info_library_autogen.d
 
 # All Build rule for target.
 CMakeFiles/BankingSystem.dir/all: GUI/src/database/CMakeFiles/database_library.dir/all
-CMakeFiles/BankingSystem.dir/all: CMakeFiles/BankingSystem_autogen_timestamp_deps.dir/all
 CMakeFiles/BankingSystem.dir/all: CMakeFiles/BankingSystem_autogen.dir/all
+CMakeFiles/BankingSystem.dir/all: CMakeFiles/BankingSystem_autogen_timestamp_deps.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/BankingSystem.dir/build.make CMakeFiles/BankingSystem.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/test/Documents/banking_system/build/CMakeFiles --progress-num=1,2,3 "Built target BankingSystem"

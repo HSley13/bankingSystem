@@ -34,25 +34,18 @@ main_window::main_window(QWidget *parent)
     vbox->addWidget(welcome, 2, Qt ::AlignCenter);
     vbox->addWidget(admin, Qt ::AlignLeft);
     vbox->addWidget(client, Qt ::AlignLeft);
-    vbox->setAlignment(Qt::AlignCenter);
-}
-
-void main_window::adm_button_clicked()
-{
-    message = new QMessageBox(this);
-    message->information(this, "Redirecting...", "You are about to be redirected to the Administrator's Authentification Page");
-
-    adm_main_window *new_window = new adm_main_window;
-
-    new_window->show();
 }
 
 void main_window::client_button_clicked()
 {
-    message = new QMessageBox(this);
-    message->information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
-
     client_main_window *new_window = new client_main_window;
+
+    new_window->show();
+}
+
+void main_window::adm_button_clicked()
+{
+    adm_main_window *new_window = new adm_main_window;
 
     new_window->show();
 }
