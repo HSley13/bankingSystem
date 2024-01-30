@@ -42,6 +42,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
 
     button = new QPushButton("Confirm", this);
     connect(button, &QPushButton::clicked, this, &adm_main_window::confirm_login);
+
     vbox = new QVBoxLayout(central_widget);
     vbox->setAlignment(Qt::AlignCenter);
 
@@ -68,7 +69,7 @@ void adm_main_window::confirm_login()
     if (BANK ::verifying_password(password, hashed_password))
     {
         QMessageBox *message1 = new QMessageBox(this);
-        message1->information(this, "login Succeed", "login succeed");
+        message1->information(this, "Information", "Login succeed");
         hide();
 
         adm_option_main_window *new_window = new adm_option_main_window;
@@ -77,10 +78,9 @@ void adm_main_window::confirm_login()
     }
     else
     {
-        QString message1 = "Login Failed! The Account number :" + QString::number(account_number) + " is not Found, correct it and try again";
+        QString message1 = "Login Failed! The Account number: " + QString::number(account_number) + " is not Found, correct it and try again";
 
         QMessageBox *message = new QMessageBox(this);
-        message->warning(this, message1, message1);
-        connection->close();
+        message->warning(this, "Warning!", message1);
     }
 }

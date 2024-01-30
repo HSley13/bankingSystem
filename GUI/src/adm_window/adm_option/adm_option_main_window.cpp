@@ -20,9 +20,10 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
         window_stack = new QStackedWidget();
+        setCentralWidget(window_stack);
 
         central_widget = new QWidget(this);
-        setCentralWidget(window_stack);
+
         setWindowTitle("ADM window Management");
 
         resize(600, 600);
@@ -75,12 +76,14 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_1_hbox1 = new QHBoxLayout();
         wid_1_hbox1->addWidget(message1);
         wid_1_hbox1->addWidget(new_adm_account_number);
+        wid_1_hbox1->setAlignment(Qt::AlignCenter);
 
         QLabel *message2 = new QLabel("Enter your Desired Password", this);
         new_adm_password = new QLineEdit(this);
         QHBoxLayout *wid_1_hbox2 = new QHBoxLayout();
         wid_1_hbox2->addWidget(message2);
         wid_1_hbox2->addWidget(new_adm_password);
+        wid_1_hbox2->setAlignment(Qt::AlignCenter);
 
         QLabel *message3 = new QLabel("Confirmed Password", this);
         new_adm_password_confirmation = new QLineEdit(this);
@@ -88,6 +91,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_1_hbox3 = new QHBoxLayout();
         wid_1_hbox3->addWidget(message3);
         wid_1_hbox3->addWidget(new_adm_password_confirmation);
+        wid_1_hbox3->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_1_confirm_button = new QPushButton("Confirm", this);
         connect(wid_1_confirm_button, &QPushButton::clicked, this, &adm_option_main_window::wid_1_conf);
@@ -101,6 +105,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid1_vbox->addLayout(wid_1_hbox3, Qt::AlignCenter);
         wid1_vbox->addWidget(wid_1_confirm_button);
         wid1_vbox->addWidget(back_button1, Qt::AlignCenter, Qt::AlignBottom);
+        wid1_vbox->setAlignment(Qt::AlignCenter);
 
         wid_1->setLayout(wid1_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -117,6 +122,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QVBoxLayout *wid_2_vbox = new QVBoxLayout();
         wid_2_vbox->addWidget(wid_2_button, Qt::AlignCenter);
         wid_2_vbox->addWidget(back_button2, Qt::AlignCenter | Qt::AlignBottom);
+        wid_2_vbox->setAlignment(Qt::AlignCenter);
 
         wid_2->setLayout(wid_2_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -129,6 +135,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_3_hbox = new QHBoxLayout();
         wid_3_hbox->addWidget(wid_3_label);
         wid_3_hbox->addWidget(wid_3_account_number);
+        wid_3_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_3_button = new QPushButton("Confirm", this);
         connect(wid_3_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_table);
@@ -140,6 +147,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_3_vbox->addLayout(wid_3_hbox);
         wid_3_vbox->addWidget(wid_3_button);
         wid_3_vbox->addWidget(back_button3, Qt::AlignCenter | Qt::AlignBottom);
+        wid_3_vbox->setAlignment(Qt::AlignCenter);
 
         wid_3->setLayout(wid_3_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -156,6 +164,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QVBoxLayout *wid_4_vbox = new QVBoxLayout();
         wid_4_vbox->addWidget(wid_4_button, Qt::AlignCenter);
         wid_4_vbox->addWidget(back_button4, Qt::AlignCenter | Qt::AlignBottom);
+        wid_4_vbox->setAlignment(Qt::AlignCenter);
 
         wid_4->setLayout(wid_4_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -168,6 +177,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_5_hbox = new QHBoxLayout();
         wid_5_hbox->addWidget(wid_5_label);
         wid_5_hbox->addWidget(wid_5_account_number);
+        wid_5_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_5_button = new QPushButton("Confirm", this);
         connect(wid_5_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_in_debt);
@@ -179,6 +189,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_5_vbox->addLayout(wid_5_hbox);
         wid_5_vbox->addWidget(wid_5_button, Qt::AlignCenter);
         wid_5_vbox->addWidget(back_button5, Qt::AlignCenter | Qt::AlignBottom);
+        wid_5_vbox->setAlignment(Qt::AlignCenter);
 
         wid_5->setLayout(wid_5_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -191,8 +202,9 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_6_hbox = new QHBoxLayout();
         wid_6_hbox->addWidget(wid_6_label);
         wid_6_hbox->addWidget(wid_6_account_number);
+        wid_6_hbox->setAlignment(Qt::AlignCenter);
 
-        QPushButton *wid_6_button = new QPushButton("6", this);
+        QPushButton *wid_6_button = new QPushButton("Confirm", this);
         connect(wid_6_button, &QPushButton::clicked, this, &adm_option_main_window::display_transactions_history);
 
         back_button6 = new QPushButton("Previous Menu");
@@ -202,6 +214,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_6_vbox->addLayout(wid_6_hbox);
         wid_6_vbox->addWidget(wid_6_button, Qt::AlignCenter);
         wid_6_vbox->addWidget(back_button6, Qt::AlignCenter | Qt::AlignBottom);
+        wid_6_vbox->setAlignment(Qt::AlignCenter);
 
         wid_6->setLayout(wid_6_vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -214,6 +227,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QHBoxLayout *wid_7_hbox = new QHBoxLayout();
         wid_7_hbox->addWidget(wid_7_label);
         wid_7_hbox->addWidget(wid_7_account_number);
+        wid_7_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_7_button = new QPushButton("Confirm", this);
         connect(wid_7_button, &QPushButton::clicked, this, &adm_option_main_window::delete_accounts);
@@ -224,12 +238,12 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QVBoxLayout *wid_7_vbox = new QVBoxLayout();
         wid_7_vbox->addLayout(wid_7_hbox);
         wid_7_vbox->addWidget(wid_7_button, Qt::AlignCenter);
-        wid_7_vbox->addWidget(back_button5, Qt::AlignCenter | Qt::AlignBottom);
+        wid_7_vbox->addWidget(back_button7, Qt::AlignCenter | Qt::AlignBottom);
+        wid_7_vbox->setAlignment(Qt::AlignCenter);
 
         wid_7->setLayout(wid_7_vbox);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
         window_stack->addWidget(central_widget);
         window_stack->addWidget(wid_1);
         window_stack->addWidget(wid_2);
@@ -264,7 +278,7 @@ void adm_option_main_window::wid_1_conf()
         if (password.compare(password_confirmation))
         {
                 QMessageBox *message = new QMessageBox(this);
-                message->warning(this, "Password Confirmation Incorrect, try again", "Password Confirmation Incorrect, try again");
+                message->warning(this, "Warning!", "Password Confirmation Incorrect, try again");
                 return;
         }
 

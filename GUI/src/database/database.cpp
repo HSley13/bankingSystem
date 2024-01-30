@@ -261,25 +261,33 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (result->isBeforeFirst())
+        if (!result->next())
         {
-            while (result->next())
-            {
-                items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
+            message->show();
 
-                table->insertRow(row);
-                table->setItem(row, 0, items[0]);
-                table->setItem(row, 1, items[1]);
+            delete message;
+            return;
+        }
 
-                row++;
+        while (result->next())
+        {
+            items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
 
-                items.clear();
-            }
+            table->insertRow(row);
+            table->setItem(row, 0, items[0]);
+            table->setItem(row, 1, items[1]);
+
+            row++;
+
+            items.clear();
         }
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
+        table->resize(400, 400);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -595,7 +603,6 @@ std ::string BANK ::retrieve_interest_rate_initial_timestamp(sql ::Connection *c
         else
         {
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
-            ;
             return "";
         }
     }
@@ -859,6 +866,7 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
+        table->resize(400, 400);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -936,29 +944,37 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (result->next())
+        if (!result->next())
         {
-            items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
-                  << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
+            message->show();
 
-            table->insertRow(row);
-
-            for (int i = 0; i < items.size(); i++)
-                table->setItem(row, i, items[i]);
-
-            items.clear();
+            delete message;
+            return;
         }
+
+        items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
+              << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
+
+        table->insertRow(row);
+
+        for (int i = 0; i < items.size(); i++)
+            table->setItem(row, i, items[i]);
+
+        items.clear();
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
+        table->resize(400, 400);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1062,6 +1078,7 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
+        table->resize(400, 400);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1137,28 +1154,35 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (result->next())
+        if (!result->next())
         {
-            items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
-                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Warning!", "The Account you enter either doesn't exist or doesn't owe the Bank, Check and try again");
 
-            table->insertRow(row);
-
-            for (int i = 0; i < items.size(); i++)
-                table->setItem(row, i, items[i]);
-
-            items.clear();
+            delete message;
+            return;
         }
+
+        items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
+              << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
+              << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
+
+        table->insertRow(row);
+
+        for (int i = 0; i < items.size(); i++)
+            table->setItem(row, i, items[i]);
+
+        items.clear();
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
+        table->resize(400, 400);
         table->show();
     }
     catch (const sql ::SQLException &e)
