@@ -56,51 +56,51 @@ client_main_window ::client_main_window(QWidget *parent)
     national_ID = new QLabel("National ID with at least a letter within it: ", this);
     insert_national_ID = new QLineEdit(this);
     hbox1 = new QHBoxLayout();
-    hbox1->addWidget(national_ID);
-    hbox1->addWidget(insert_national_ID);
+    hbox1->addWidget(national_ID, Qt::AlignCenter);
+    hbox1->addWidget(insert_national_ID, Qt::AlignCenter);
 
     first_name = new QLabel("First Name: ", this);
     insert_first_name = new QLineEdit(this);
     hbox2 = new QHBoxLayout();
-    hbox2->addWidget(first_name);
-    hbox2->addWidget(insert_first_name);
+    hbox2->addWidget(first_name, Qt::AlignCenter);
+    hbox2->addWidget(insert_first_name, Qt::AlignCenter);
 
     last_name = new QLabel("Last Name: ", this);
     insert_last_name = new QLineEdit(this);
     hbox3 = new QHBoxLayout();
-    hbox3->addWidget(last_name);
-    hbox3->addWidget(insert_last_name);
+    hbox3->addWidget(last_name, Qt::AlignCenter);
+    hbox3->addWidget(insert_last_name, Qt::AlignCenter);
 
     date_birth = new QLabel("Date of Birth ( 2024-01-31 ): ", this);
     insert_date_birth = new QLineEdit(this);
     hbox4 = new QHBoxLayout();
-    hbox4->addWidget(date_birth);
-    hbox4->addWidget(insert_date_birth);
+    hbox4->addWidget(date_birth, Qt::AlignCenter);
+    hbox4->addWidget(insert_date_birth, Qt::AlignCenter);
 
     phone_number = new QLabel("Phone Number: ", this);
     insert_phone_number = new QLineEdit(this);
     hbox5 = new QHBoxLayout();
-    hbox5->addWidget(phone_number);
-    hbox5->addWidget(insert_phone_number);
+    hbox5->addWidget(phone_number, Qt::AlignCenter);
+    hbox5->addWidget(insert_phone_number, Qt::AlignCenter);
 
     email = new QLabel("Email: ", this);
     insert_email = new QLineEdit(this);
     hbox6 = new QHBoxLayout();
-    hbox6->addWidget(email);
-    hbox6->addWidget(insert_email);
+    hbox6->addWidget(email, Qt::AlignCenter);
+    hbox6->addWidget(insert_email, Qt::AlignCenter);
 
     address = new QLabel("Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ", this);
     insert_address = new QLineEdit(this);
     hbox7 = new QHBoxLayout();
-    hbox7->addWidget(address);
-    hbox7->addWidget(insert_address);
+    hbox7->addWidget(address, Qt::AlignCenter);
+    hbox7->addWidget(insert_address, Qt::AlignCenter);
 
     QString info_text = "Your Account should have at least $100 when creating it, so please enter those $100 and not less.\n\n"
                         "Interest Rate Scale according to your First Deposit, which can't be changed.\n\n"
                         "1. Balance = $100 ---> Interest Rate = 0%\n"
                         "2. $500 > Balance > $100 ---> Interest Rate = 2%\n"
                         "3. $1000 > Balance >= $500 ---> Interest Rate = 5%\n"
-                        "4. Balance > $1000 ---> Interest Rate = 7%\n";
+                        "4. Balance > $1000 ---> Interest Rate = 7%";
 
     QTextEdit *interest_rate_info = new QTextEdit(this);
     interest_rate_info->setPlainText(info_text);
@@ -108,23 +108,23 @@ client_main_window ::client_main_window(QWidget *parent)
     insert_balance = new QLineEdit(this);
 
     hbox8 = new QHBoxLayout();
-    hbox8->addWidget(interest_rate_info);
-    hbox8->addWidget(insert_balance);
+    hbox8->addWidget(interest_rate_info, Qt::AlignCenter);
+    hbox8->addWidget(insert_balance, Qt::AlignCenter);
     QGroupBox *grp_balance = new QGroupBox();
     grp_balance->setLayout(hbox8);
 
     password = new QLabel("Enter Password: ", this);
     insert_password = new QLineEdit(this);
     hbox9 = new QHBoxLayout();
-    hbox9->addWidget(password);
-    hbox9->addWidget(insert_password);
+    hbox9->addWidget(password, Qt::AlignCenter);
+    hbox9->addWidget(insert_password, Qt::AlignCenter);
 
     password_confirmation = new QLabel("Enter Password Confirmation: ", this);
     insert_password_confirmation = new QLineEdit(this);
     insert_password_confirmation->setEchoMode(QLineEdit::Password);
     hbox10 = new QHBoxLayout();
-    hbox10->addWidget(password_confirmation);
-    hbox10->addWidget(insert_password_confirmation);
+    hbox10->addWidget(password_confirmation, Qt::AlignCenter);
+    hbox10->addWidget(insert_password_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
     connect(confirm_button, &QPushButton::clicked, this, &client_main_window::confirm_button_func);
@@ -149,6 +149,7 @@ client_main_window ::client_main_window(QWidget *parent)
 
     create_account_widget->setLayout(VBOX);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
     bank_info_widget = new QWidget();
     bank_info_widget->setWindowTitle("Bank Info");
 
@@ -246,7 +247,7 @@ client_main_window ::client_main_window(QWidget *parent)
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
 
     QVBoxLayout *vbox = new QVBoxLayout();
-    vbox->addWidget(information);
+    vbox->addWidget(information, Qt::AlignCenter);
     vbox->addWidget(back_button, Qt::AlignCenter);
     vbox->setAlignment(Qt::AlignCenter);
 

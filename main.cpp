@@ -326,8 +326,6 @@ using namespace std;
 // TODO LIST
 // Check and resolve the memory leaks issues
 // Reduce code redundancy into functions
-// Create the GUI for a more user friendly
-
 int main(int argc, const char **argv)
 {
     try

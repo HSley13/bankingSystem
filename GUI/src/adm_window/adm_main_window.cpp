@@ -29,16 +29,16 @@ adm_main_window ::adm_main_window(QWidget *parent)
     insert_adm_account_number = new QLineEdit(this);
 
     hbox1 = new QHBoxLayout();
-    hbox1->addWidget(adm_account_number);
-    hbox1->addWidget(insert_adm_account_number);
+    hbox1->addWidget(adm_account_number, Qt::AlignCenter);
+    hbox1->addWidget(insert_adm_account_number, Qt::AlignCenter);
 
     adm_password = new QLabel("Enter ADM Password: ");
     insert_adm_password = new QLineEdit(this);
     insert_adm_password->setEchoMode(QLineEdit::Password);
 
     hbox2 = new QHBoxLayout();
-    hbox2->addWidget(adm_password);
-    hbox2->addWidget(insert_adm_password);
+    hbox2->addWidget(adm_password, Qt::AlignCenter);
+    hbox2->addWidget(insert_adm_password, Qt::AlignCenter);
 
     confirm_login = new QPushButton("Confirm", this);
     connect(confirm_login, &QPushButton::clicked, this, &adm_main_window::confirm_login_func);
@@ -48,7 +48,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
 
     vbox->addLayout(hbox1);
     vbox->addLayout(hbox2);
-    vbox->addWidget(confirm_login);
+    vbox->addWidget(confirm_login, Qt::AlignCenter);
 }
 
 void adm_main_window::confirm_login_func()

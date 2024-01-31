@@ -74,23 +74,23 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QLabel *message1 = new QLabel("Enter your Desired Account Number", this);
         new_adm_account_number = new QLineEdit(this);
         QHBoxLayout *wid_1_hbox1 = new QHBoxLayout();
-        wid_1_hbox1->addWidget(message1);
-        wid_1_hbox1->addWidget(new_adm_account_number);
+        wid_1_hbox1->addWidget(message1, Qt::AlignCenter);
+        wid_1_hbox1->addWidget(new_adm_account_number, Qt::AlignCenter);
         wid_1_hbox1->setAlignment(Qt::AlignCenter);
 
         QLabel *message2 = new QLabel("Enter your Desired Password", this);
         new_adm_password = new QLineEdit(this);
         QHBoxLayout *wid_1_hbox2 = new QHBoxLayout();
-        wid_1_hbox2->addWidget(message2);
-        wid_1_hbox2->addWidget(new_adm_password);
+        wid_1_hbox2->addWidget(message2, Qt::AlignCenter);
+        wid_1_hbox2->addWidget(new_adm_password, Qt::AlignCenter);
         wid_1_hbox2->setAlignment(Qt::AlignCenter);
 
         QLabel *message3 = new QLabel("Confirmed Password", this);
         new_adm_password_confirmation = new QLineEdit(this);
         new_adm_password_confirmation->setEchoMode(QLineEdit::Password);
         QHBoxLayout *wid_1_hbox3 = new QHBoxLayout();
-        wid_1_hbox3->addWidget(message3);
-        wid_1_hbox3->addWidget(new_adm_password_confirmation);
+        wid_1_hbox3->addWidget(message3, Qt::AlignCenter);
+        wid_1_hbox3->addWidget(new_adm_password_confirmation, Qt::AlignCenter);
         wid_1_hbox3->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_1_confirm_button = new QPushButton("Confirm", this);
@@ -100,10 +100,10 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         connect(back_button1, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
         QVBoxLayout *wid_1_vbox = new QVBoxLayout();
-        wid_1_vbox->addLayout(wid_1_hbox1, Qt::AlignCenter);
-        wid_1_vbox->addLayout(wid_1_hbox2, Qt::AlignCenter);
-        wid_1_vbox->addLayout(wid_1_hbox3, Qt::AlignCenter);
-        wid_1_vbox->addWidget(wid_1_confirm_button);
+        wid_1_vbox->addLayout(wid_1_hbox1);
+        wid_1_vbox->addLayout(wid_1_hbox2);
+        wid_1_vbox->addLayout(wid_1_hbox3);
+        wid_1_vbox->addWidget(wid_1_confirm_button, Qt::AlignCenter);
         wid_1_vbox->addWidget(back_button1, Qt::AlignCenter, Qt::AlignBottom);
         wid_1_vbox->setAlignment(Qt::AlignCenter);
 
@@ -133,8 +133,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QLabel *wid_3_label = new QLabel("Enter the Account You want to display", this);
         wid_3_account_number = new QLineEdit(this);
         QHBoxLayout *wid_3_hbox = new QHBoxLayout();
-        wid_3_hbox->addWidget(wid_3_label);
-        wid_3_hbox->addWidget(wid_3_account_number);
+        wid_3_hbox->addWidget(wid_3_label, Qt::AlignCenter);
+        wid_3_hbox->addWidget(wid_3_account_number, Qt::AlignCenter);
         wid_3_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_3_button = new QPushButton("Confirm", this);
@@ -145,7 +145,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
 
         QVBoxLayout *wid_3_vbox = new QVBoxLayout();
         wid_3_vbox->addLayout(wid_3_hbox);
-        wid_3_vbox->addWidget(wid_3_button);
+        wid_3_vbox->addWidget(wid_3_button, Qt::AlignCenter);
         wid_3_vbox->addWidget(back_button3, Qt::AlignCenter | Qt::AlignBottom);
         wid_3_vbox->setAlignment(Qt::AlignCenter);
 
@@ -175,8 +175,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QLabel *wid_5_label = new QLabel("Enter the Account You want to display to see their debt", this);
         wid_5_account_number = new QLineEdit(this);
         QHBoxLayout *wid_5_hbox = new QHBoxLayout();
-        wid_5_hbox->addWidget(wid_5_label);
-        wid_5_hbox->addWidget(wid_5_account_number);
+        wid_5_hbox->addWidget(wid_5_label, Qt::AlignCenter);
+        wid_5_hbox->addWidget(wid_5_account_number, Qt::AlignCenter);
         wid_5_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_5_button = new QPushButton("Confirm", this);
@@ -200,8 +200,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QLabel *wid_6_label = new QLabel("Enter the Account You want to Display all Transactions History for", this);
         wid_6_account_number = new QLineEdit(this);
         QHBoxLayout *wid_6_hbox = new QHBoxLayout();
-        wid_6_hbox->addWidget(wid_6_label);
-        wid_6_hbox->addWidget(wid_6_account_number);
+        wid_6_hbox->addWidget(wid_6_label, Qt::AlignCenter);
+        wid_6_hbox->addWidget(wid_6_account_number, Qt::AlignCenter);
         wid_6_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_6_button = new QPushButton("Confirm", this);
@@ -225,8 +225,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         QLabel *wid_7_label = new QLabel("Enter the Account You want to delete", this);
         wid_7_account_number = new QLineEdit(this);
         QHBoxLayout *wid_7_hbox = new QHBoxLayout();
-        wid_7_hbox->addWidget(wid_7_label);
-        wid_7_hbox->addWidget(wid_7_account_number);
+        wid_7_hbox->addWidget(wid_7_label, Qt::AlignCenter);
+        wid_7_hbox->addWidget(wid_7_account_number, Qt::AlignCenter);
         wid_7_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_7_button = new QPushButton("Confirm", this);
