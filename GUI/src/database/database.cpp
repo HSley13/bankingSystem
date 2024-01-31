@@ -360,10 +360,31 @@ void Transactions ::insert_borrowal(sql ::Connection *connection, int account_nu
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Account::create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string password, std ::string hash_password)
+bool Account::are_all_same(int phone_number)
+{
+
+    std::string phone_number_str = std::to_string(phone_number);
+
+    for (size_t i = 1; i < phone_number_str.length(); i++)
+    {
+        if (phone_number_str[i] != phone_number_str[0])
+            return false;
+    }
+
+    return true;
+}
+
+void Account ::create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string hash_password)
 {
     try
     {
+        if (Account::are_all_same(phone_number))
+        {
+            std ::cerr << "Enter a valid Phone number where all the digits aren't the same" << std ::endl;
+
+            return;
+        }
+
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"));
         prep_statement->setString(1, national_ID);
         prep_statement->setString(2, first_name);
@@ -413,21 +434,156 @@ void Account::create_account(sql ::Connection *connection, int account_number, s
     }
 }
 
+void Account::Qt_create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string hash_password)
+{
+    try
+    {
+        QMessageBox *acc_message;
+
+        if (Account ::are_all_same(phone_number))
+        {
+            acc_message = new QMessageBox();
+            acc_message->warning(nullptr, "Phone Number Error", "Enter a valid Phone number where all the digits aren't the same");
+
+            return;
+        }
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO accounts (national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"));
+        prep_statement->setString(1, national_ID);
+        prep_statement->setString(2, first_name);
+        prep_statement->setString(3, last_name);
+        prep_statement->setString(4, date_birth);
+        prep_statement->setInt(5, phone_number);
+        prep_statement->setString(6, email);
+        prep_statement->setString(7, address);
+        prep_statement->setDouble(8, balance);
+        prep_statement->setDouble(9, interest_rate);
+
+        prep_statement->executeUpdate();
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("SELECT account_number FROM accounts WHERE national_ID = ?;"));
+        prep_statement->setString(1, national_ID);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (result->next())
+        {
+            account_number = result->getInt("account_number");
+
+            QString info = " " + QString::number(account_number) + " is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future";
+            acc_message = new QMessageBox();
+            acc_message->information(nullptr, "Account Number", info);
+
+            std ::string table_name = "NO";
+            table_name.append(std::to_string(account_number));
+
+            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+            prep_statement->executeUpdate();
+
+            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+            prep_statement->setString(1, "Account Created");
+            prep_statement->executeUpdate();
+
+            delete acc_message;
+        }
+
+        call_insert_or_update_hashed_password(connection, account_number, hash_password);
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void Account ::remove_accounts(sql ::Connection *connection, int account_number)
 {
     try
     {
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * from accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
+        if (!result->next())
+        {
+            std ::cerr << "Acount Number not found in our database, check and try again" << std ::endl;
+
+            return;
+        }
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        result = std ::unique_ptr<sql ::ResultSet>(prep_statement->executeQuery());
+
         if (result->isBeforeFirst())
         {
-            std ::cout << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std ::endl;
+            std ::cerr << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std ::endl;
 
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
+            return;
+        }
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("DELETE FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("DELETE FROM password_security WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("DELETE FROM transactions WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->executeUpdate();
+
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement->setString(1, "Account Deleted");
+        prep_statement->executeUpdate();
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        QMessageBox *message;
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * from accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result->next())
+        {
+            message = new QMessageBox();
+            message->warning(nullptr, "Error", "Acount Number not found in our database, check and try again");
+
+            return;
+        }
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        result = std ::unique_ptr<sql ::ResultSet>(prep_statement->executeQuery());
+
+        if (result->isBeforeFirst())
+        {
+            message = new QMessageBox();
+            message->warning(nullptr, "Error", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
 
             delete message;
 
@@ -926,19 +1082,21 @@ void BANK ::display_specific_accounts(sql ::Connection *connection, int account_
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next())
+        if (!result->next())
         {
-            std ::cout << "National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name");
-
-            std ::cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
-
-            std ::cout << " | Email: " << result->getString("email") << " | Address: " << result->getString("address") << " | Balance: " << result->getDouble("balance") << " | Interest Rate: " << result->getDouble("interest_rate");
-
-            std ::cout << " | Initial Timestamp: " << result->getString("initial_timestamp") << std ::endl;
-            std ::cout << std ::endl;
-        }
-        else
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+
+            return;
+        }
+
+        std ::cout << "National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name");
+
+        std ::cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
+
+        std ::cout << " | Email: " << result->getString("email") << " | Address: " << result->getString("address") << " | Balance: " << result->getDouble("balance") << " | Interest Rate: " << result->getDouble("interest_rate");
+
+        std ::cout << " | Initial Timestamp: " << result->getString("initial_timestamp") << std ::endl;
+        std ::cout << std ::endl;
     }
     catch (const sql ::SQLException &e)
     {

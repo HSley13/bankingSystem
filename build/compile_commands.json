@@ -100,5 +100,17 @@
   "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/usr/local/mysql-connector-c++-8.2.0/include/jdbc -I/Users/test/Documents/banking_system/GUI/src/database -isystem /Users/test/Documents/banking_system/build/GUI/src/client_window/option/option_library_autogen/include -isystem /opt/homebrew/lib/QtCore.framework/Headers -iframework /opt/homebrew/lib -isystem /opt/homebrew/share/qt/mkspecs/macx-clang -isystem /opt/homebrew/include -isystem /opt/homebrew/lib/QtWidgets.framework/Headers -isystem /opt/homebrew/lib/QtGui.framework/Headers -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -o CMakeFiles/option_library.dir/option_library_autogen/mocs_compilation.cpp.o -c /Users/test/Documents/banking_system/build/GUI/src/client_window/option/option_library_autogen/mocs_compilation.cpp",
   "file": "/Users/test/Documents/banking_system/build/GUI/src/client_window/option/option_library_autogen/mocs_compilation.cpp",
   "output": "GUI/src/client_window/option/CMakeFiles/option_library.dir/option_library_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/Users/test/Documents/banking_system/build/GUI/src/client_window/option",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/usr/local/mysql-connector-c++-8.2.0/include/jdbc -I/Users/test/Documents/banking_system/GUI/src/database -isystem /Users/test/Documents/banking_system/build/GUI/src/client_window/option/option_library_autogen/include -isystem /opt/homebrew/lib/QtCore.framework/Headers -iframework /opt/homebrew/lib -isystem /opt/homebrew/share/qt/mkspecs/macx-clang -isystem /opt/homebrew/include -isystem /opt/homebrew/lib/QtWidgets.framework/Headers -isystem /opt/homebrew/lib/QtGui.framework/Headers -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -o CMakeFiles/option_library.dir/option_main.cpp.o -c /Users/test/Documents/banking_system/GUI/src/client_window/option/option_main.cpp",
+  "file": "/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main.cpp",
+  "output": "GUI/src/client_window/option/CMakeFiles/option_library.dir/option_main.cpp.o"
+},
+{
+  "directory": "/Users/test/Documents/banking_system/build/GUI/src/client_window/option",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/usr/local/mysql-connector-c++-8.2.0/include/jdbc -I/Users/test/Documents/banking_system/GUI/src/database -isystem /Users/test/Documents/banking_system/build/GUI/src/client_window/option/option_library_autogen/include -isystem /opt/homebrew/lib/QtCore.framework/Headers -iframework /opt/homebrew/lib -isystem /opt/homebrew/share/qt/mkspecs/macx-clang -isystem /opt/homebrew/include -isystem /opt/homebrew/lib/QtWidgets.framework/Headers -isystem /opt/homebrew/lib/QtGui.framework/Headers -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -o CMakeFiles/option_library.dir/option_main_window.cpp.o -c /Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.cpp",
+  "file": "/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.cpp",
+  "output": "GUI/src/client_window/option/CMakeFiles/option_library.dir/option_main_window.cpp.o"
 }
 ]

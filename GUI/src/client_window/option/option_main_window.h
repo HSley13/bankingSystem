@@ -21,5 +21,6 @@ public:
 
 private:
     QWidget *central_widget;
+
 private slots:
 };

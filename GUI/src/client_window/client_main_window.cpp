@@ -107,10 +107,10 @@ client_main_window ::client_main_window(QWidget *parent)
     interest_rate_info->setReadOnly(true);
     insert_balance = new QLineEdit(this);
 
-    hbox8 = new QHBoxLayout(this);
+    hbox8 = new QHBoxLayout();
     hbox8->addWidget(interest_rate_info);
     hbox8->addWidget(insert_balance);
-    QGroupBox *grp_balance = new QGroupBox(this);
+    QGroupBox *grp_balance = new QGroupBox();
     grp_balance->setLayout(hbox8);
 
     password = new QLabel("Enter Password: ", this);
@@ -268,10 +268,18 @@ void client_main_window::back_button_func()
 
 void client_main_window::confirm_button_func()
 {
+    std ::string national_ID1 = insert_national_ID->text().toStdString();
+    std ::string first_name1 = insert_first_name->text().toStdString();
+    std ::string last_name1 = insert_last_name->text().toStdString();
+    std ::string date_birth1 = insert_date_birth->text().toStdString();
+    int phone_number1 = insert_phone_number->text().toInt();
+    std ::string email1 = insert_email->text().toStdString();
+    std ::string address1 = insert_address->text().toStdString();
     double balance = insert_balance->text().toDouble();
+    int account_number;
 
-    std ::string password1 = password->text().toStdString();
-    std ::string password_confirmation1 = password_confirmation->text().toStdString();
+    std ::string password1 = insert_password->text().toStdString();
+    std ::string password_confirmation1 = insert_password_confirmation->text().toStdString();
 
     if (balance < 100 || password1.compare(password_confirmation1))
     {
@@ -291,8 +299,33 @@ void client_main_window::confirm_button_func()
         }
     }
 
-    message1 = new QMessageBox(this);
-    message1->information(this, "All Right", "All the info are OK");
+    double interest_rate;
+
+    if (balance == 100)
+        interest_rate = 0;
+
+    else if (balance > 100 && balance < 500)
+        interest_rate = 0.02;
+
+    else if (balance < 1000 && balance >= 500)
+        interest_rate = 0.05;
+
+    else
+        interest_rate = 0.07;
+
+    connection_details ID;
+    ID.server = "localhost";
+    ID.user = "root";
+    ID.password = "sleyHortes1312";
+
+    sql ::Connection *connection = connection_setup(&ID);
+
+    std ::string hash_password = BANK ::hashing_password(password1);
+
+    Account ::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1, phone_number1, email1, address1, balance, interest_rate, hash_password);
+
+    password->clear();
+    password_confirmation->clear();
 }
 
 void client_main_window::account_inquiry_func()

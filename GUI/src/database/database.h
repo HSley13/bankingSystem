@@ -48,7 +48,11 @@ public:
 class Account
 {
 public:
-    static void create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string password, std ::string hash_password);
+    static bool are_all_same(int phone_number);
+
+    static void create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string hash_password);
+
+    static void Qt_create_account(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string first_name, std ::string last_name, std ::string date_birth, int phone_number, std ::string email, std ::string address, const double balance, const double interest_rate, std ::string hash_password);
 
     static void remove_accounts(sql ::Connection *connection, int account_number);
 

@@ -60,5 +60,20 @@
         "algorithm": "cpp",
         "qtextedit": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "banking_system",
+            "database": "bankingSystemDatabase",
+            "username": "root"
+        }
+    ]
 }

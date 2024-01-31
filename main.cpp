@@ -637,7 +637,7 @@ int main(int argc, const char **argv)
 
                         hash_password = BANK ::hashing_password(password);
 
-                        Account ::create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, password, hash_password);
+                        Account ::create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, hash_password);
 
                         password.clear();
                         password_confirmation.clear();

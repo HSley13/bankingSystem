@@ -370,5 +370,5 @@ void adm_option_main_window::delete_accounts()
 
         int account_number = wid_7_account_number->text().toInt();
 
-        Account::remove_accounts(connection, account_number);
+        Account::Qt_remove_accounts(connection, account_number);
 }
