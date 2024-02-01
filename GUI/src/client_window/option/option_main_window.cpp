@@ -222,16 +222,16 @@ option_main_window::option_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-    vbox5 = new QVBoxLayout();
-    vbox5->addLayout(tran_hbox1, Qt::AlignCenter);
-    vbox5->addLayout(tran_hbox2, Qt::AlignCenter);
-    vbox5->addLayout(tran_hbox3, Qt::AlignCenter);
-    vbox5->addLayout(tran_hbox4, Qt::AlignCenter);
-    vbox5->addWidget(confirm_button, Qt::AlignCenter);
-    vbox5->addWidget(back_button, Qt::AlignCenter);
-    vbox5->setAlignment(Qt::AlignCenter);
+    vbox4 = new QVBoxLayout();
+    vbox4->addLayout(tran_hbox1, Qt::AlignCenter);
+    vbox4->addLayout(tran_hbox2, Qt::AlignCenter);
+    vbox4->addLayout(tran_hbox3, Qt::AlignCenter);
+    vbox4->addLayout(tran_hbox4, Qt::AlignCenter);
+    vbox4->addWidget(confirm_button, Qt::AlignCenter);
+    vbox4->addWidget(back_button, Qt::AlignCenter);
+    vbox4->setAlignment(Qt::AlignCenter);
 
-    transfer_widget->setLayout(vbox5);
+    transfer_widget->setLayout(vbox4);
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     borrowal_widget = new QWidget();
@@ -277,29 +277,135 @@ option_main_window::option_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-    vbox6 = new QVBoxLayout();
-    vbox6->addLayout(borr_hbox1, Qt::AlignCenter);
-    vbox6->addLayout(borr_hbox2, Qt::AlignCenter);
-    vbox6->addWidget(grp_balance, Qt::AlignCenter);
-    vbox6->addWidget(confirm_button, Qt::AlignCenter);
-    vbox6->addWidget(back_button, Qt::AlignCenter);
-    vbox6->setAlignment(Qt::AlignCenter);
+    vbox5 = new QVBoxLayout();
+    vbox5->addLayout(borr_hbox1, Qt::AlignCenter);
+    vbox5->addLayout(borr_hbox2, Qt::AlignCenter);
+    vbox5->addWidget(grp_balance, Qt::AlignCenter);
+    vbox5->addWidget(confirm_button, Qt::AlignCenter);
+    vbox5->addWidget(back_button, Qt::AlignCenter);
+    vbox5->setAlignment(Qt::AlignCenter);
 
-    borrowal_widget->setLayout(vbox6);
+    borrowal_widget->setLayout(vbox5);
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     return_borrowal_widget = new QWidget();
     return_borrowal_widget->setWindowTitle("Return Borrowed Money");
 
+    return_borrowal_message1 = new QLabel("Enter Account Number", this);
+    account_number_ret = new QLineEdit(this);
+    ret_hbox1 = new QHBoxLayout();
+    ret_hbox1->addWidget(return_borrowal_message1, Qt::AlignCenter);
+    ret_hbox1->addWidget(account_number_ret, Qt::AlignCenter);
+
+    return_borrowal_message2 = new QLabel("Enter Password", this);
+    password_ret = new QLineEdit(this);
+    password_ret->setEchoMode(QLineEdit::Password);
+    ret_hbox2 = new QHBoxLayout();
+    ret_hbox2->addWidget(return_borrowal_message2, Qt::AlignCenter);
+    ret_hbox2->addWidget(password_ret, Qt::AlignCenter);
+
+    confirm_button = new QPushButton("Confirm", this);
+    connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_func7);
+
+    back_button = new QPushButton("Return to the Previous Menu", this);
+    connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
+
+    vbox6 = new QVBoxLayout();
+    vbox6->addLayout(ret_hbox1, Qt::AlignCenter);
+    vbox6->addLayout(ret_hbox2, Qt::AlignCenter);
+    vbox6->addWidget(confirm_button, Qt::AlignCenter);
+    vbox6->addWidget(back_button, Qt::AlignCenter);
+    vbox6->setAlignment(Qt::AlignCenter);
+
+    return_borrowal_widget->setLayout(vbox6);
+
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     edit_and_forget_widget = new QWidget();
     edit_and_forget_widget->setWindowTitle("Edit Personal Information/ Forget Password");
+
+    edit_perso = new QPushButton("1. Edit Personnal Information", this);
+    // connect(edit_perso, &QPushButton::clicked, this, &option_main_window::);
+
+    forget_password = new QPushButton("2. Forget Password", this);
+    // connect(forget_password, &QPushButton::clicked, this, &option_main_window::);
+
+    change_password = new QPushButton("3. Change Password", this);
+    // connect(change_password, &QPushButton::clicked, this, &option_main_window::);
+
+    back_button = new QPushButton("Return to the Previous Menu", this);
+    connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
+
+    vbox7 = new QVBoxLayout();
+    vbox7->addWidget(edit_perso, Qt::AlignCenter);
+    vbox7->addWidget(forget_password, Qt::AlignCenter);
+    vbox7->addWidget(change_password, Qt::AlignCenter);
+    vbox7->addWidget(back_button, Qt::AlignCenter);
+    vbox7->setAlignment(Qt::AlignCenter);
+
+    edit_and_forget_widget->setLayout(vbox7);
+
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     transaction_history_widget = new QWidget();
     transaction_history_widget->setWindowTitle("Transaction History");
+
+    transaction_history_message1 = new QLabel("Enter Account Number", this);
+    account_number_transac = new QLineEdit(this);
+    transac_hbox1 = new QHBoxLayout();
+    transac_hbox1->addWidget(transaction_history_message1, Qt::AlignCenter);
+    transac_hbox1->addWidget(account_number_transac, Qt::AlignCenter);
+
+    transaction_history_message2 = new QLabel("Enter Password", this);
+    password_transac = new QLineEdit(this);
+    password_transac->setEchoMode(QLineEdit::Password);
+    transac_hbox2 = new QHBoxLayout();
+    transac_hbox2->addWidget(transaction_history_message2, Qt::AlignCenter);
+    transac_hbox2->addWidget(password_transac, Qt::AlignCenter);
+
+    confirm_button = new QPushButton("Confirm", this);
+    connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_func7);
+
+    back_button = new QPushButton("Return to the Previous Menu", this);
+    connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
+
+    vbox8 = new QVBoxLayout();
+    vbox8->addLayout(transac_hbox1, Qt::AlignCenter);
+    vbox8->addLayout(transac_hbox2, Qt::AlignCenter);
+    vbox8->addWidget(confirm_button, Qt::AlignCenter);
+    vbox8->addWidget(back_button, Qt::AlignCenter);
+    vbox8->setAlignment(Qt::AlignCenter);
+
+    transaction_history_widget->setLayout(vbox8);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     delete_account_widget = new QWidget();
     delete_account_widget->setWindowTitle("Delete Account");
+
+    delete_account_message1 = new QLabel("Enter Account Number", this);
+    account_number_dele = new QLineEdit(this);
+    dele_hbox1 = new QHBoxLayout();
+    dele_hbox1->addWidget(delete_account_message1, Qt::AlignCenter);
+    dele_hbox1->addWidget(account_number_dele, Qt::AlignCenter);
+
+    delete_account_message2 = new QLabel("Enter Password", this);
+    password_dele = new QLineEdit(this);
+    password_dele->setEchoMode(QLineEdit::Password);
+    dele_hbox2 = new QHBoxLayout();
+    dele_hbox2->addWidget(delete_account_message2, Qt::AlignCenter);
+    dele_hbox2->addWidget(password_dele, Qt::AlignCenter);
+
+    confirm_button = new QPushButton("Confirm", this);
+    connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_func9);
+
+    back_button = new QPushButton("Return to the Previous Menu", this);
+    connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
+
+    vbox9 = new QVBoxLayout();
+    vbox9->addLayout(dele_hbox1, Qt::AlignCenter);
+    vbox9->addLayout(dele_hbox2, Qt::AlignCenter);
+    vbox9->addWidget(confirm_button, Qt::AlignCenter);
+    vbox9->addWidget(back_button, Qt::AlignCenter);
+    vbox9->setAlignment(Qt::AlignCenter);
+
+    delete_account_widget->setLayout(vbox9);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
     window_stack->addWidget(central_widget);
     window_stack->addWidget(balance_widget);
