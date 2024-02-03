@@ -52,16 +52,11 @@ double check_balance(sql ::Connection *connection, int account_number)
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next())
-        {
-            balance = result->getDouble("balance");
-            return balance;
-        }
-        else
-        {
-            std ::cout << "Account Not Found, Verify the Number again before trying" << std ::endl;
+        if (!result->next())
             return 0.0;
-        }
+
+        balance = result->getDouble("balance");
+        return balance;
     }
     catch (const sql ::SQLException &e)
     {
@@ -72,6 +67,38 @@ double check_balance(sql ::Connection *connection, int account_number)
     {
         std ::cerr << e.what() << std ::endl;
         return 0.0;
+    }
+}
+
+void Qt_display_balance(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        QMessageBox *message;
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result->next())
+            return;
+
+        QString info_text = "Your Balance is: " + QString::number(static_cast<double>(result->getDouble("balance")));
+
+        message = new QMessageBox();
+        message->information(nullptr, "Balance Check", info_text);
+        message->show();
+
+        delete message;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << e.what() << std ::endl;
     }
 }
 
@@ -253,8 +280,6 @@ void Transactions ::display_transactions_history(sql ::Connection *connection, i
             std ::cout << std ::endl;
             std ::cout << std ::endl;
         }
-        else
-            std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
     }
     catch (const sql ::SQLException &e)
     {
@@ -405,22 +430,22 @@ void Account ::create_account(sql ::Connection *connection, int account_number, 
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next())
-        {
-            account_number = result->getInt("account_number");
+        if (!result->next())
+            return;
 
-            std ::cout << account_number << std ::endl;
+        account_number = result->getInt("account_number");
 
-            std ::string table_name = "NO";
-            table_name.append(std::to_string(account_number));
+        std ::cout << account_number << std ::endl;
 
-            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
-            prep_statement->executeUpdate();
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
 
-            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
-            prep_statement->setString(1, "Account Created");
-            prep_statement->executeUpdate();
-        }
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+        prep_statement->executeUpdate();
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement->setString(1, "Account Created");
+        prep_statement->executeUpdate();
 
         call_insert_or_update_hashed_password(connection, account_number, hash_password);
     }
@@ -466,26 +491,26 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next())
-        {
-            account_number = result->getInt("account_number");
+        if (!result->next())
+            return;
 
-            QString info = " " + QString::number(account_number) + " is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future";
-            acc_message = new QMessageBox();
-            acc_message->information(nullptr, "Account Number", info);
+        account_number = result->getInt("account_number");
 
-            std ::string table_name = "NO";
-            table_name.append(std::to_string(account_number));
+        QString info = " " + QString::number(account_number) + " is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future";
+        acc_message = new QMessageBox();
+        acc_message->information(nullptr, "Account Number", info);
 
-            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
-            prep_statement->executeUpdate();
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
 
-            prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
-            prep_statement->setString(1, "Account Created");
-            prep_statement->executeUpdate();
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+        prep_statement->executeUpdate();
 
-            delete acc_message;
-        }
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement->setString(1, "Account Created");
+        prep_statement->executeUpdate();
+
+        delete acc_message;
 
         call_insert_or_update_hashed_password(connection, account_number, hash_password);
     }
@@ -690,16 +715,52 @@ std ::string BANK ::retrieve_hashed_password(sql ::Connection *connection, int a
 
         std ::string hashed_password;
 
-        if (result->next())
-        {
-            hashed_password = result->getString("hashed_password");
-            return hashed_password;
-        }
-        else
+        if (!result->next())
         {
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
             return "";
         }
+
+        hashed_password = result->getString("hashed_password");
+
+        return hashed_password;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+        return "";
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << e.what() << std ::endl;
+        return "";
+    }
+}
+
+std ::string BANK ::Qt_retrieve_hashed_password(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT hashed_password FROM password_security WHERE account_number = ?"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        std ::string hashed_password;
+
+        if (!result->next())
+        {
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Warning!", "The Account entered doesn't exist in our data, Check and try again");
+            message->show();
+
+            delete message;
+
+            return "";
+        }
+
+        hashed_password = result->getString("hashed_password");
+        return hashed_password;
     }
     catch (const sql ::SQLException &e)
     {
@@ -724,16 +785,51 @@ std ::string BANK ::retrieve_adm_hashed_password(sql ::Connection *connection, i
 
         std ::string hashed_password;
 
-        if (result->next())
-        {
-            hashed_password = result->getString("hashed_password");
-            return hashed_password;
-        }
-        else
+        if (!result->next())
         {
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
             return "";
         }
+
+        hashed_password = result->getString("hashed_password");
+        return hashed_password;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+        return "";
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << e.what() << std ::endl;
+        return "";
+    }
+}
+
+std ::string BANK ::Qt_retrieve_adm_hashed_password(sql ::Connection *connection, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT hashed_password FROM adm_password_security WHERE account_number = ?"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        std ::string hashed_password;
+
+        if (!result->next())
+        {
+            QMessageBox *message = new QMessageBox();
+            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
+            message->show();
+
+            delete message;
+
+            return "";
+        }
+
+        hashed_password = result->getString("hashed_password");
+        return hashed_password;
     }
     catch (const sql ::SQLException &e)
     {
@@ -789,16 +885,14 @@ std ::string BANK ::retrieve_interest_rate_initial_timestamp(sql ::Connection *c
 
         std::string initial_timestamp;
 
-        if (result->next())
-        {
-            initial_timestamp = result->getString("initial_timestamp");
-            return initial_timestamp;
-        }
-        else
+        if (!result->next())
         {
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
             return "";
         }
+
+        initial_timestamp = result->getString("initial_timestamp");
+        return initial_timestamp;
     }
     catch (const sql ::SQLException &e)
     {
@@ -933,7 +1027,7 @@ bool BANK ::authentification_check(sql ::Connection *connection, int account_num
     }
 }
 
-void BANK ::authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password)
+bool BANK ::authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password)
 {
     std ::cout << "Enter Account Number: ";
     std ::cin >> account_number;
@@ -941,8 +1035,26 @@ void BANK ::authentification_message(sql ::Connection *connection, int &account_
 
     hash_password = BANK ::retrieve_hashed_password(connection, account_number);
 
-    std ::cout << "What is your Password: " << std ::endl;
-    std ::cout << "You have 3 Chances" << std ::endl;
+    if (hash_password == "")
+
+        return false;
+
+    return true;
+}
+
+bool BANK ::adm_authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password)
+{
+    std ::cout << "Enter Account Number: ";
+    std ::cin >> account_number;
+    std ::cout << std ::endl;
+
+    hash_password = BANK ::retrieve_adm_hashed_password(connection, account_number);
+
+    if (hash_password == "")
+
+        return false;
+
+    return true;
 }
 
 void BANK ::create_adm(sql ::Connection *connection, int account_number, std ::string hash_password)
@@ -1296,18 +1408,19 @@ void BANK ::display_specific_accounts_in_debt(sql ::Connection *connection, int 
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->next())
+        if (!result->next())
         {
-            std ::cout << "National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
-
-            std ::cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
-
-            std ::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << std ::endl;
-            std ::cout << std ::endl;
-            std ::cout << std ::endl;
-        }
-        else
             std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+            return;
+        }
+
+        std ::cout << "National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
+
+        std ::cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
+
+        std ::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << std ::endl;
+        std ::cout << std ::endl;
+        std ::cout << std ::endl;
     }
     catch (const sql ::SQLException &e)
     {

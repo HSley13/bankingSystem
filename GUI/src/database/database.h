@@ -21,6 +21,8 @@ sql ::Connection *connection_setup(connection_details *ID);
 
 double check_balance(sql ::Connection *connection, int account_number);
 
+void Qt_display_balance(sql ::Connection *connection, int account_number);
+
 void call_insert_or_update_hashed_password(sql ::Connection *connection, int account_number, const std ::string hash_password);
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,7 +73,11 @@ public:
 
     static std ::string retrieve_hashed_password(sql ::Connection *connection, int account_number);
 
+    static std ::string Qt_retrieve_hashed_password(sql ::Connection *connection, int account_number);
+
     static std ::string retrieve_adm_hashed_password(sql ::Connection *connection, int account_number);
+
+    static std ::string Qt_retrieve_adm_hashed_password(sql ::Connection *connection, int account_number);
 
     static std ::string retrieve_interest_rate_initial_timestamp(sql ::Connection *connection, int account_number);
 
@@ -81,7 +87,9 @@ public:
 
     static bool authentification_check(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string date_birth);
 
-    static void authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password);
+    static bool authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password);
+
+    static bool adm_authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password);
 
     static void create_adm(sql ::Connection *connection, int account_number, std ::string hash_password);
 

@@ -64,7 +64,7 @@ void adm_main_window::confirm_login_func()
 
     sql ::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::retrieve_adm_hashed_password(connection, account_number);
+    std ::string hashed_password = BANK ::Qt_retrieve_adm_hashed_password(connection, account_number);
 
     if (BANK ::verifying_password(password, hashed_password))
     {
@@ -74,12 +74,5 @@ void adm_main_window::confirm_login_func()
         adm_option_main_window *new_window = new adm_option_main_window;
 
         new_window->show();
-    }
-    else
-    {
-        QString message1 = "Login Failed! The Account number: " + QString::number(account_number) + " is not Found or Your Password is Incorrect, check and try again";
-
-        message = new QMessageBox(this);
-        message->warning(this, "Warning!", message1);
     }
 }

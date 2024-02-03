@@ -429,6 +429,32 @@ void option_main_window::back_button_func()
 
 void option_main_window::confirm_button_func1()
 {
+    int account_number = account_number_ba->text().toInt();
+    std ::string password = password_ba->text().toStdString();
+
+    connection_details ID;
+    ID.server = "localhost";
+    ID.user = "root";
+    ID.password = "sleyHortes1312";
+
+    sql ::Connection *connection = connection_setup(&ID);
+
+    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+    if (hashed_password == "")
+        return;
+
+    if (!BANK ::verifying_password(password, hashed_password))
+    {
+        QMessageBox *message = new QMessageBox();
+        message->warning(nullptr, "Balance Check", "Password Incorrect");
+
+        delete message;
+
+        return;
+    }
+
+    Qt_display_balance(connection, account_number);
 }
 
 void option_main_window::confirm_button_func2()

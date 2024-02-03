@@ -388,18 +388,14 @@ int main(int argc, const char **argv)
             switch (options)
             {
             case 1: // Administrator
-                cout << "Enter Account Number: ";
-                cin >> account_number;
-                cout << endl;
-
-                hash_password = BANK ::retrieve_adm_hashed_password(connection, account_number);
-
-                cout << "What is your Password: " << endl;
-
-                cout << "You have 3 Chances" << endl;
+                if (!BANK ::adm_authentification_message(connection, account_number, hash_password))
+                    break;
 
                 do
                 {
+                    cout << "What is your Password: " << endl;
+                    cout << "You have 3 Chances" << endl;
+
                     cin >> password;
                     cout << endl;
 
@@ -687,10 +683,15 @@ int main(int argc, const char **argv)
                             switch (options2)
                             {
                             case 1: // Balance Check
-                                BANK ::authentification_message(connection, account_number, hash_password);
+
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
 
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -716,14 +717,18 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 2: // Deposit
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
+
                                 cout << "Enter Amount to Deposit: ";
                                 cin >> amount_to_deposit;
                                 cout << endl;
 
-                                BANK ::authentification_message(connection, account_number, hash_password);
-
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -748,14 +753,21 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 3: // Withdraw
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
+
                                 cout << "Enter Amount to Withdraw: ";
                                 cin >> amount_to_withdraw;
                                 cout << endl;
 
-                                BANK ::authentification_message(connection, account_number, hash_password);
-
                                 do
                                 {
+                                    if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                        break;
+
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -791,6 +803,9 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 4: // Transfer
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
+
                                 cout << "Enter Amount to Transfer: ";
                                 cin >> amount_to_transfer;
                                 cout << endl;
@@ -799,10 +814,14 @@ int main(int argc, const char **argv)
                                 cin >> account_number2;
                                 cout << endl;
 
-                                BANK ::authentification_message(connection, account_number1, hash_password);
-
                                 do
                                 {
+                                    if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                        break;
+
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -855,13 +874,17 @@ int main(int argc, const char **argv)
 
                                 cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
 
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
+
                                 cin >> amount_to_borrow;
                                 cout << endl;
 
-                                BANK ::authentification_message(connection, account_number, hash_password);
-
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -936,10 +959,14 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 6: // Return Borrowed Money
-                                BANK ::authentification_message(connection, account_number, hash_password);
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
 
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -1068,10 +1095,14 @@ int main(int argc, const char **argv)
                                             switch (options4)
                                             {
                                             case 1: // Edit Name
-                                                BANK ::authentification_message(connection, account_number, hash_password);
+                                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                                    break;
 
                                                 do
                                                 {
+                                                    std ::cout << "What is your Password: " << std ::endl;
+                                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                                     cin >> password;
                                                     cout << endl;
 
@@ -1102,10 +1133,14 @@ int main(int argc, const char **argv)
                                                 break;
 
                                             case 2: // Edit Email
-                                                BANK ::authentification_message(connection, account_number, hash_password);
+                                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                                    break;
 
                                                 do
                                                 {
+                                                    std ::cout << "What is your Password: " << std ::endl;
+                                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                                     cin >> password;
                                                     cout << endl;
 
@@ -1135,10 +1170,14 @@ int main(int argc, const char **argv)
                                                 break;
 
                                             case 3: // Edit address
-                                                BANK ::authentification_message(connection, account_number, hash_password);
+                                                if (BANK ::authentification_message(connection, account_number, hash_password))
+                                                    break;
 
                                                 do
                                                 {
+                                                    std ::cout << "What is your Password: " << std ::endl;
+                                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                                     cin >> password;
                                                     cout << endl;
 
@@ -1169,10 +1208,14 @@ int main(int argc, const char **argv)
                                                 break;
 
                                             case 4: // Edit Phone Number
-                                                BANK ::authentification_message(connection, account_number, hash_password);
+                                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                                    break;
 
                                                 do
                                                 {
+                                                    std ::cout << "What is your Password: " << std ::endl;
+                                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                                     cin >> password;
                                                     cout << endl;
 
@@ -1208,10 +1251,14 @@ int main(int argc, const char **argv)
                                         break;
 
                                     case 2: // Change Password
-                                        BANK ::authentification_message(connection, account_number, hash_password);
+                                        if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                            break;
 
                                         do
                                         {
+                                            std ::cout << "What is your Password: " << std ::endl;
+                                            std ::cout << "You have 3 Chances" << std ::endl;
+
                                             cin >> password;
                                             cout << endl;
 
@@ -1296,10 +1343,14 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 8: // Transaction History
-                                BANK ::authentification_message(connection, account_number, hash_password);
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
 
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
@@ -1321,11 +1372,14 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 9: // Delete an Account
-                                BANK ::authentification_message(connection, account_number, hash_password);
-                                ;
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
 
                                 do
                                 {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
                                     cin >> password;
                                     cout << endl;
 
