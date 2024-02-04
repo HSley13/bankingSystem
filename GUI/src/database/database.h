@@ -31,11 +31,19 @@ class Transactions
 public:
     static void deposit(sql ::Connection *connection, const double amount_to_deposit, int account_number);
 
+    static void Qt_deposit(sql ::Connection *connection, const double amount_to_deposit, int account_number);
+
     static void withdrawal(sql ::Connection *connection, const double sum_to_withdraw, int account_number);
+
+    static void Qt_withdrawal(sql ::Connection *connection, const double sum_to_withdraw, int account_number);
 
     static void transfer(sql ::Connection *connection, const double amount_to_send, int account_number1, int account_number2);
 
+    static void Qt_transfer(sql ::Connection *connection, const double amount_to_send, int account_number1, int account_number2);
+
     static void borrow(sql ::Connection *connection, const double amount_to_borrow, int account_number);
+
+    static void Qt_borrow(sql ::Connection *connection, const double amount_to_borrow, int account_number);
 
     static void display_transactions_history(sql ::Connection *connection, int account_number);
 

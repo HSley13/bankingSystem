@@ -42,15 +42,15 @@ static constexpr auto qt_meta_stringdata_CLASSoption_main_windowENDCLASS = QtMoc
     "option_main_window",
     "back_button_func",
     "",
-    "confirm_button_func1",
-    "confirm_button_func2",
-    "confirm_button_func3",
-    "confirm_button_func4",
-    "confirm_button_func5",
-    "confirm_button_func6",
+    "confirm_button_balance",
+    "confirm_button_deposit",
+    "confirm_button_withdrawal",
+    "confirm_button_transfer",
+    "confirm_button_borrowal",
+    "confirm_button_return_borrowal",
     "confirm_button_func7",
-    "confirm_button_func8",
-    "confirm_button_func9"
+    "confirm_button_transaction_history",
+    "confirm_button_delete_account"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t {
@@ -58,15 +58,15 @@ struct qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t {
     char stringdata0[19];
     char stringdata1[17];
     char stringdata2[1];
-    char stringdata3[21];
-    char stringdata4[21];
-    char stringdata5[21];
-    char stringdata6[21];
-    char stringdata7[21];
-    char stringdata8[21];
+    char stringdata3[23];
+    char stringdata4[23];
+    char stringdata5[26];
+    char stringdata6[24];
+    char stringdata7[24];
+    char stringdata8[31];
     char stringdata9[21];
-    char stringdata10[21];
-    char stringdata11[21];
+    char stringdata10[35];
+    char stringdata11[30];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -75,28 +75,28 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t qt
         QT_MOC_LITERAL(0, 18),  // "option_main_window"
         QT_MOC_LITERAL(19, 16),  // "back_button_func"
         QT_MOC_LITERAL(36, 0),  // ""
-        QT_MOC_LITERAL(37, 20),  // "confirm_button_func1"
-        QT_MOC_LITERAL(58, 20),  // "confirm_button_func2"
-        QT_MOC_LITERAL(79, 20),  // "confirm_button_func3"
-        QT_MOC_LITERAL(100, 20),  // "confirm_button_func4"
-        QT_MOC_LITERAL(121, 20),  // "confirm_button_func5"
-        QT_MOC_LITERAL(142, 20),  // "confirm_button_func6"
-        QT_MOC_LITERAL(163, 20),  // "confirm_button_func7"
-        QT_MOC_LITERAL(184, 20),  // "confirm_button_func8"
-        QT_MOC_LITERAL(205, 20)   // "confirm_button_func9"
+        QT_MOC_LITERAL(37, 22),  // "confirm_button_balance"
+        QT_MOC_LITERAL(60, 22),  // "confirm_button_deposit"
+        QT_MOC_LITERAL(83, 25),  // "confirm_button_withdrawal"
+        QT_MOC_LITERAL(109, 23),  // "confirm_button_transfer"
+        QT_MOC_LITERAL(133, 23),  // "confirm_button_borrowal"
+        QT_MOC_LITERAL(157, 30),  // "confirm_button_return_borrowal"
+        QT_MOC_LITERAL(188, 20),  // "confirm_button_func7"
+        QT_MOC_LITERAL(209, 34),  // "confirm_button_transaction_hi..."
+        QT_MOC_LITERAL(244, 29)   // "confirm_button_delete_account"
     },
     "option_main_window",
     "back_button_func",
     "",
-    "confirm_button_func1",
-    "confirm_button_func2",
-    "confirm_button_func3",
-    "confirm_button_func4",
-    "confirm_button_func5",
-    "confirm_button_func6",
+    "confirm_button_balance",
+    "confirm_button_deposit",
+    "confirm_button_withdrawal",
+    "confirm_button_transfer",
+    "confirm_button_borrowal",
+    "confirm_button_return_borrowal",
     "confirm_button_func7",
-    "confirm_button_func8",
-    "confirm_button_func9"
+    "confirm_button_transaction_history",
+    "confirm_button_delete_account"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -153,23 +153,23 @@ Q_CONSTINIT const QMetaObject option_main_window::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<option_main_window, std::true_type>,
         // method 'back_button_func'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func1'
+        // method 'confirm_button_balance'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func2'
+        // method 'confirm_button_deposit'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func3'
+        // method 'confirm_button_withdrawal'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func4'
+        // method 'confirm_button_transfer'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func5'
+        // method 'confirm_button_borrowal'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func6'
+        // method 'confirm_button_return_borrowal'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'confirm_button_func7'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func8'
+        // method 'confirm_button_transaction_history'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func9'
+        // method 'confirm_button_delete_account'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -182,15 +182,15 @@ void option_main_window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         (void)_t;
         switch (_id) {
         case 0: _t->back_button_func(); break;
-        case 1: _t->confirm_button_func1(); break;
-        case 2: _t->confirm_button_func2(); break;
-        case 3: _t->confirm_button_func3(); break;
-        case 4: _t->confirm_button_func4(); break;
-        case 5: _t->confirm_button_func5(); break;
-        case 6: _t->confirm_button_func6(); break;
+        case 1: _t->confirm_button_balance(); break;
+        case 2: _t->confirm_button_deposit(); break;
+        case 3: _t->confirm_button_withdrawal(); break;
+        case 4: _t->confirm_button_transfer(); break;
+        case 5: _t->confirm_button_borrowal(); break;
+        case 6: _t->confirm_button_return_borrowal(); break;
         case 7: _t->confirm_button_func7(); break;
-        case 8: _t->confirm_button_func8(); break;
-        case 9: _t->confirm_button_func9(); break;
+        case 8: _t->confirm_button_transaction_history(); break;
+        case 9: _t->confirm_button_delete_account(); break;
         default: ;
         }
     }

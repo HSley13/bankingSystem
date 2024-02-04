@@ -169,13 +169,13 @@ private:
 
 private slots:
     void back_button_func();
-    void confirm_button_func1();
-    void confirm_button_func2();
-    void confirm_button_func3();
-    void confirm_button_func4();
-    void confirm_button_func5();
-    void confirm_button_func6();
+    void confirm_button_balance();
+    void confirm_button_deposit();
+    void confirm_button_withdrawal();
+    void confirm_button_transfer();
+    void confirm_button_borrowal();
+    void confirm_button_return_borrowal();
     void confirm_button_func7();
-    void confirm_button_func8();
-    void confirm_button_func9();
+    void confirm_button_transaction_history();
+    void confirm_button_delete_account();
 };

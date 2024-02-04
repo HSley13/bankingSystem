@@ -157,10 +157,42 @@ void Transactions ::deposit(sql ::Connection *connection, const double amount_to
 
         prep_statement->executeUpdate();
 
+        insert_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
+
         std ::cout << "You have deposited: $" << amount_to_deposit << ", and your new Balance is: $" << check_balance(connection, account_number) << std ::endl;
         std ::cout << std ::endl;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void Transactions ::Qt_deposit(sql ::Connection *connection, const double amount_to_deposit, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("UPDATE transactions SET deposit = ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_deposit);
+        prep_statement->setInt(2, account_number);
+
+        prep_statement->executeUpdate();
+
+        BANK ::apply_interest_rate_to_balance(connection, account_number);
 
         insert_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
+
+        QString info = "You have deposited: $" + QString::number(static_cast<double>(amount_to_deposit)) + "and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
+
+        QMessageBox *message = new QMessageBox();
+        message->information(nullptr, "New Deposit", info);
+        message->show();
+
+        delete message;
     }
     catch (const sql ::SQLException &e)
     {
@@ -197,6 +229,34 @@ void Transactions ::withdrawal(sql ::Connection *connection, const double amount
     }
 }
 
+void Transactions ::Qt_withdrawal(sql ::Connection *connection, const double amount_to_withdraw, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("UPDATE transactions SET withdrawal = ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_withdraw);
+        prep_statement->setInt(2, account_number);
+
+        prep_statement->executeUpdate();
+
+        QString info = "You have withdrawn: $" + QString::number(static_cast<double>(amount_to_withdraw)) + "Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
+
+        QMessageBox *message = new QMessageBox();
+        message->information(nullptr, "New Withdrawal", info);
+        message->show();
+
+        delete message;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void Transactions ::transfer(sql ::Connection *connection, const double amount_to_transfer, int account_number1, int account_number2)
 {
     try
@@ -216,6 +276,42 @@ void Transactions ::transfer(sql ::Connection *connection, const double amount_t
         insert_transactions(connection, account_number2, "Money Received from " + std::to_string(account_number1) + ", Amount of: $", amount_to_transfer);
 
         std ::cout << "You have sent: $" << amount_to_transfer << " to the account number: " << account_number2 << " and Your new balance is: $" << check_balance(connection, account_number1) << std ::endl;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void Transactions ::Qt_transfer(sql ::Connection *connection, const double amount_to_transfer, int account_number1, int account_number2)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_sender(connection->prepareStatement("UPDATE transactions SET transfer = ? WHERE account_number = ?;"));
+        prep_statement_sender->setDouble(1, amount_to_transfer);
+        prep_statement_sender->setInt(2, account_number1);
+        prep_statement_sender->executeUpdate();
+
+        insert_transactions(connection, account_number1, "Money Transferred to " + std::to_string(account_number2) + ", Amount of: $", amount_to_transfer);
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_receiver(connection->prepareStatement("UPDATE transactions SET receive = ? WHERE account_number = ?;"));
+        prep_statement_receiver->setDouble(1, amount_to_transfer);
+        prep_statement_receiver->setInt(2, account_number2);
+        prep_statement_receiver->executeUpdate();
+
+        insert_transactions(connection, account_number2, "Money Received from " + std::to_string(account_number1) + ", Amount of: $", amount_to_transfer);
+
+        QString info = "You have sent $" + QString::number(static_cast<double>(amount_to_transfer)) + " to the account number " + QString::number(account_number2) + " and your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number1))) + " ";
+
+        QMessageBox *message = new QMessageBox();
+        message->information(nullptr, "New Withdrawal", info);
+        message->show();
+
+        delete message;
     }
     catch (const sql ::SQLException &e)
     {
