@@ -250,6 +250,18 @@ void Transactions ::transfer(sql ::Connection *connection, const double amount_t
 {
     try
     {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * from accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number2);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result->next())
+        {
+            std ::cout << "Acount Number which will reiceive the money is not found in our database, check and try again" << std ::endl;
+
+            return;
+        }
+
         std ::unique_ptr<sql ::PreparedStatement> prep_statement_sender(connection->prepareStatement("UPDATE transactions SET transfer = ? WHERE account_number = ?;"));
         prep_statement_sender->setDouble(1, amount_to_transfer);
         prep_statement_sender->setInt(2, account_number1);
@@ -280,6 +292,18 @@ void Transactions ::Qt_transfer(sql ::Connection *connection, const double amoun
 {
     try
     {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * from accounts WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number2);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result->next())
+        {
+            QMessageBox::warning(nullptr, "Error", "Acount Number which will reiceive the money is not found in our database, check and try again");
+
+            return;
+        }
+
         std ::unique_ptr<sql ::PreparedStatement> prep_statement_sender(connection->prepareStatement("UPDATE transactions SET transfer = ? WHERE account_number = ?;"));
         prep_statement_sender->setDouble(1, amount_to_transfer);
         prep_statement_sender->setInt(2, account_number1);
@@ -421,15 +445,15 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        QList<QTableWidgetItem *> items;
-        int row = table->rowCount();
-
         if (!result)
         {
             QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
 
             return;
         }
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
 
         while (result->next())
         {
@@ -694,7 +718,7 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
 
         result = std ::unique_ptr<sql ::ResultSet>(prep_statement->executeQuery());
 
-        if (result->isBeforeFirst())
+        if (result->next())
         {
             QMessageBox::warning(nullptr, "Error", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
 
@@ -719,6 +743,8 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
         prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
         prep_statement->setString(1, "Account Deleted");
         prep_statement->executeUpdate();
+
+        QMessageBox::information(nullptr, "OK", "Account deleted Successfully");
     }
     catch (const sql ::SQLException &e)
     {
@@ -836,7 +862,7 @@ std ::string BANK ::Qt_retrieve_hashed_password(sql ::Connection *connection, in
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Warning!", "The Account entered doesn't exist in our data, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our data, Check and try again");
 
             return "";
         }

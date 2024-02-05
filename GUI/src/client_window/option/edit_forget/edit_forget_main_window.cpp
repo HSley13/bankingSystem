@@ -312,37 +312,30 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     forget_hbox_1->addWidget(account_number_forget, Qt::AlignCenter);
     forget_hbox_1->addWidget(insert_account_number_forget, Qt::AlignCenter);
 
-    password_forget = new QLabel("Enter Password", this);
-    insert_password_forget = new QLineEdit(this);
-    insert_password_forget->setEchoMode(QLineEdit::Password);
-    forget_hbox_2 = new QHBoxLayout();
-    forget_hbox_2->addWidget(password_forget, Qt::AlignCenter);
-    forget_hbox_2->addWidget(insert_password_forget, Qt::AlignCenter);
-
     national_ID_forget = new QLabel("Enter Your National ID", this);
     insert_national_ID_forget = new QLineEdit(this);
-    forget_hbox_3 = new QHBoxLayout();
-    forget_hbox_3->addWidget(national_ID_forget, Qt::AlignCenter);
-    forget_hbox_3->addWidget(insert_national_ID_forget, Qt::AlignCenter);
+    forget_hbox_2 = new QHBoxLayout();
+    forget_hbox_2->addWidget(national_ID_forget, Qt::AlignCenter);
+    forget_hbox_2->addWidget(insert_national_ID_forget, Qt::AlignCenter);
 
     date_birth_forget = new QLabel("Enter Date of Birth", this);
     insert_date_birth_forget = new QLineEdit(this);
-    forget_hbox_4 = new QHBoxLayout();
-    forget_hbox_4->addWidget(date_birth_forget, Qt::AlignCenter);
-    forget_hbox_4->addWidget(insert_date_birth_forget, Qt::AlignCenter);
+    forget_hbox_3 = new QHBoxLayout();
+    forget_hbox_3->addWidget(date_birth_forget, Qt::AlignCenter);
+    forget_hbox_3->addWidget(insert_date_birth_forget, Qt::AlignCenter);
 
     new_password_forget = new QLabel("Enter new  Password", this);
     insert_new_password_forget = new QLineEdit(this);
-    forget_hbox_5 = new QHBoxLayout();
-    forget_hbox_5->addWidget(new_password_forget, Qt::AlignCenter);
-    forget_hbox_5->addWidget(insert_new_password_forget, Qt::AlignCenter);
+    forget_hbox_4 = new QHBoxLayout();
+    forget_hbox_4->addWidget(new_password_forget, Qt::AlignCenter);
+    forget_hbox_4->addWidget(insert_new_password_forget, Qt::AlignCenter);
 
     new_password_confirmation_forget = new QLabel("Enter new Password Confirmation", this);
     insert_new_password_confirmation_forget = new QLineEdit(this);
     insert_new_password_confirmation_forget->setEchoMode(QLineEdit::Password);
-    forget_hbox_6 = new QHBoxLayout();
-    forget_hbox_6->addWidget(new_password_confirmation_forget, Qt::AlignCenter);
-    forget_hbox_6->addWidget(insert_new_password_confirmation_forget, Qt::AlignCenter);
+    forget_hbox_5 = new QHBoxLayout();
+    forget_hbox_5->addWidget(new_password_confirmation_forget, Qt::AlignCenter);
+    forget_hbox_5->addWidget(insert_new_password_confirmation_forget, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_forget_func);
@@ -356,7 +349,6 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     vbox_3->addLayout(forget_hbox_3, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_4, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_5, Qt::AlignCenter);
-    vbox_3->addLayout(forget_hbox_6, Qt::AlignCenter);
     vbox_3->addWidget(confirm_button, Qt::AlignCenter);
     vbox_3->addWidget(back_button, Qt::AlignCenter);
     vbox_3->setAlignment(Qt::AlignCenter);
@@ -437,7 +429,6 @@ void edit_forget_main_window::confirm_change_func()
 void edit_forget_main_window::confirm_forget_func()
 {
     int account_number = insert_account_number_forget->text().toInt();
-    std ::string password = insert_password_forget->text().toStdString();
 
     std ::string new_password = insert_new_password_forget->text().toStdString();
     std ::string new_password_confirmation = insert_new_password_confirmation_forget->text().toStdString();
@@ -451,18 +442,6 @@ void edit_forget_main_window::confirm_forget_func()
     ID.password = "sleyHortes1312";
 
     sql ::Connection *connection = connection_setup(&ID);
-
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
-
-    if (hashed_password == "")
-        return;
-
-    if (!BANK ::verifying_password(password, hashed_password))
-    {
-        QMessageBox::warning(this, "!!!", "Password Incorrect");
-
-        return;
-    }
 
     if (!BANK ::authentification_check(connection, account_number, national_ID, date_birth))
     {

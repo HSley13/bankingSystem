@@ -63,11 +63,11 @@ option_main_window::option_main_window(QWidget *parent)
 
         transaction_history = new QPushButton("8. Transaction History", this);
         connect(transaction_history, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(8); });
+                { window_stack->setCurrentIndex(7); });
 
         delete_account = new QPushButton("9. Delete Account", this);
         connect(delete_account, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(9); });
+                { window_stack->setCurrentIndex(8); });
 
         VBOX = new QVBoxLayout(central_widget);
         VBOX->setAlignment(Qt::AlignCenter);
@@ -653,6 +653,7 @@ void option_main_window::confirm_button_edit_perso()
 
         new_window->show();
 }
+
 void option_main_window::confirm_button_transaction_history()
 {
         int account_number = account_number_transac->text().toInt();
@@ -679,6 +680,7 @@ void option_main_window::confirm_button_transaction_history()
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
 }
+
 void option_main_window::confirm_button_delete_account()
 {
         int account_number = account_number_dele->text().toInt();
@@ -698,7 +700,7 @@ void option_main_window::confirm_button_delete_account()
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
-                QMessageBox::warning(nullptr, "Transac History", "Password Incorrect");
+                QMessageBox::warning(nullptr, "Delete Account", "Password Incorrect");
 
                 return;
         }
