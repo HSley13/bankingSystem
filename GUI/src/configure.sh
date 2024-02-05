@@ -1,2 +1,2 @@
 #!/bin/bash
-cmake -S ../ -B app/build/
+sudo cmake -S ../ -B app/build/

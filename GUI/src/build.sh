@@ -1,3 +1,3 @@
 #!/bin/bash
 cd app/build/ 
-make 
+sudo make 

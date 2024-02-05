@@ -66,14 +66,21 @@ void adm_main_window::confirm_login_func()
 
     std ::string hashed_password = BANK ::Qt_retrieve_adm_hashed_password(connection, account_number);
 
-    if (BANK ::verifying_password(password, hashed_password))
+    if (hashed_password == "")
+        return;
+
+    if (!BANK ::verifying_password(password, hashed_password))
     {
-        QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
+        QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
-        adm_option_main_window *new_window = new adm_option_main_window;
-
-        new_window->show();
+        return;
     }
+
+    QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
+
+    adm_option_main_window *new_window = new adm_option_main_window;
+
+    new_window->show();
 
     insert_adm_account_number->clear();
     insert_adm_password->clear();

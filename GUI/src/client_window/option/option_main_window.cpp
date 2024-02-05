@@ -679,6 +679,10 @@ void option_main_window::confirm_button_return_borrowal()
 
         QMessageBox::information(this, "Debt paid", "Thanks, You have officially paid your debt and are now allowed to make another one");
 
+        account_number_ret->clear();
+        password_ret->clear();
+
+        password.clear();
         hashed_password.clear();
 }
 
@@ -717,6 +721,10 @@ void option_main_window::confirm_button_transaction_history()
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
 
+        account_number_transac->clear();
+        password_transac->clear();
+
+        password.clear();
         hashed_password.clear();
 }
 
@@ -746,5 +754,9 @@ void option_main_window::confirm_button_delete_account()
 
         Account::Qt_remove_accounts(connection, account_number);
 
+        account_number_dele->clear();
+        password_dele->clear();
+
+        password.clear();
         hashed_password.clear();
 }
