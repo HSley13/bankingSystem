@@ -1088,6 +1088,13 @@ int main(int argc, const char **argv)
                                                         std ::cin >> new_first_name;
                                                         std ::cout << std ::endl;
 
+                                                        while (new_first_name.empty())
+                                                        {
+                                                            std ::cout << "Name left Blank, Enter a valid One" << std ::endl;
+
+                                                            std ::cout << std ::endl;
+                                                        }
+
                                                         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_first_name);
@@ -1095,6 +1102,8 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         password.clear();
+
+                                                        std ::cout << "Name changed Successfully" << std ::endl;
 
                                                         break;
                                                     }
@@ -1125,6 +1134,13 @@ int main(int argc, const char **argv)
                                                         std ::cout << "Enter the New Mail: ";
                                                         std ::cin >> new_email;
 
+                                                        while (new_email.empty())
+                                                        {
+                                                            std ::cout << "Email left Blank, Enter a valid One" << std ::endl;
+
+                                                            std ::cout << std ::endl;
+                                                        }
+
                                                         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_email);
@@ -1132,6 +1148,8 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         password.clear();
+
+                                                        std ::cout << "Email changed Successfully" << std ::endl;
 
                                                         break;
                                                     }
@@ -1163,6 +1181,13 @@ int main(int argc, const char **argv)
                                                         std ::cin >> new_address;
                                                         std ::cout << std ::endl;
 
+                                                        while (new_address.empty())
+                                                        {
+                                                            std ::cout << "Address left Blank, Enter a valid One" << std ::endl;
+
+                                                            std ::cout << std ::endl;
+                                                        }
+
                                                         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_address);
@@ -1170,6 +1195,8 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         password.clear();
+
+                                                        std ::cout << "Address changed Successfully" << std ::endl;
 
                                                         break;
                                                     }
@@ -1201,6 +1228,13 @@ int main(int argc, const char **argv)
                                                         std ::cin >> new_phone_number;
                                                         std ::cout << std ::endl;
 
+                                                        while (new_phone_number.empty())
+                                                        {
+                                                            std ::cout << "Phone Number left Blank, Enter a valid One" << std ::endl;
+
+                                                            std ::cout << std ::endl;
+                                                        }
+
                                                         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setInt(2, new_phone_number);
@@ -1208,6 +1242,8 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         password.clear();
+
+                                                        std ::cout << "Phone Number changed Successfully" << std ::endl;
 
                                                         break;
                                                     }
