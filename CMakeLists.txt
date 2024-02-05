@@ -11,3 +11,4 @@ target_link_libraries(BankingSystem PRIVATE database_library Qt6::Core Qt6::Widg
 
 add_subdirectory(GUI/src/database)
 
+install(TARGETS BankingSystem DESTINATION /usr/local/bin)

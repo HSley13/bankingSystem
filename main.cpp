@@ -505,6 +505,7 @@ int main(int argc, const char **argv)
                                 std ::cout << std ::endl;
 
                                 BANK ::remove_accounts(connection, account_number);
+
                                 break;
                             }
 
@@ -512,6 +513,8 @@ int main(int argc, const char **argv)
 
                         break;
                     }
+
+                    password.clear();
 
                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                     k--;
@@ -705,6 +708,8 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
+                                    password.clear();
+
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
@@ -740,6 +745,8 @@ int main(int argc, const char **argv)
 
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -790,6 +797,8 @@ int main(int argc, const char **argv)
 
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -846,6 +855,8 @@ int main(int argc, const char **argv)
 
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -922,8 +933,12 @@ int main(int argc, const char **argv)
 
                                         Transactions ::borrow(connection, amount_to_borrow, account_number);
 
+                                        password.clear();
+
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -992,8 +1007,12 @@ int main(int argc, const char **argv)
 
                                         Transactions ::insert_transactions(connection, account_number, "New Money Returned, Sum of ", amount_to_return);
 
+                                        password.clear();
+
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -1101,12 +1120,14 @@ int main(int argc, const char **argv)
 
                                                         prep_statement->executeUpdate();
 
-                                                        password.clear();
-
                                                         std ::cout << "Name changed Successfully" << std ::endl;
+
+                                                        password.clear();
 
                                                         break;
                                                     }
+
+                                                    password.clear();
 
                                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
@@ -1147,12 +1168,14 @@ int main(int argc, const char **argv)
 
                                                         prep_statement->executeUpdate();
 
-                                                        password.clear();
-
                                                         std ::cout << "Email changed Successfully" << std ::endl;
+
+                                                        password.clear();
 
                                                         break;
                                                     }
+
+                                                    password.clear();
 
                                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
@@ -1201,6 +1224,8 @@ int main(int argc, const char **argv)
                                                         break;
                                                     }
 
+                                                    password.clear();
+
                                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
 
@@ -1228,25 +1253,20 @@ int main(int argc, const char **argv)
                                                         std ::cin >> new_phone_number;
                                                         std ::cout << std ::endl;
 
-                                                        while (new_phone_number.empty())
-                                                        {
-                                                            std ::cout << "Phone Number left Blank, Enter a valid One" << std ::endl;
-
-                                                            std ::cout << std ::endl;
-                                                        }
-
                                                         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setInt(2, new_phone_number);
 
                                                         prep_statement->executeUpdate();
 
-                                                        password.clear();
-
                                                         std ::cout << "Phone Number changed Successfully" << std ::endl;
+
+                                                        password.clear();
 
                                                         break;
                                                     }
+
+                                                    password.clear();
 
                                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
@@ -1297,6 +1317,8 @@ int main(int argc, const char **argv)
 
                                                 break;
                                             }
+
+                                            password.clear();
 
                                             std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                             k--;
@@ -1370,10 +1392,13 @@ int main(int argc, const char **argv)
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
                                         Transactions ::display_transactions_history(connection, account_number);
+
                                         password.clear();
 
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -1404,6 +1429,8 @@ int main(int argc, const char **argv)
 
                                         break;
                                     }
+
+                                    password.clear();
 
                                     std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
@@ -1511,6 +1538,9 @@ int main(int argc, const char **argv)
                         std ::cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << std ::endl;
                         std ::cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << std ::endl;
                         std ::cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
                         break;
                     }

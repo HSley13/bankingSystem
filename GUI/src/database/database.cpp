@@ -686,6 +686,8 @@ void Account ::remove_accounts(sql ::Connection *connection, int account_number)
         prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
         prep_statement->setString(1, "Account Deleted");
         prep_statement->executeUpdate();
+
+        std ::cout << "Account number: " << account_number << " Deleted successfully" << std ::endl;
     }
     catch (const sql ::SQLException &e)
     {
