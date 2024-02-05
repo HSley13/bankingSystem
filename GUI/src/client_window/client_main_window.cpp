@@ -323,8 +323,25 @@ void client_main_window::confirm_button_func()
 
     Account ::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1, phone_number1, email1, address1, balance, interest_rate, hash_password);
 
+    national_ID1.clear();
+    last_name1.clear();
+    first_name1.clear();
+    email1.clear();
+    address1.clear();
+    date_birth1.clear();
     password->clear();
     password_confirmation->clear();
+
+    insert_national_ID->clear();
+    insert_last_name->clear();
+    insert_first_name->clear();
+    insert_email->clear();
+    insert_address->clear();
+    insert_phone_number->clear();
+    insert_date_birth->clear();
+    insert_balance->clear();
+    insert_password->clear();
+    insert_password_confirmation->clear();
 }
 
 void client_main_window::account_inquiry_func()

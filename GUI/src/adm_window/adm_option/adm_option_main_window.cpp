@@ -288,6 +288,11 @@ void adm_option_main_window::wid_1_config()
 
         QMessageBox::information(this, "Password Confirmation Correct, Account created successfully", "Password Confirmation Correct, Account created successfully");
 
+        new_adm_account_number->clear();
+        new_adm_password->clear();
+        new_adm_password_confirmation->clear();
+
+        hash_password.clear();
         password.clear();
         password_confirmation.clear();
 }
@@ -316,6 +321,8 @@ void adm_option_main_window::display_specific_accounts_table()
         int account_number = wid_3_account_number->text().toInt();
 
         BANK ::Qt_display_specific_accounts(connection, account_number);
+
+        wid_3_account_number->clear();
 }
 
 void adm_option_main_window::display_people_in_debt()
@@ -356,6 +363,8 @@ void adm_option_main_window::display_transactions_history()
         int account_number = wid_6_account_number->text().toInt();
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
+
+        wid_6_account_number->clear();
 }
 
 void adm_option_main_window::delete_accounts()
@@ -370,4 +379,6 @@ void adm_option_main_window::delete_accounts()
         int account_number = wid_7_account_number->text().toInt();
 
         Account::Qt_remove_accounts(connection, account_number);
+
+        wid_7_account_number->clear();
 }

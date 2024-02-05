@@ -74,4 +74,10 @@ void adm_main_window::confirm_login_func()
 
         new_window->show();
     }
+
+    insert_adm_account_number->clear();
+    insert_adm_password->clear();
+
+    hashed_password.clear();
+    password.clear();
 }

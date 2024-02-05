@@ -420,10 +420,17 @@ void edit_forget_main_window::confirm_change_func()
 
     call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
+    QMessageBox::information(this, "OK", "Account Password Changed Successfully");
+
+    insert_account_number_change->clear();
+    insert_password_change->clear();
+    insert_new_password_change->clear();
+    insert_new_password_confirmation_change->clear();
+
+    password.clear();
     new_password.clear();
     new_password_confirmation.clear();
-
-    QMessageBox::information(this, "OK", "Account Password Changed Successfully");
+    hashed_password.clear();
 }
 
 void edit_forget_main_window::confirm_forget_func()
@@ -461,10 +468,19 @@ void edit_forget_main_window::confirm_forget_func()
 
     call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
+    QMessageBox::information(this, "OK", "Account Password Changed Successfully");
+
+    insert_account_number_forget->clear();
+    insert_new_password_forget->clear();
+    insert_new_password_confirmation_forget->clear();
+    insert_national_ID_forget->clear();
+    insert_date_birth_forget->clear();
+
     new_password.clear();
     new_password_confirmation.clear();
-
-    QMessageBox::information(this, "OK", "Account Password Changed Successfully");
+    national_ID.clear();
+    date_birth.clear();
+    new_hash_password.clear();
 }
 
 void edit_forget_main_window::confirm_edit_name_func()
@@ -513,6 +529,16 @@ void edit_forget_main_window::confirm_edit_name_func()
     prep_statement->executeUpdate();
 
     QMessageBox::information(this, "OK", "Name Changed Successfully");
+
+    insert_account_number_1->clear();
+    insert_name->clear();
+    insert_name_confirmation->clear();
+    insert_password_1->clear();
+
+    new_first_name.clear();
+    new_first_name_confirmation.clear();
+    password.clear();
+    hashed_password.clear();
 }
 
 void edit_forget_main_window::confirm_edit_email_func()
@@ -657,4 +683,14 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
     prep_statement->executeUpdate();
 
     QMessageBox::information(this, "OK", "Phone Number Changed Successfully");
+
+    insert_account_number_4->clear();
+    insert_phone_number->clear();
+    insert_phone_number_confirmation->clear();
+    insert_password_4->clear();
+
+    new_phone_number.clear();
+    new_phone_number_confirmation.clear();
+    password.clear();
+    hashed_password.clear();
 }

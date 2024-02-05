@@ -429,6 +429,12 @@ void option_main_window::confirm_button_balance()
         BANK ::apply_interest_rate_to_balance(connection, account_number);
 
         Qt_display_balance(connection, account_number);
+
+        hashed_password.clear();
+        password.clear();
+
+        account_number_ba->clear();
+        password_ba->clear();
 }
 
 void option_main_window::confirm_button_deposit()
@@ -457,6 +463,13 @@ void option_main_window::confirm_button_deposit()
         }
 
         Transactions ::Qt_deposit(connection, amount_to_deposit, account_number);
+
+        password.clear();
+        hashed_password.clear();
+
+        account_number_de->clear();
+        password_de->clear();
+        amount_de->clear();
 }
 
 void option_main_window::confirm_button_withdrawal()
@@ -485,6 +498,13 @@ void option_main_window::confirm_button_withdrawal()
         }
 
         Transactions ::Qt_withdrawal(connection, amount_to_withdraw, account_number);
+
+        password.clear();
+        hashed_password.clear();
+
+        account_number_with->clear();
+        password_with->clear();
+        amount_with->clear();
 }
 void option_main_window::confirm_button_transfer()
 {
@@ -513,6 +533,14 @@ void option_main_window::confirm_button_transfer()
         }
 
         Transactions ::Qt_transfer(connection, amount_to_transfer, account_number1, account_number2);
+
+        password.clear();
+        hashed_password.clear();
+
+        account_number1_tran->clear();
+        account_number2_tran->clear();
+        password_tran->clear();
+        amount_tran->clear();
 }
 
 void option_main_window::confirm_button_borrowal()
@@ -567,6 +595,13 @@ void option_main_window::confirm_button_borrowal()
         prep_statement->executeUpdate();
 
         Transactions ::Qt_borrow(connection, amount_to_borrow, account_number);
+
+        password.clear();
+        hashed_password.clear();
+
+        account_number_borr->clear();
+        password_borr->clear();
+        amount_borr->clear();
 }
 
 void option_main_window::confirm_button_return_borrowal()
@@ -643,6 +678,8 @@ void option_main_window::confirm_button_return_borrowal()
         Transactions ::insert_transactions(connection, account_number, "New Money Returned, Sum of ", due_returned);
 
         QMessageBox::information(this, "Debt paid", "Thanks, You have officially paid your debt and are now allowed to make another one");
+
+        hashed_password.clear();
 }
 
 void option_main_window::confirm_button_edit_perso()
@@ -679,6 +716,8 @@ void option_main_window::confirm_button_transaction_history()
         }
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
+
+        hashed_password.clear();
 }
 
 void option_main_window::confirm_button_delete_account()
@@ -706,4 +745,6 @@ void option_main_window::confirm_button_delete_account()
         }
 
         Account::Qt_remove_accounts(connection, account_number);
+
+        hashed_password.clear();
 }
