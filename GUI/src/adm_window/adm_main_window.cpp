@@ -68,8 +68,7 @@ void adm_main_window::confirm_login_func()
 
     if (BANK ::verifying_password(password, hashed_password))
     {
-        message = new QMessageBox(this);
-        message->information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
+        QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
 
         adm_option_main_window *new_window = new adm_option_main_window;
 

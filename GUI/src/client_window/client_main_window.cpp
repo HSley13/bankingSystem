@@ -286,15 +286,13 @@ void client_main_window::confirm_button_func()
     {
         if (balance < 100)
         {
-            message1 = new QMessageBox(this);
-            message1->warning(this, "Balance XXX", "Unsufficient Balance, Enter an amount >= 100");
+            QMessageBox::warning(this, "Balance XXX", "Unsufficient Balance, Enter an amount >= 100");
 
             return;
         }
         else
         {
-            message1 = new QMessageBox(this);
-            message1->warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
+            QMessageBox::warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
 
             return;
         }
@@ -331,8 +329,7 @@ void client_main_window::confirm_button_func()
 
 void client_main_window::account_inquiry_func()
 {
-    message1 = new QMessageBox(this);
-    message1->information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
+    QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
 
     option_main_window *new_window = new option_main_window;
 

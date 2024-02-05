@@ -1,4 +1,5 @@
 #include "option_main_window.h"
+#include <edit_forget_main_window.h>
 #include <database.h>
 #include <iostream>
 #include <QMainWindow>
@@ -15,6 +16,7 @@
 #include <QStackedWidget>
 #include <QTableWidgetItem>
 #include <QGroupBox>
+#include <QInputDialog>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -57,8 +59,7 @@ option_main_window::option_main_window(QWidget *parent)
                 { window_stack->setCurrentIndex(6); });
 
         edit_and_forget = new QPushButton("7. Edit Account Information", this);
-        connect(edit_and_forget, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(7); });
+        connect(edit_and_forget, &QPushButton::clicked, this, &option_main_window::confirm_button_edit_perso);
 
         transaction_history = new QPushButton("8. Transaction History", this);
         connect(transaction_history, &QPushButton::clicked, this, [=]()
@@ -320,31 +321,6 @@ option_main_window::option_main_window(QWidget *parent)
         return_borrowal_widget->setLayout(vbox6);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        edit_and_forget_widget = new QWidget();
-        edit_and_forget_widget->setWindowTitle("Edit Personal Information/ Forget Password");
-
-        edit_perso = new QPushButton("1. Edit Personnal Information", this);
-        // connect(edit_perso, &QPushButton::clicked, this, &option_main_window::);
-
-        forget_password = new QPushButton("2. Forget Password", this);
-        // connect(forget_password, &QPushButton::clicked, this, &option_main_window::);
-
-        change_password = new QPushButton("3. Change Password", this);
-        // connect(change_password, &QPushButton::clicked, this, &option_main_window::);
-
-        back_button = new QPushButton("Return to the Previous Menu", this);
-        connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
-
-        vbox7 = new QVBoxLayout();
-        vbox7->addWidget(edit_perso, Qt::AlignCenter);
-        vbox7->addWidget(forget_password, Qt::AlignCenter);
-        vbox7->addWidget(change_password, Qt::AlignCenter);
-        vbox7->addWidget(back_button, Qt::AlignCenter);
-        vbox7->setAlignment(Qt::AlignCenter);
-
-        edit_and_forget_widget->setLayout(vbox7);
-
-        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         transaction_history_widget = new QWidget();
         transaction_history_widget->setWindowTitle("Transaction History");
 
@@ -414,7 +390,6 @@ option_main_window::option_main_window(QWidget *parent)
         window_stack->addWidget(transfer_widget);
         window_stack->addWidget(borrowal_widget);
         window_stack->addWidget(return_borrowal_widget);
-        window_stack->addWidget(edit_and_forget_widget);
         window_stack->addWidget(transaction_history_widget);
         window_stack->addWidget(delete_account_widget);
 }
@@ -446,11 +421,7 @@ void option_main_window::confirm_button_balance()
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
-                QMessageBox *message = new QMessageBox();
-                message->warning(nullptr, "Balance Check", "Password Incorrect");
-                message->show();
-
-                delete message;
+                QMessageBox::warning(nullptr, "Balance Check", "Password Incorrect");
 
                 return;
         }
@@ -480,11 +451,7 @@ void option_main_window::confirm_button_deposit()
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
-                QMessageBox *message = new QMessageBox();
-                message->warning(nullptr, "Deposit", "Password Incorrect");
-                message->show();
-
-                delete message;
+                QMessageBox::warning(nullptr, "Deposit", "Password Incorrect");
 
                 return;
         }
@@ -512,11 +479,7 @@ void option_main_window::confirm_button_withdrawal()
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
-                QMessageBox *message = new QMessageBox();
-                message->warning(nullptr, "Withdrawal", "Password Incorrect");
-                message->show();
-
-                delete message;
+                QMessageBox::warning(nullptr, "Withdrawal", "Password Incorrect");
 
                 return;
         }
@@ -544,29 +507,201 @@ void option_main_window::confirm_button_transfer()
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
-                QMessageBox *message = new QMessageBox();
-                message->warning(nullptr, "Transfer", "Password Incorrect");
-                message->show();
-
-                delete message;
+                QMessageBox::warning(nullptr, "Transfer", "Password Incorrect");
 
                 return;
         }
 
         Transactions ::Qt_transfer(connection, amount_to_transfer, account_number1, account_number2);
 }
+
 void option_main_window::confirm_button_borrowal()
 {
+        int account_number = account_number_borr->text().toInt();
+        std ::string password = password_borr->text().toStdString();
+        double amount_to_borrow = amount_borr->text().toDouble();
+
+        double borrowal_interest_rate;
+
+        if (amount_to_borrow == 100)
+                borrowal_interest_rate = 0.001;
+
+        else if (amount_to_borrow > 100 && amount_to_borrow < 500)
+                borrowal_interest_rate = 0.05;
+
+        else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
+                borrowal_interest_rate = 0.07;
+
+        else
+                borrowal_interest_rate = 0.1;
+
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+        if (hashed_password == "")
+                return;
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (result->next())
+        {
+                QMessageBox::warning(nullptr, "Error", "Aren't allowed to borrow Cause this account owes the Bank. First Pay the Debt and then the  borrowal will be possible");
+
+                return;
+        }
+
+        Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
+        prep_statement->setInt(1, account_number);
+
+        prep_statement->executeUpdate();
+
+        Transactions ::Qt_borrow(connection, amount_to_borrow, account_number);
 }
+
 void option_main_window::confirm_button_return_borrowal()
 {
+        int account_number = account_number_ret->text().toInt();
+        std ::string password = password_ret->text().toStdString();
+
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+        if (hashed_password == "")
+                return;
+
+        if (!BANK ::verifying_password(password, hashed_password))
+        {
+                QMessageBox::warning(nullptr, "Borrowal Return", "Password Incorrect");
+
+                return;
+        }
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
+        prep_statement_call_update->setInt(1, account_number);
+
+        prep_statement_call_update->executeUpdate();
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_select_borrowal(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement_select_borrowal->setInt(1, account_number);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement_select_borrowal->executeQuery());
+
+        double due_returned;
+
+        if (result->next())
+                due_returned = result->getDouble("borrowed_amount");
+
+        bool OK = true;
+        QString info = "The amount to be returned is: $" + QString::number(static_cast<double>(due_returned)) + ". Enter the exact amount and not less";
+
+        QString input = QInputDialog::getText(nullptr, "Due Returned", info, QLineEdit::Normal, "", &OK);
+
+        if (input.isEmpty())
+        {
+                QMessageBox::warning(this, "void", "Input Empty");
+
+                return;
+        }
+
+        if (OK && !input.isEmpty())
+        {
+                if (input.toDouble() < due_returned)
+                {
+                        QMessageBox::warning(this, "Unsufficient amount", "Unsufficient amount");
+
+                        return;
+                }
+        }
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_borrowal(connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
+        prep_statement_delete_borrowal->setInt(1, account_number);
+
+        prep_statement_delete_borrowal->executeUpdate();
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_event(connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
+        prep_statement_delete_event->setInt(1, account_number);
+
+        prep_statement_delete_event->executeUpdate();
+
+        Transactions ::insert_transactions(connection, account_number, "New Money Returned, Sum of ", due_returned);
+
+        QMessageBox::information(this, "Debt paid", "Thanks, You have officially paid your debt and are now allowed to make another one");
 }
-void option_main_window::confirm_button_func7()
+
+void option_main_window::confirm_button_edit_perso()
 {
+        QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the account editing official webpage");
+
+        edit_forget_main_window *new_window = new edit_forget_main_window;
+
+        new_window->show();
 }
 void option_main_window::confirm_button_transaction_history()
 {
+        int account_number = account_number_transac->text().toInt();
+        std ::string password = password_transac->text().toStdString();
+
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+        if (hashed_password == "")
+                return;
+
+        if (!BANK ::verifying_password(password, hashed_password))
+        {
+                QMessageBox::warning(nullptr, "Transac History", "Password Incorrect");
+
+                return;
+        }
+
+        Transactions ::Qt_display_transactions_history(connection, account_number);
 }
 void option_main_window::confirm_button_delete_account()
 {
+        int account_number = account_number_dele->text().toInt();
+        std ::string password = password_dele->text().toStdString();
+
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+        if (hashed_password == "")
+                return;
+
+        if (!BANK ::verifying_password(password, hashed_password))
+        {
+                QMessageBox::warning(nullptr, "Transac History", "Password Incorrect");
+
+                return;
+        }
+
+        Account::Qt_remove_accounts(connection, account_number);
 }

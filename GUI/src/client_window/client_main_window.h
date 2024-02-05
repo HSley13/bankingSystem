@@ -52,9 +52,6 @@ private:
     QLineEdit *insert_password;
     QLineEdit *insert_password_confirmation;
 
-    QMessageBox *message1;
-    QMessageBox *message2;
-
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;
     QHBoxLayout *hbox3;

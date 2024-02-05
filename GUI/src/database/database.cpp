@@ -74,7 +74,6 @@ void Qt_display_balance(sql ::Connection *connection, int account_number)
 {
     try
     {
-        QMessageBox *message;
 
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
@@ -86,11 +85,7 @@ void Qt_display_balance(sql ::Connection *connection, int account_number)
 
         QString info_text = "Your Balance is: " + QString::number(static_cast<double>(result->getDouble("balance")));
 
-        message = new QMessageBox();
-        message->information(nullptr, "Balance Check", info_text);
-        message->show();
-
-        delete message;
+        QMessageBox::information(nullptr, "Balance Check", info_text);
     }
     catch (const sql ::SQLException &e)
     {
@@ -159,7 +154,7 @@ void Transactions ::deposit(sql ::Connection *connection, const double amount_to
 
         insert_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
 
-        std ::cout << "You have deposited: $" << amount_to_deposit << ", and your new Balance is: $" << check_balance(connection, account_number) << std ::endl;
+        std ::cout << "You have deposited: $" << amount_to_deposit << " and your new Balance is: $" << check_balance(connection, account_number) << std ::endl;
         std ::cout << std ::endl;
     }
     catch (const sql ::SQLException &e)
@@ -186,13 +181,9 @@ void Transactions ::Qt_deposit(sql ::Connection *connection, const double amount
 
         insert_transactions(connection, account_number, "New Money Deposited, Sum of ", amount_to_deposit);
 
-        QString info = "You have deposited: $" + QString::number(static_cast<double>(amount_to_deposit)) + "and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
+        QString info = "You have deposited: $" + QString::number(static_cast<double>(amount_to_deposit)) + " and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
 
-        QMessageBox *message = new QMessageBox();
-        message->information(nullptr, "New Deposit", info);
-        message->show();
-
-        delete message;
+        QMessageBox::information(nullptr, "New Deposit", info);
     }
     catch (const sql ::SQLException &e)
     {
@@ -239,13 +230,11 @@ void Transactions ::Qt_withdrawal(sql ::Connection *connection, const double amo
 
         prep_statement->executeUpdate();
 
-        QString info = "You have withdrawn: $" + QString::number(static_cast<double>(amount_to_withdraw)) + "Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
+        insert_transactions(connection, account_number, "New Money Withdrawn, Sum of: $", amount_to_withdraw);
 
-        QMessageBox *message = new QMessageBox();
-        message->information(nullptr, "New Withdrawal", info);
-        message->show();
+        QString info = "You have withdrawn: $" + QString::number(static_cast<double>(amount_to_withdraw)) + " and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
 
-        delete message;
+        QMessageBox::information(nullptr, "New Withdrawal", info);
     }
     catch (const sql ::SQLException &e)
     {
@@ -307,11 +296,7 @@ void Transactions ::Qt_transfer(sql ::Connection *connection, const double amoun
 
         QString info = "You have sent $" + QString::number(static_cast<double>(amount_to_transfer)) + " to the account number " + QString::number(account_number2) + " and your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number1))) + " ";
 
-        QMessageBox *message = new QMessageBox();
-        message->information(nullptr, "New Withdrawal", info);
-        message->show();
-
-        delete message;
+        QMessageBox::information(nullptr, "New Withdrawal", info);
     }
     catch (const sql ::SQLException &e)
     {
@@ -337,6 +322,32 @@ void Transactions ::borrow(sql ::Connection *connection, const double amount_to_
         std ::cout << std ::endl;
 
         insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void Transactions ::Qt_borrow(sql ::Connection *connection, const double amount_to_borrow, int account_number)
+{
+    try
+    {
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("Update accounts set balance = balance + ? WHERE account_number = ?;"));
+        prep_statement->setDouble(1, amount_to_borrow);
+        prep_statement->setInt(2, account_number);
+
+        prep_statement->executeUpdate();
+
+        insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
+
+        QString info = "You have Borrowed: $" + QString::number(static_cast<double>(amount_to_borrow)) + " and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
+
+        QMessageBox::information(nullptr, "New Borrowal", info);
     }
     catch (const sql ::SQLException &e)
     {
@@ -415,11 +426,8 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
 
         if (!result)
         {
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
-            message->show();
+            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
 
-            delete message;
             return;
         }
 
@@ -444,13 +452,6 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
     }
     catch (const sql ::SQLException &e)
     {
-        QMessageBox *message = new QMessageBox();
-        message->warning(nullptr, "Warning!", "The Account you entered doesn't exist in our data. Check and try again");
-        message->show();
-
-        delete message;
-        return;
-
         std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
     }
     catch (const std ::exception &e)
@@ -463,6 +464,7 @@ void Transactions ::insert_borrowal(sql ::Connection *connection, int account_nu
 {
     try
     {
+
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO borrowal_record (account_number, borrowed_amount, interest_rate, initial_timestamp) VALUES (?, ?, ?, CURRENT_TIMESTAMP);"));
         prep_statement->setInt(1, account_number);
         prep_statement->setDouble(2, amount_to_borrow);
@@ -559,12 +561,9 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
 {
     try
     {
-        QMessageBox *acc_message;
-
         if (Account ::are_all_same(phone_number))
         {
-            acc_message = new QMessageBox();
-            acc_message->warning(nullptr, "Phone Number Error", "Enter a valid Phone number where all the digits aren't the same");
+            QMessageBox::warning(nullptr, "Phone Number Error", "Enter a valid Phone number where all the digits aren't the same");
 
             return;
         }
@@ -593,8 +592,7 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
         account_number = result->getInt("account_number");
 
         QString info = " " + QString::number(account_number) + " is Your Account Number, remember it because you will need it to gain access to everything you want to do in the future";
-        acc_message = new QMessageBox();
-        acc_message->information(nullptr, "Account Number", info);
+        QMessageBox::information(nullptr, "Account Number", info);
 
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
@@ -605,8 +603,6 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
         prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
         prep_statement->setString(1, "Account Created");
         prep_statement->executeUpdate();
-
-        delete acc_message;
 
         call_insert_or_update_hashed_password(connection, account_number, hash_password);
     }
@@ -681,8 +677,6 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
 {
     try
     {
-        QMessageBox *message;
-
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * from accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
@@ -690,8 +684,7 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
 
         if (!result->next())
         {
-            message = new QMessageBox();
-            message->warning(nullptr, "Error", "Acount Number not found in our database, check and try again");
+            QMessageBox::warning(nullptr, "Error", "Acount Number not found in our database, check and try again");
 
             return;
         }
@@ -703,10 +696,7 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
 
         if (result->isBeforeFirst())
         {
-            message = new QMessageBox();
-            message->warning(nullptr, "Error", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
-
-            delete message;
+            QMessageBox::warning(nullptr, "Error", "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible");
 
             return;
         }
@@ -846,11 +836,7 @@ std ::string BANK ::Qt_retrieve_hashed_password(sql ::Connection *connection, in
 
         if (!result->next())
         {
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Warning!", "The Account entered doesn't exist in our data, Check and try again");
-            message->show();
-
-            delete message;
+            QMessageBox::warning(nullptr, "Warning!", "The Account entered doesn't exist in our data, Check and try again");
 
             return "";
         }
@@ -915,11 +901,7 @@ std ::string BANK ::Qt_retrieve_adm_hashed_password(sql ::Connection *connection
 
         if (!result->next())
         {
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
-            message->show();
-
-            delete message;
+            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
 
             return "";
         }
@@ -1105,11 +1087,7 @@ bool BANK ::authentification_check(sql ::Connection *connection, int account_num
             date_birth1 = result->getString("date_birth");
         }
 
-        if (national_ID1.compare(national_ID) && date_birth1.compare(date_birth))
-            return false;
-
-        else
-            return true;
+        return (!national_ID1.compare(national_ID) && !date_birth1.compare(date_birth));
     }
     catch (const sql ::SQLException &e)
     {
@@ -1132,7 +1110,6 @@ bool BANK ::authentification_message(sql ::Connection *connection, int &account_
     hash_password = BANK ::retrieve_hashed_password(connection, account_number);
 
     if (hash_password == "")
-
         return false;
 
     return true;
@@ -1350,11 +1327,8 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
 
         if (!result->next())
         {
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
-            message->show();
+            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
 
-            delete message;
             return;
         }
 
@@ -1561,10 +1535,8 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
 
         if (!result->next())
         {
-            QMessageBox *message = new QMessageBox();
-            message->warning(nullptr, "Warning!", "The Account you enter either doesn't exist or doesn't owe the Bank, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "The Account you enter either doesn't exist or doesn't owe the Bank, Check and try again");
 
-            delete message;
             return;
         }
 

@@ -277,8 +277,8 @@ void adm_option_main_window::wid_1_config()
 
         if (password.compare(password_confirmation))
         {
-                QMessageBox *message = new QMessageBox(this);
-                message->warning(this, "Warning!", "Password Confirmation Incorrect, try again");
+                QMessageBox::warning(this, "Warning!", "Password Confirmation Incorrect, try again");
+
                 return;
         }
 
@@ -286,8 +286,7 @@ void adm_option_main_window::wid_1_config()
 
         BANK ::create_adm(connection, account_number, hash_password);
 
-        QMessageBox *message = new QMessageBox(this);
-        message->information(this, "Password Confirmation Correct, Account created successfully", "Password Confirmation Correct, Account created successfully");
+        QMessageBox::information(this, "Password Confirmation Correct, Account created successfully", "Password Confirmation Correct, Account created successfully");
 
         password.clear();
         password_confirmation.clear();

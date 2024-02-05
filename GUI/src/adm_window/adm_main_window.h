@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QTextEdit>
-#include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
@@ -25,8 +24,6 @@ private:
     QLineEdit *insert_adm_password;
 
     QPushButton *confirm_login;
-
-    QMessageBox *message;
 
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;

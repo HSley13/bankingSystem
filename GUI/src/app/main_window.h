@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
-#include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
@@ -26,7 +25,6 @@ private:
 
     QVBoxLayout *vbox;
     QHBoxLayout *hbox;
-    QMessageBox *message;
 
 private slots:
     void adm_button_clicked();

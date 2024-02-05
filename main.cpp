@@ -10,8 +10,6 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-using namespace std;
-
 // BELOW ARE ALL THE REQUIREMENTS AND PREPARATIONS FOR THE DATABASE IN ORDER TO USE THIS PROJECT'S CODE. MAKE SURE THAT YOU HAVE MYSQL INSTALLED ON YOUR PC. YOU CAN USE EITHER VSCODE OR MYSQL WORKBENCH TO RUN THESE FOLLOWING QUERIES
 
 /*
@@ -332,7 +330,7 @@ int main(int argc, const char **argv)
     {
         if (argc < 2)
         {
-            cerr << "You should Enter the Password as the Second Argument in order to connect to the Database" << endl;
+            std ::cerr << "You should Enter the Password as the Second Argument in order to connect to the Database" << std ::endl;
             return 1;
         }
 
@@ -344,43 +342,43 @@ int main(int argc, const char **argv)
         sql ::Connection *connection = connection_setup(&ID);
         if (!connection)
         {
-            cerr << "Failed to establish the Database connection." << endl;
+            std ::cerr << "Failed to establish the Database connection." << std ::endl;
             return 1;
         }
 
         int adm_options, options, options1, options2, options3, options4;
 
-        string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp;
+        std ::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp;
 
         int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate, amount_to_borrow, amount_to_return, borrowal_interest_rate;
 
-        stack<int> main_menu;
+        std ::stack<int> main_menu;
 
-        stack<int> sub_menu;
+        std ::stack<int> sub_menu;
 
         do
         {
-            cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << endl;
+            std ::cout << "---------- ********** ---------- ********** ---------- ********** WELCOME TO THE CROSS-CONTINENTAL TREASURY BANK ********** ---------- ********** ---------- ********** ----------" << std ::endl;
 
-            cout << endl;
-            cout << endl;
-            cout << endl;
+            std ::cout << std ::endl;
+            std ::cout << std ::endl;
+            std ::cout << std ::endl;
 
-            cout << "                                                 *********** Among the List below, choose what best suits You **********" << endl;
-            cout << endl;
+            std ::cout << "                                                 *********** Among the List below, choose what best suits You **********" << std ::endl;
+            std ::cout << std ::endl;
 
-            cout << "1. Administrator" << endl;
+            std ::cout << "1. Administrator" << std ::endl;
 
-            cout << "2. Regular Client" << endl;
+            std ::cout << "2. Regular Client" << std ::endl;
 
-            cout << "0. QUIT" << endl;
+            std ::cout << "0. QUIT" << std ::endl;
 
-            cout << endl;
+            std ::cout << std ::endl;
 
-            cin >> options;
-            cout << endl;
+            std ::cin >> options;
+            std ::cout << std ::endl;
 
             if (options)
                 sub_menu.push(options);
@@ -393,35 +391,35 @@ int main(int argc, const char **argv)
 
                 do
                 {
-                    cout << "What is your Password: " << endl;
-                    cout << "You have 3 Chances" << endl;
+                    std ::cout << "What is your Password: " << std ::endl;
+                    std ::cout << "You have 3 Chances" << std ::endl;
 
-                    cin >> password;
-                    cout << endl;
+                    std ::cin >> password;
+                    std ::cout << std ::endl;
 
                     if (BANK ::verifying_password(password, hash_password))
                     {
                         do
                         {
-                            cout << "1. Create an Administrator" << endl;
+                            std ::cout << "1. Create an Administrator" << std ::endl;
 
-                            cout << "2. Display The Accounts Table" << endl;
+                            std ::cout << "2. Display The Accounts Table" << std ::endl;
 
-                            cout << "3. Display Specific Account through the Account_number" << endl;
+                            std ::cout << "3. Display Specific Account through the Account_number" << std ::endl;
 
-                            cout << "4. Display People in Debt " << endl;
+                            std ::cout << "4. Display People in Debt " << std ::endl;
 
-                            cout << "5. Display Specific Person in Debt through the Account_number" << endl;
+                            std ::cout << "5. Display Specific Person in Debt through the Account_number" << std ::endl;
 
-                            cout << "6. Display all Transactions History for an Account_number" << endl;
+                            std ::cout << "6. Display all Transactions History for an Account_number" << std ::endl;
 
-                            cout << "7. Remove Accounts through the Account_number" << endl;
+                            std ::cout << "7. Remove Accounts through the Account_number" << std ::endl;
 
-                            cout << "0. Return to the Previous Menu" << endl;
-                            cout << endl;
+                            std ::cout << "0. Return to the Previous Menu" << std ::endl;
+                            std ::cout << std ::endl;
 
-                            cin >> adm_options;
-                            cout << endl;
+                            std ::cin >> adm_options;
+                            std ::cout << std ::endl;
 
                             if (adm_options)
                                 sub_menu.push(adm_options);
@@ -437,19 +435,19 @@ int main(int argc, const char **argv)
                             switch (adm_options)
                             {
                             case 1: // Create an Administrator
-                                cout << "Enter your Desired Account Number: ";
-                                cin >> account_number;
-                                cout << endl;
+                                std ::cout << "Enter your Desired Account Number: ";
+                                std ::cin >> account_number;
+                                std ::cout << std ::endl;
 
-                                cout << "Enter Your Password: ";
-                                cin >> password;
-                                cout << endl;
+                                std ::cout << "Enter Your Password: ";
+                                std ::cin >> password;
+                                std ::cout << std ::endl;
 
                                 do
                                 {
-                                    cout << "Password Confirmation: ";
-                                    cin >> password_confirmation;
-                                    cout << endl;
+                                    std ::cout << "Password Confirmation: ";
+                                    std ::cin >> password_confirmation;
+                                    std ::cout << std ::endl;
 
                                 } while (password.compare(password_confirmation));
 
@@ -469,9 +467,9 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 3: // Display Specific Account
-                                cout << "Enter The Account Number To be displayed" << endl;
-                                cin >> account_number;
-                                cout << endl;
+                                std ::cout << "Enter The Account Number To be displayed" << std ::endl;
+                                std ::cin >> account_number;
+                                std ::cout << std ::endl;
 
                                 BANK ::display_specific_accounts(connection, account_number);
 
@@ -484,27 +482,27 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 5: // Display Specific Accounts in Debt
-                                cout << "Enter The Account Number's in Debt To be displayed" << endl;
-                                cin >> account_number;
-                                cout << endl;
+                                std ::cout << "Enter The Account Number's in Debt To be displayed" << std ::endl;
+                                std ::cin >> account_number;
+                                std ::cout << std ::endl;
 
                                 BANK ::display_specific_accounts_in_debt(connection, account_number);
 
                                 break;
 
                             case 6: // Display Transactions History
-                                cout << "Enter The Account Number's Transactions History To be displayed" << endl;
-                                cin >> account_number;
-                                cout << endl;
+                                std ::cout << "Enter The Account Number's Transactions History To be displayed" << std ::endl;
+                                std ::cin >> account_number;
+                                std ::cout << std ::endl;
 
                                 BANK ::display_transactions_history(connection, account_number);
 
                                 break;
 
                             case 7: // Remove Account
-                                cout << "Enter The Account Number To be removed" << endl;
-                                cin >> account_number;
-                                cout << endl;
+                                std ::cout << "Enter The Account Number To be removed" << std ::endl;
+                                std ::cin >> account_number;
+                                std ::cout << std ::endl;
 
                                 BANK ::remove_accounts(connection, account_number);
                                 break;
@@ -515,7 +513,7 @@ int main(int argc, const char **argv)
                         break;
                     }
 
-                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                     k--;
 
                 } while (k);
@@ -527,17 +525,17 @@ int main(int argc, const char **argv)
             case 2: // Regular client
                 do
                 {
-                    cout << "1. New to our Bank and Would like to Create an Account" << endl;
+                    std ::cout << "1. New to our Bank and Would like to Create an Account" << std ::endl;
 
-                    cout << "2. Already possess an Account and would like to process some inquiries relative to it" << endl;
+                    std ::cout << "2. Already possess an Account and would like to process some inquiries relative to it" << std ::endl;
 
-                    cout << "3. Information on our Bank" << endl;
+                    std ::cout << "3. Information on our Bank" << std ::endl;
 
-                    cout << "0. Return to the Previous Menu" << endl;
+                    std ::cout << "0. Return to the Previous Menu" << std ::endl;
 
-                    cout << endl;
+                    std ::cout << std ::endl;
 
-                    cin >> options1;
+                    std ::cin >> options1;
 
                     if (options1)
                         sub_menu.push(options1);
@@ -554,54 +552,54 @@ int main(int argc, const char **argv)
                     {
                     case 1: // Create the Account and the table History along the way
 
-                        cout << "Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information: " << endl;
-                        cout << endl;
+                        std ::cout << "Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information: " << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "National ID with at least a letter within it: ";
-                        cin >> national_ID;
-                        cout << endl;
+                        std ::cout << "National ID with at least a letter within it: ";
+                        std ::cin >> national_ID;
+                        std ::cout << std ::endl;
 
-                        cout << "First Name: ";
-                        cin >> first_name;
-                        cout << endl;
+                        std ::cout << "First Name: ";
+                        std ::cin >> first_name;
+                        std ::cout << std ::endl;
 
-                        cout << "Last Name: ";
-                        cin >> last_name;
-                        cout << endl;
+                        std ::cout << "Last Name: ";
+                        std ::cin >> last_name;
+                        std ::cout << std ::endl;
 
-                        cout << "Date of Birth ( 2024-01-31 ) : ";
-                        cin >> date_birth;
-                        cout << endl;
+                        std ::cout << "Date of Birth ( 2024-01-31 ) : ";
+                        std ::cin >> date_birth;
+                        std ::cout << std ::endl;
 
-                        cout << "Phone Number: ";
-                        cin >> phone_number;
-                        cout << endl;
+                        std ::cout << "Phone Number: ";
+                        std ::cin >> phone_number;
+                        std ::cout << std ::endl;
 
-                        cout << "Email: ";
-                        cin >> email;
-                        cout << endl;
+                        std ::cout << "Email: ";
+                        std ::cin >> email;
+                        std ::cout << std ::endl;
 
-                        cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ";
-                        cin >> address;
-                        cout << endl;
+                        std ::cout << "Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ";
+                        std ::cin >> address;
+                        std ::cout << std ::endl;
 
                         do
                         {
-                            cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << endl;
-                            cout << endl;
+                            std ::cout << "Your Account should have at least 100 when creating it, so Please enter those 100 dollars and not less: " << std ::endl;
+                            std ::cout << std ::endl;
 
-                            cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << endl;
-                            cout << endl;
+                            std ::cout << "Interest Rate Scale according to your First Deposit which can't be changed: " << std ::endl;
+                            std ::cout << std ::endl;
 
-                            cout << "1. Balance = 100 ---> Interest Rate = 0" << endl;
+                            std ::cout << "1. Balance = 100 ---> Interest Rate = 0" << std ::endl;
 
-                            cout << "2. 500 > Balance > 100 ---> Interest Rate = 2%" << endl;
+                            std ::cout << "2. 500 > Balance > 100 ---> Interest Rate = 2%" << std ::endl;
 
-                            cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 5%" << endl;
+                            std ::cout << "3. 1000 > Balance >= 500 ---> Interest Rate = 5%" << std ::endl;
 
-                            cout << "4. Balance > 1000 ---> Interest Rate = 7%" << endl;
+                            std ::cout << "4. Balance > 1000 ---> Interest Rate = 7%" << std ::endl;
 
-                            cin >> balance;
+                            std ::cin >> balance;
 
                         } while (balance < 100);
 
@@ -617,15 +615,15 @@ int main(int argc, const char **argv)
                         else
                             interest_rate = 0.07;
 
-                        cout << "Password: ";
-                        cin >> password;
-                        cout << endl;
+                        std ::cout << "Password: ";
+                        std ::cin >> password;
+                        std ::cout << std ::endl;
 
                         do
                         {
-                            cout << "Passord Confirmation: ";
-                            cin >> password_confirmation;
-                            cout << endl;
+                            std ::cout << "Passord Confirmation: ";
+                            std ::cin >> password_confirmation;
+                            std ::cout << std ::endl;
 
                         } while (password.compare(password_confirmation));
 
@@ -641,33 +639,33 @@ int main(int argc, const char **argv)
                     case 2: // Perform Inquiry Relative to an Existing Account
                         do
                         {
-                            cout << "Choose among the Options below, what best suits You" << endl;
-                            cout << endl;
+                            std ::cout << "Choose among the Options below, what best suits You" << std ::endl;
+                            std ::cout << std ::endl;
 
-                            cout << "1. Check your Balance" << endl;
+                            std ::cout << "1. Check your Balance" << std ::endl;
 
-                            cout << "2. Deposit" << endl;
+                            std ::cout << "2. Deposit" << std ::endl;
 
-                            cout << "3. Money Withdrawal " << endl;
+                            std ::cout << "3. Money Withdrawal " << std ::endl;
 
-                            cout << "4. Money Transfer" << endl;
+                            std ::cout << "4. Money Transfer" << std ::endl;
 
-                            cout << "5. Borrow Money" << endl;
+                            std ::cout << "5. Borrow Money" << std ::endl;
 
-                            cout << "6. Return Borrowed Money" << endl;
+                            std ::cout << "6. Return Borrowed Money" << std ::endl;
 
-                            cout << "7. Edit Account Information / Forget Password" << endl;
+                            std ::cout << "7. Edit Account Information / Forget Password" << std ::endl;
 
-                            cout << "8. Transaction History" << endl;
+                            std ::cout << "8. Transaction History" << std ::endl;
 
-                            cout << "9. Delete Account" << endl;
+                            std ::cout << "9. Delete Account" << std ::endl;
 
-                            cout << "0. Return to the Previous Menu" << endl;
+                            std ::cout << "0. Return to the Previous Menu" << std ::endl;
 
-                            cout << endl;
+                            std ::cout << std ::endl;
 
-                            cin >> options2;
-                            cout << endl;
+                            std ::cin >> options2;
+                            std ::cout << std ::endl;
 
                             if (options2)
                                 main_menu.push(options2);
@@ -692,22 +690,22 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
                                         BANK ::apply_interest_rate_to_balance(connection, account_number);
 
-                                        cout << "Your Current Balance is: " << check_balance(connection, account_number) << endl;
-                                        cout << endl;
+                                        std ::cout << "Your Current Balance is: " << check_balance(connection, account_number) << std ::endl;
+                                        std ::cout << std ::endl;
 
                                         password.clear();
 
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -720,17 +718,17 @@ int main(int argc, const char **argv)
                                 if (!BANK ::authentification_message(connection, account_number, hash_password))
                                     break;
 
-                                cout << "Enter Amount to Deposit: ";
-                                cin >> amount_to_deposit;
-                                cout << endl;
+                                std ::cout << "Enter Amount to Deposit: ";
+                                std ::cin >> amount_to_deposit;
+                                std ::cout << std ::endl;
 
                                 do
                                 {
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
@@ -743,7 +741,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -756,9 +754,9 @@ int main(int argc, const char **argv)
                                 if (!BANK ::authentification_message(connection, account_number, hash_password))
                                     break;
 
-                                cout << "Enter Amount to Withdraw: ";
-                                cin >> amount_to_withdraw;
-                                cout << endl;
+                                std ::cout << "Enter Amount to Withdraw: ";
+                                std ::cin >> amount_to_withdraw;
+                                std ::cout << std ::endl;
 
                                 do
                                 {
@@ -768,8 +766,8 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
@@ -779,11 +777,11 @@ int main(int argc, const char **argv)
 
                                         while (amount_to_withdraw > balance)
                                         {
-                                            cout << "Balance is: " << balance << " which is less than the Amount to Withdraw" << endl;
+                                            std ::cout << "Balance is: " << balance << " which is less than the Amount to Withdraw" << std ::endl;
 
-                                            cout << "So Please Enter a reasonnable Amount: ";
-                                            cin >> amount_to_withdraw;
-                                            cout << endl;
+                                            std ::cout << "So Please Enter a reasonnable Amount: ";
+                                            std ::cin >> amount_to_withdraw;
+                                            std ::cout << std ::endl;
                                         }
 
                                         Transactions ::withdrawal(connection, amount_to_withdraw, account_number);
@@ -793,7 +791,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -806,13 +804,13 @@ int main(int argc, const char **argv)
                                 if (!BANK ::authentification_message(connection, account_number, hash_password))
                                     break;
 
-                                cout << "Enter Amount to Transfer: ";
-                                cin >> amount_to_transfer;
-                                cout << endl;
+                                std ::cout << "Enter Amount to Transfer: ";
+                                std ::cin >> amount_to_transfer;
+                                std ::cout << std ::endl;
 
-                                cout << "Enter the Account Number to receive the Money: ";
-                                cin >> account_number2;
-                                cout << endl;
+                                std ::cout << "Enter the Account Number to receive the Money: ";
+                                std ::cin >> account_number2;
+                                std ::cout << std ::endl;
 
                                 do
                                 {
@@ -822,8 +820,8 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
@@ -833,11 +831,11 @@ int main(int argc, const char **argv)
 
                                         while (amount_to_transfer > balance)
                                         {
-                                            cout << "Your balance is: " << balance << " which is less than the Amount to Transfer" << endl;
+                                            std ::cout << "Your balance is: " << balance << " which is less than the Amount to Transfer" << std ::endl;
 
-                                            cout << "So Please enter a reasonnable Amount: ";
-                                            cin >> amount_to_transfer;
-                                            cout << endl;
+                                            std ::cout << "So Please enter a reasonnable Amount: ";
+                                            std ::cin >> amount_to_transfer;
+                                            std ::cout << std ::endl;
                                         }
 
                                         BANK ::apply_interest_rate_to_balance(connection, account_number2);
@@ -849,7 +847,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -859,97 +857,75 @@ int main(int argc, const char **argv)
                                 break;
 
                             case 5: // Borrow Money
-                                cout << "No one is allowed to borrow Money if currently owes the Bank any amount otherwise She/He will be logged out of the System Completely. Please go to the Previous Menu and Pay what is owed before asking for any New Borrowal" << endl;
-                                cout << endl;
-
-                                cout << "Enter Amount to Borrow: " << endl;
-                                cout << "Interest Rate Scale on Borrowed Amount " << endl;
-                                cout << endl;
-
-                                cout << "1. Borrowed Amount = 100 ---> Interest Rate = 0.1%. PS: TO BE RETURN WITHIN 1 DAY OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "2. 500 > Borrowed Amount > 100 ---> Interest Rate = 5% PS: TO BE RETURN WITHIN 2 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "3. 1000 > Borrowed Amount >= 500 ---> Interest Rate = 7% PS: TO BE RETURN WITHIN 3 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
-                                cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << endl;
-
                                 if (!BANK ::authentification_message(connection, account_number, hash_password))
                                     break;
 
-                                cin >> amount_to_borrow;
-                                cout << endl;
+                                std ::cout << "No one is allowed to borrow Money if currently owes the Bank any amount otherwise She/He will be logged out of the System Completely. Please go to the Previous Menu and Pay what is owed before asking for any New Borrowal" << std ::endl;
+                                std ::cout << std ::endl;
+
+                                std ::cout << "Interest Rate Scale on Borrowed Amount " << std ::endl;
+                                std ::cout << std ::endl;
+
+                                std ::cout << "1. Borrowed Amount = 100 ---> Interest Rate = 0.1%. PS: TO BE RETURN WITHIN 1 DAY OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << std ::endl;
+
+                                std ::cout << "2. 500 > Borrowed Amount > 100 ---> Interest Rate = 5% PS: TO BE RETURN WITHIN 2 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << std ::endl;
+
+                                std ::cout << "3. 1000 > Borrowed Amount >= 500 ---> Interest Rate = 7% PS: TO BE RETURN WITHIN 3 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << std ::endl;
+
+                                std ::cout << "4. Borrowed Amount > 1000 ---> Interest Rate = 10% PS: TO BE RETURN WITHIN 4 DAYS OR IT'LL BE DEDUCED FROM YOUR ACCOUNT WITH A 0.01 MORE ON THE INTEREST RATE" << std ::endl;
+                                std ::cout << std ::endl;
+
+                                std ::cout << "Enter Amount to Borrow: " << std ::endl;
+                                std ::cin >> amount_to_borrow;
+                                std ::cout << std ::endl;
 
                                 do
                                 {
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
+
                                         if (amount_to_borrow == 100)
-                                        {
                                             borrowal_interest_rate = 0.001;
 
-                                            Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 24 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
-                                        }
-
                                         else if (amount_to_borrow > 100 && amount_to_borrow < 500)
-                                        {
                                             borrowal_interest_rate = 0.05;
 
-                                            Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 48 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
-                                        }
-
                                         else if (amount_to_borrow < 1000 && amount_to_borrow >= 500)
-                                        {
                                             borrowal_interest_rate = 0.07;
 
-                                            Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
-
-                                            unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 72 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
-
-                                            prep_statement->executeUpdate();
-
-                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
-                                        }
-
                                         else
-                                        {
                                             borrowal_interest_rate = 0.1;
 
-                                            Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+                                        prep_statement->setInt(1, account_number);
 
-                                            unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
-                                            prep_statement->setInt(1, account_number);
+                                        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-                                            prep_statement->executeUpdate();
-
-                                            Transactions ::borrow(connection, amount_to_borrow, account_number);
+                                        if (result->next())
+                                        {
+                                            std ::cout << "Aren't allowed to borrow Cause this account owes the Bank. First Pay the Debt and then the  borrowal will be possible" << std ::endl;
+                                            break;
                                         }
+
+                                        Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+
+                                        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
+                                        prep_statement->setInt(1, account_number);
+
+                                        prep_statement->executeUpdate();
+
+                                        Transactions ::borrow(connection, amount_to_borrow, account_number);
 
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -967,49 +943,49 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
-                                        unique_ptr<sql ::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
+                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
                                         prep_statement_call_update->setInt(1, account_number);
 
                                         prep_statement_call_update->executeUpdate();
 
-                                        cout << "The Amount ought to be returned is: ";
-                                        unique_ptr<sql ::PreparedStatement> prep_statement_select_borrowal(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+                                        std ::cout << "The Amount ought to be returned is: ";
+                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement_select_borrowal(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
                                         prep_statement_select_borrowal->setInt(1, account_number);
 
-                                        unique_ptr<sql ::ResultSet> result(prep_statement_select_borrowal->executeQuery());
+                                        std ::unique_ptr<sql ::ResultSet> result(prep_statement_select_borrowal->executeQuery());
 
                                         double due_returned;
                                         if (result->next())
                                         {
                                             due_returned = result->getDouble("borrowed_amount");
-                                            cout << due_returned << endl;
+                                            std ::cout << due_returned << std ::endl;
                                         }
 
-                                        cout << "Enter Exact Amount to be returned and not less" << endl;
-                                        cin >> amount_to_return;
-                                        cout << endl;
+                                        std ::cout << "Enter Exact Amount to be returned and not less" << std ::endl;
+                                        std ::cin >> amount_to_return;
+                                        std ::cout << std ::endl;
 
                                         while (due_returned != amount_to_return)
                                         {
-                                            cout << "Entered Amount is less than the one to be returned, Enter it again" << endl;
-                                            cin >> amount_to_return;
-                                            cout << endl;
+                                            std ::cout << "Entered Amount is less than the one to be returned, Enter it again" << std ::endl;
+                                            std ::cin >> amount_to_return;
+                                            std ::cout << std ::endl;
                                         }
 
-                                        cout << "Thanks, You have officially paid your debt and are now allowed to make another one" << endl;
-                                        cout << endl;
+                                        std ::cout << "Thanks, You have officially paid your debt and are now allowed to make another one" << std ::endl;
+                                        std ::cout << std ::endl;
 
-                                        unique_ptr<sql ::PreparedStatement> prep_statement_delete_borrowal(connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
+                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_borrowal(connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
                                         prep_statement_delete_borrowal->setInt(1, account_number);
 
                                         prep_statement_delete_borrowal->executeUpdate();
 
-                                        unique_ptr<sql ::PreparedStatement> prep_statement_delete_event(connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
+                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_event(connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
                                         prep_statement_delete_event->setInt(1, account_number);
 
                                         prep_statement_delete_event->executeUpdate();
@@ -1019,7 +995,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -1031,21 +1007,21 @@ int main(int argc, const char **argv)
                             case 7: // Edit Account Information
                                 do
                                 {
-                                    cout << "Choose among the options below, what best suits your requirements" << endl;
-                                    cout << endl;
+                                    std ::cout << "Choose among the options below, what best suits your requirements" << std ::endl;
+                                    std ::cout << std ::endl;
 
-                                    cout << "1. Edit Personal Information" << endl;
+                                    std ::cout << "1. Edit Personal Information" << std ::endl;
 
-                                    cout << "2. Change Password" << endl;
+                                    std ::cout << "2. Change Password" << std ::endl;
 
-                                    cout << "3. Forget Password" << endl;
+                                    std ::cout << "3. Forget Password" << std ::endl;
 
-                                    cout << "0. Return to the Previous Menu" << endl;
+                                    std ::cout << "0. Return to the Previous Menu" << std ::endl;
 
-                                    cout << endl;
+                                    std ::cout << std ::endl;
 
-                                    cin >> options3;
-                                    cout << endl;
+                                    std ::cin >> options3;
+                                    std ::cout << std ::endl;
 
                                     if (options3)
                                         main_menu.push(options3);
@@ -1063,23 +1039,23 @@ int main(int argc, const char **argv)
                                     case 1: // Edit personal Information
                                         do
                                         {
-                                            cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << endl;
-                                            cout << endl;
+                                            std ::cout << "Choose among the options below, what best suits your requirements: PS: The Date of Birth and National ID number can't be edited" << std ::endl;
+                                            std ::cout << std ::endl;
 
-                                            cout << "1. Edit Name" << endl;
+                                            std ::cout << "1. Edit Name" << std ::endl;
 
-                                            cout << "2. Edit email" << endl;
+                                            std ::cout << "2. Edit email" << std ::endl;
 
-                                            cout << "3. Edit address" << endl;
+                                            std ::cout << "3. Edit address" << std ::endl;
 
-                                            cout << "4. Edit Phone Number" << endl;
+                                            std ::cout << "4. Edit Phone Number" << std ::endl;
 
-                                            cout << "0. Return to the Previous Menu" << endl;
+                                            std ::cout << "0. Return to the Previous Menu" << std ::endl;
 
-                                            cout << endl;
+                                            std ::cout << std ::endl;
 
-                                            cin >> options4;
-                                            cout << endl;
+                                            std ::cin >> options4;
+                                            std ::cout << std ::endl;
 
                                             if (options4)
                                                 main_menu.push(options4);
@@ -1103,16 +1079,16 @@ int main(int argc, const char **argv)
                                                     std ::cout << "What is your Password: " << std ::endl;
                                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                                    cin >> password;
-                                                    cout << endl;
+                                                    std ::cin >> password;
+                                                    std ::cout << std ::endl;
 
                                                     if (BANK ::verifying_password(password, hash_password))
                                                     {
-                                                        cout << "Enter the New First Name. PS: Last Name can't be changed: ";
-                                                        cin >> new_first_name;
-                                                        cout << endl;
+                                                        std ::cout << "Enter the New First Name. PS: Last Name can't be changed: ";
+                                                        std ::cin >> new_first_name;
+                                                        std ::cout << std ::endl;
 
-                                                        unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
+                                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_first_name);
 
@@ -1123,7 +1099,7 @@ int main(int argc, const char **argv)
                                                         break;
                                                     }
 
-                                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
 
                                                 } while (k);
@@ -1141,15 +1117,15 @@ int main(int argc, const char **argv)
                                                     std ::cout << "What is your Password: " << std ::endl;
                                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                                    cin >> password;
-                                                    cout << endl;
+                                                    std ::cin >> password;
+                                                    std ::cout << std ::endl;
 
                                                     if (BANK ::verifying_password(password, hash_password))
                                                     {
-                                                        cout << "Enter the New Mail: ";
-                                                        cin >> new_email;
+                                                        std ::cout << "Enter the New Mail: ";
+                                                        std ::cin >> new_email;
 
-                                                        unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
+                                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_email);
 
@@ -1160,7 +1136,7 @@ int main(int argc, const char **argv)
                                                         break;
                                                     }
 
-                                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
 
                                                 } while (k);
@@ -1178,16 +1154,16 @@ int main(int argc, const char **argv)
                                                     std ::cout << "What is your Password: " << std ::endl;
                                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                                    cin >> password;
-                                                    cout << endl;
+                                                    std ::cin >> password;
+                                                    std ::cout << std ::endl;
 
                                                     if (BANK ::verifying_password(password, hash_password))
                                                     {
-                                                        cout << "Enter the New Address: ";
-                                                        cin >> new_address;
-                                                        cout << endl;
+                                                        std ::cout << "Enter the New Address: ";
+                                                        std ::cin >> new_address;
+                                                        std ::cout << std ::endl;
 
-                                                        unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
+                                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setString(2, new_address);
 
@@ -1198,7 +1174,7 @@ int main(int argc, const char **argv)
                                                         break;
                                                     }
 
-                                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
 
                                                 } while (k);
@@ -1216,16 +1192,16 @@ int main(int argc, const char **argv)
                                                     std ::cout << "What is your Password: " << std ::endl;
                                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                                    cin >> password;
-                                                    cout << endl;
+                                                    std ::cin >> password;
+                                                    std ::cout << std ::endl;
 
                                                     if (BANK ::verifying_password(password, hash_password))
                                                     {
-                                                        cout << "Enter the New Phone Number: ";
-                                                        cin >> new_phone_number;
-                                                        cout << endl;
+                                                        std ::cout << "Enter the New Phone Number: ";
+                                                        std ::cin >> new_phone_number;
+                                                        std ::cout << std ::endl;
 
-                                                        unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
+                                                        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setInt(2, new_phone_number);
 
@@ -1236,7 +1212,7 @@ int main(int argc, const char **argv)
                                                         break;
                                                     }
 
-                                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                                     k--;
 
                                                 } while (k);
@@ -1259,20 +1235,20 @@ int main(int argc, const char **argv)
                                             std ::cout << "What is your Password: " << std ::endl;
                                             std ::cout << "You have 3 Chances" << std ::endl;
 
-                                            cin >> password;
-                                            cout << endl;
+                                            std ::cin >> password;
+                                            std ::cout << std ::endl;
 
                                             if (BANK ::verifying_password(password, hash_password))
                                             {
-                                                cout << "Enter the New Password: ";
-                                                cin >> new_password;
-                                                cout << endl;
+                                                std ::cout << "Enter the New Password: ";
+                                                std ::cin >> new_password;
+                                                std ::cout << std ::endl;
 
                                                 do
                                                 {
-                                                    cout << "Enter the New Password Confirmation: ";
-                                                    cin >> new_password_confirmation;
-                                                    cout << endl;
+                                                    std ::cout << "Enter the New Password Confirmation: ";
+                                                    std ::cin >> new_password_confirmation;
+                                                    std ::cout << std ::endl;
 
                                                 } while (new_password.compare(new_password_confirmation));
 
@@ -1286,7 +1262,7 @@ int main(int argc, const char **argv)
                                                 break;
                                             }
 
-                                            cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                            std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                             k--;
 
                                         } while (k);
@@ -1296,32 +1272,32 @@ int main(int argc, const char **argv)
                                         break;
 
                                     case 3: // Forget Password
-                                        cout << "In order to Change the password, We shall make sure that One is Who is proclaims to be, so Please Provide us with the Following Information for the Authentification Process" << endl;
-                                        cout << endl;
+                                        std ::cout << "In order to Change the password, We shall make sure that One is Who is proclaims to be, so Please Provide us with the Following Information for the Authentification Process" << std ::endl;
+                                        std ::cout << std ::endl;
 
-                                        cout << "Enter Account Number: " << endl;
-                                        cin >> account_number;
-                                        cout << endl;
+                                        std ::cout << "Enter Account Number: " << std ::endl;
+                                        std ::cin >> account_number;
+                                        std ::cout << std ::endl;
 
-                                        cout << "Enter National ID Number: " << endl;
-                                        cin >> national_ID;
-                                        cout << endl;
+                                        std ::cout << "Enter National ID Number: " << std ::endl;
+                                        std ::cin >> national_ID;
+                                        std ::cout << std ::endl;
 
-                                        cout << "Enter Date of Birth: " << endl;
-                                        cin >> date_birth;
-                                        cout << endl;
+                                        std ::cout << "Enter Date of Birth: " << std ::endl;
+                                        std ::cin >> date_birth;
+                                        std ::cout << std ::endl;
 
                                         if (BANK ::authentification_check(connection, account_number, national_ID, date_birth))
                                         {
-                                            cout << "Enter New Password: ";
-                                            cin >> new_password;
-                                            cout << endl;
+                                            std ::cout << "Enter New Password: ";
+                                            std ::cin >> new_password;
+                                            std ::cout << std ::endl;
 
                                             do
                                             {
-                                                cout << "Enter New Password Confirmation: ";
-                                                cin >> new_password_confirmation;
-                                                cout << endl;
+                                                std ::cout << "Enter New Password Confirmation: ";
+                                                std ::cin >> new_password_confirmation;
+                                                std ::cout << std ::endl;
 
                                             } while (new_password.compare(new_password_confirmation));
 
@@ -1330,10 +1306,11 @@ int main(int argc, const char **argv)
                                             call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
                                             new_password.clear();
+                                            new_password_confirmation.clear();
                                         }
 
                                         else
-                                            cout << "The provided Information are Incorrect" << endl;
+                                            std ::cout << "The provided Information are Incorrect" << std ::endl;
 
                                         break;
                                     }
@@ -1351,8 +1328,8 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
@@ -1362,7 +1339,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -1380,8 +1357,8 @@ int main(int argc, const char **argv)
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
-                                    cin >> password;
-                                    cout << endl;
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
 
                                     if (BANK ::verifying_password(password, hash_password))
                                     {
@@ -1392,7 +1369,7 @@ int main(int argc, const char **argv)
                                         break;
                                     }
 
-                                    cout << "Incorrect password. Chances left: " << k - 1 << endl;
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
                                     k--;
 
                                 } while (k);
@@ -1407,97 +1384,97 @@ int main(int argc, const char **argv)
                         break;
 
                     case 3: // Information on the Bank
-                        cout << "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence" << endl;
+                        std ::cout << "Title The CROSS_CONTINENTAL TREASURY BANK: A Compendium of Financial Excellence" << std ::endl;
 
-                        cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK" << endl;
-                        cout << "SECTION 1.1: Our Vision and Mission" << endl;
-                        cout << endl;
-                        cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth." << endl;
-                        cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction." << endl;
-                        cout << "SECTION 1.2: Core Values" << endl;
-                        cout << endl;
-                        cout << "Integrity: Upholding the highest ethical standards in all interactions." << endl;
-                        cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape." << endl;
-                        cout << "Client Satisfaction: Placing our clients at the center and ensuring their success is our success." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 1: INTRODUCTION TO THE CROSS-CONTINENTAL TREASURY BANK" << std ::endl;
+                        std ::cout << "SECTION 1.1: Our Vision and Mission" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "The CROSS-CONTINENTAL TREASURY BANK envisions a world where financial services transcend borders, empower individuals, and foster economic growth." << std ::endl;
+                        std ::cout << "Our mission is to provide cutting-edge banking solutions with a commitment to integrity, innovation, and client satisfaction." << std ::endl;
+                        std ::cout << "SECTION 1.2: Core Values" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Integrity: Upholding the highest ethical standards in all interactions." << std ::endl;
+                        std ::cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape." << std ::endl;
+                        std ::cout << "Client Satisfaction: Plastd ::cing our clients at the center and ensuring their success is our success." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << endl;
-                        cout << endl;
-                        cout << "SECTION 2.1: Robust Security Protocols" << endl;
-                        cout << endl;
-                        cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information." << endl;
-                        cout << "Regular audits and assessments to fortify our defenses against emerging threats." << endl;
-                        cout << "SECTION 2.2: Compliance and Regulatory Adherence" << endl;
-                        cout << endl;
-                        cout << "Strict adherence to international banking regulations and compliance standards." << endl;
-                        cout << "Continuous training and development for staff to stay abreast of regulatory changes." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 2: THE PILLARS OF FINANCIAL SECURITY" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 2.1: Robust Security Protocols" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Implementing state-of-the-art encryption and cybersecurity measures to safeguard client information." << std ::endl;
+                        std ::cout << "Regular audits and assessments to fortify our defenses against emerging threats." << std ::endl;
+                        std ::cout << "SECTION 2.2: Compliance and Regulatory Adherence" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Strict adherence to international banking regulations and compliance standards." << std ::endl;
+                        std ::cout << "Continuous training and development for staff to stay abreast of regulatory changes." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS" << endl;
-                        cout << endl;
-                        cout << "SECTION 3.1: Personalized Banking Solutions" << endl;
-                        cout << endl;
-                        cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele." << endl;
-                        cout << "Offering a wide array of accounts, investment options, and lending services." << endl;
-                        cout << "SECTION 3.2: Global Accessibility" << endl;
-                        cout << endl;
-                        cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 3: SERVICES TAILORED TO YOUR AMBITIONS" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 3.1: Personalized Banking Solutions" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Tailoring financial services to meet the unique needs and aspirations of our diverse clientele." << std ::endl;
+                        std ::cout << "Offering a wide array of accounts, investment options, and lending services." << std ::endl;
+                        std ::cout << "SECTION 3.2: Global Accessibility" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "A network of branches and ATMs spanning continents, ensuring clients can access their funds whenever and wherever they need." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY" << endl;
-                        cout << endl;
-                        cout << "SECTION 4.1: Educational Initiatives" << endl;
-                        cout << endl;
-                        cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources." << endl;
-                        cout << "Encouraging informed decision-making and responsible financial behavior." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 4: EMPOWERING FINANCIAL LITERACY" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 4.1: Educational Initiatives" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "The CROSS-CONTINENTAL TREASURY BANK commits to promoting financial literacy through workshops, seminars, and accessible online resources." << std ::endl;
+                        std ::cout << "Encouraging informed decision-making and responsible financial behavior." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY" << endl;
-                        cout << endl;
-                        cout << "SECTION 5.1: Sustainable Banking Practices" << endl;
-                        cout << endl;
-                        cout << "Integrating environmental and social responsibility into our business model." << endl;
-                        cout << "Investing in eco-friendly initiatives and supporting community development projects." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 5.1: Sustainable Banking Practices" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Integrating environmental and social responsibility into our business model." << std ::endl;
+                        std ::cout << "Investing in eco-fristd ::endly initiatives and supporting community development projects." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 6: THE FUTURE OF BANKING" << endl;
-                        cout << endl;
-                        cout << "SECTION 6.1: Technological Advancements" << endl;
-                        cout << endl;
-                        cout << "Embracing cutting-edge technology to enhance efficiency, security, and user experience." << endl;
-                        cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking." << endl;
-                        cout << "SECTION 6.2: Continuous Improvement" << endl;
-                        cout << endl;
-                        cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 6: THE FUTURE OF BANKING" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 6.1: Technological Advancements" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "Embrastd ::cing cutting-edge technology to enhance efficiency, security, and user experience." << std ::endl;
+                        std ::cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking." << std ::endl;
+                        std ::cout << "SECTION 6.2: Continuous Improvement" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "A commitment to continuous improvement through client feedback, market analysis, and strategic partnerships." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH" << endl;
-                        cout << endl;
-                        cout << "SECTION 7.1: Personalized Customer Service" << endl;
-                        cout << endl;
-                        cout << "A dedicated customer support team ensuring a seamless and delightful banking experience." << endl;
-                        cout << "Proactive resolution of issues and a commitment to exceeding client expectations." << endl;
-                        cout << endl;
-                        cout << endl;
-                        cout << endl;
+                        std ::cout << "CHAPTER 7: CLIENT-CENTRIC APPROACH" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "SECTION 7.1: Personalized Customer Service" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "A dedicated customer support team ensuring a seamless and delightful banking experience." << std ::endl;
+                        std ::cout << "Proactive resolution of issues and a commitment to exceeding client expectations." << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << std ::endl;
 
-                        cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK" << endl;
-                        cout << endl;
-                        cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << endl;
-                        cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << endl;
-                        cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << endl;
+                        std ::cout << "CHAPTER 8: THANKS FOR CHOOSING OUR BANK" << std ::endl;
+                        std ::cout << std ::endl;
+                        std ::cout << "In the ever-evolving world of finance, The CROSS-CONTINENTAL TREASURY BANK stands as a beacon of reliability, innovation, and commitment." << std ::endl;
+                        std ::cout << " This compendium serves as a testament to our dedication to providing unparalleled financial services on a global scale. " << std ::endl;
+                        std ::cout << " Join us in the pursuit of financial excellence, where your aspirations find a home in The CROSS-CONTINENTAL TREASURY BANK." << std ::endl;
 
                         break;
                     }
@@ -1507,7 +1484,7 @@ int main(int argc, const char **argv)
                 break;
 
             case 0: // Exit
-                cout << "Thanks for having choose CROSS-CONTINENTAL TREASURY BANK, Have a Good Day" << endl;
+                std ::cout << "Thanks for having choose CROSS-CONTINENTAL TREASURY BANK, Have a Good Day" << std ::endl;
 
                 exit(1);
 
@@ -1521,10 +1498,10 @@ int main(int argc, const char **argv)
     }
     catch (sql ::SQLException &e)
     {
-        cerr << "SQL ERROR: " << e.what() << endl;
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
     }
     catch (const std ::exception &e)
     {
-        cout << "C++ ERROR: " << e.what() << endl;
+        std ::cout << "C++ ERROR: " << e.what() << std ::endl;
     }
 }

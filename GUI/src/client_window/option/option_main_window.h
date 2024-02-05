@@ -156,17 +156,6 @@ private:
     QHBoxLayout *dele_hbox1;
     QHBoxLayout *dele_hbox2;
 
-    QPushButton *edit_perso;
-    QPushButton *forget_password;
-    QPushButton *change_password;
-
-    QPushButton *edit_first_name;
-    QPushButton *edit_email;
-    QPushButton *edit_address;
-    QPushButton *edit_phone_number;
-
-    QVBoxLayout *edit_forget_vbox;
-
 private slots:
     void back_button_func();
     void confirm_button_balance();
@@ -175,7 +164,7 @@ private slots:
     void confirm_button_transfer();
     void confirm_button_borrowal();
     void confirm_button_return_borrowal();
-    void confirm_button_func7();
+    void confirm_button_edit_perso();
     void confirm_button_transaction_history();
     void confirm_button_delete_account();
 };

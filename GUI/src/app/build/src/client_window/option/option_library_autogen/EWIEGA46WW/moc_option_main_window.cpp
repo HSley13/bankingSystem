@@ -48,7 +48,7 @@ static constexpr auto qt_meta_stringdata_CLASSoption_main_windowENDCLASS = QtMoc
     "confirm_button_transfer",
     "confirm_button_borrowal",
     "confirm_button_return_borrowal",
-    "confirm_button_func7",
+    "confirm_button_edit_perso",
     "confirm_button_transaction_history",
     "confirm_button_delete_account"
 );
@@ -64,7 +64,7 @@ struct qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t {
     char stringdata6[24];
     char stringdata7[24];
     char stringdata8[31];
-    char stringdata9[21];
+    char stringdata9[26];
     char stringdata10[35];
     char stringdata11[30];
 };
@@ -81,9 +81,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t qt
         QT_MOC_LITERAL(109, 23),  // "confirm_button_transfer"
         QT_MOC_LITERAL(133, 23),  // "confirm_button_borrowal"
         QT_MOC_LITERAL(157, 30),  // "confirm_button_return_borrowal"
-        QT_MOC_LITERAL(188, 20),  // "confirm_button_func7"
-        QT_MOC_LITERAL(209, 34),  // "confirm_button_transaction_hi..."
-        QT_MOC_LITERAL(244, 29)   // "confirm_button_delete_account"
+        QT_MOC_LITERAL(188, 25),  // "confirm_button_edit_perso"
+        QT_MOC_LITERAL(214, 34),  // "confirm_button_transaction_hi..."
+        QT_MOC_LITERAL(249, 29)   // "confirm_button_delete_account"
     },
     "option_main_window",
     "back_button_func",
@@ -94,7 +94,7 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSoption_main_windowENDCLASS_t qt
     "confirm_button_transfer",
     "confirm_button_borrowal",
     "confirm_button_return_borrowal",
-    "confirm_button_func7",
+    "confirm_button_edit_perso",
     "confirm_button_transaction_history",
     "confirm_button_delete_account"
 };
@@ -165,7 +165,7 @@ Q_CONSTINIT const QMetaObject option_main_window::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'confirm_button_return_borrowal'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'confirm_button_func7'
+        // method 'confirm_button_edit_perso'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'confirm_button_transaction_history'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
@@ -188,7 +188,7 @@ void option_main_window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         case 4: _t->confirm_button_transfer(); break;
         case 5: _t->confirm_button_borrowal(); break;
         case 6: _t->confirm_button_return_borrowal(); break;
-        case 7: _t->confirm_button_func7(); break;
+        case 7: _t->confirm_button_edit_perso(); break;
         case 8: _t->confirm_button_transaction_history(); break;
         case 9: _t->confirm_button_delete_account(); break;
         default: ;

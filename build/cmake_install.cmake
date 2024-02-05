@@ -39,32 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/test/Documents/banking_system/build/GUI/src/app/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
   include("/Users/test/Documents/banking_system/build/GUI/src/database/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/Users/test/Documents/banking_system/build/GUI/src/adm_window/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/Users/test/Documents/banking_system/build/GUI/src/adm_window/adm_option/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/Users/test/Documents/banking_system/build/GUI/src/client_window/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/Users/test/Documents/banking_system/build/GUI/src/client_window/option/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

@@ -1,6 +1,5 @@
 #include "adm_option_main_window.h"
 #include <QApplication>
-#include <QWidget>
 
 int main(int argc, char **argv)
 {
