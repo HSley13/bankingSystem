@@ -71,32 +71,6 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "banking_system",
-            "database": "bankingSystemDatabase",
-            "username": "root"
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default",
-                "enableSsl": "Disabled"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
-            "database": "bankingSysyemDatabse",
-            "username": "root",
-            "name": "GUI"
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default",
-                "enableSsl": "Disabled"
-            },
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
             "name": "GUI",
             "database": "BankingSystemDatabase",
             "username": "root"
