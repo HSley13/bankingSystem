@@ -750,6 +750,7 @@ MyQtProject_autogen/timestamp: \
 	/Users/test/Documents/banking_system/GUI/src/app/main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/app/main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/app/main_window.h \
+	/Users/test/Documents/banking_system/GUI/src/app/ressource.qrc \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20functional.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20memory.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20type_traits.h \

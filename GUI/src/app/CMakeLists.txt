@@ -1,6 +1,7 @@
 qt_add_executable(MyQtProject 
         main.cpp 
         main_window.cpp 
+        ressource.qrc
 )
 
 target_link_libraries(MyQtProject PRIVATE 
@@ -10,6 +11,6 @@ target_link_libraries(MyQtProject PRIVATE
                                 adm_option_library 
                                 client_library
                         )
+qt6_add_resources(RESOURCE_FILES ressource.qrc)
                    
-
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)

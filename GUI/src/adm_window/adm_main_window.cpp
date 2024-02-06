@@ -20,6 +20,8 @@ adm_main_window ::adm_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle("Administrator");
+    setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
+
     resize(600, 600);
 
     QWidget *central_widget = new QWidget(this);

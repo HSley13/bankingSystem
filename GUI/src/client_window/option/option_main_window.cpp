@@ -28,6 +28,7 @@ option_main_window::option_main_window(QWidget *parent)
 {
         window_stack = new QStackedWidget();
         setCentralWidget(window_stack);
+        setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
 
         setWindowTitle("Client Inquiry Window");
         resize(600, 600);

@@ -71,7 +71,7 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "GUI",
+            "name": "HI",
             "database": "BankingSystemDatabase",
             "username": "root"
         }
