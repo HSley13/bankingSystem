@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QStyle>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -69,14 +70,24 @@ void adm_main_window::confirm_login_func()
     std ::string hashed_password = BANK ::Qt_retrieve_adm_hashed_password(connection, account_number);
 
     if (hashed_password == "")
+    {
+        insert_adm_account_number->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_adm_account_number->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_adm_password->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
+
+    insert_adm_password->setStyleSheet("border: 1px solid gray");
 
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
 

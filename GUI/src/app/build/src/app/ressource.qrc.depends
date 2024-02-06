@@ -1,5 +1,4 @@
-<!DOCTYPE RCC>
-<RCC version = "1.1">
+<RCC>
     <qresource>
 
         <file>images/bank.png</file>

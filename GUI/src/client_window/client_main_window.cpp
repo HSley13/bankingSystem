@@ -287,17 +287,24 @@ void client_main_window::confirm_button_func()
     {
         if (balance < 100)
         {
+            insert_balance->setStyleSheet("border: 1px solid red");
+
             QMessageBox::warning(this, "Balance XXX", "Unsufficient Balance, Enter an amount >= 100");
 
             return;
         }
         else
         {
+            insert_password_confirmation->setStyleSheet("border: 1px solid red");
+
             QMessageBox::warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
 
             return;
         }
     }
+
+    insert_balance->setStyleSheet("border: 1px solid gray");
+    insert_password_confirmation->setStyleSheet("border: 1px solid gray");
 
     double interest_rate;
 

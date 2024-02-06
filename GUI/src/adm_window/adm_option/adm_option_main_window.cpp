@@ -278,10 +278,14 @@ void adm_option_main_window::wid_1_config()
 
         if (password.compare(password_confirmation))
         {
+                new_adm_password_confirmation->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(this, "Warning!", "Password Confirmation Incorrect, try again");
 
                 return;
         }
+
+        new_adm_password_confirmation->setStyleSheet("border: 1px solid gray");
 
         std ::string hash_password = BANK ::hashing_password(password);
 

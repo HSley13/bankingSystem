@@ -400,21 +400,35 @@ void edit_forget_main_window::confirm_change_func()
     std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
     if (hashed_password == "")
+    {
+        insert_account_number_change->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_account_number_change->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_password_change->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
 
+    insert_password_change->setStyleSheet("border: 1px solid gray");
+
     if (new_password.compare(new_password_confirmation))
     {
+        insert_new_password_confirmation_change->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New password Confirmation Incorrect");
 
         return;
     }
+
+    insert_new_password_confirmation_change->setStyleSheet("border: 1px solid gray");
 
     std ::string new_hash_password = BANK ::hashing_password(new_password);
 
@@ -452,17 +466,29 @@ void edit_forget_main_window::confirm_forget_func()
 
     if (!BANK ::authentification_check(connection, account_number, national_ID, date_birth))
     {
+        insert_account_number_forget->setStyleSheet("border: 1px solid red");
+        insert_national_ID_forget->setStyleSheet("border: 1px solid red");
+        insert_date_birth_forget->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Information Incorrect", "The provided Information are Incorrect, check the National ID and the Date of Birth");
 
         return;
     }
 
+    insert_account_number_forget->setStyleSheet("border: 1px solid gray");
+    insert_national_ID_forget->setStyleSheet("border: 1px solid gray");
+    insert_date_birth_forget->setStyleSheet("border: 1px solid gray");
+
     if (new_password.compare(new_password_confirmation))
     {
+        insert_new_password_confirmation_forget->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New password Confirmation Incorrect");
 
         return;
     }
+
+    insert_new_password_confirmation_forget->setStyleSheet("border: 1px solid gray");
 
     std ::string new_hash_password = BANK ::hashing_password(new_password);
 
@@ -499,28 +525,46 @@ void edit_forget_main_window::confirm_edit_name_func()
 
     std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
+    {
+        insert_account_number_1->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_account_number_1->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_password_1->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
 
+    insert_password_1->setStyleSheet("border: 1px solid gray");
+
     if (new_first_name.empty())
     {
+        insert_name->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "void", "Name left Blank, Enter a valid One");
 
         return;
     }
 
+    insert_name->setStyleSheet("border: 1px solid gray");
+
     if (new_first_name.compare(new_first_name_confirmation))
     {
+        insert_name_confirmation->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New Name Confirmation Incorrect");
 
         return;
     }
+
+    insert_name_confirmation->setStyleSheet("border: 1px solid gray");
 
     std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
     prep_statement->setInt(1, account_number);
@@ -557,28 +601,46 @@ void edit_forget_main_window::confirm_edit_email_func()
 
     std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
+    {
+        insert_account_number_2->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_account_number_2->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_password_2->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
 
+    insert_password_2->setStyleSheet("border: 1px solid gray");
+
     if (new_email.empty())
     {
+        insert_email->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "void", "Email left Blank, Enter a valid One");
 
         return;
     }
 
+    insert_email->setStyleSheet("border: 1px solid gray");
+
     if (new_email.compare(new_email_confirmation))
     {
+        insert_email_confirmation->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New Email Confirmation Incorrect");
 
         return;
     }
+
+    insert_email_confirmation->setStyleSheet("border: 1px solid gray");
 
     std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
     prep_statement->setInt(1, account_number);
@@ -605,28 +667,46 @@ void edit_forget_main_window::confirm_edit_address_func()
 
     std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
+    {
+        insert_account_number_3->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_account_number_3->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_password_3->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
 
+    insert_password_3->setStyleSheet("border: 1px solid gray");
+
     if (new_address.empty())
     {
+        insert_address->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "void", "Email left Blank, Enter a valid One");
 
         return;
     }
 
+    insert_address->setStyleSheet("border: 1px solid gray");
+
     if (new_address.compare(new_address_confirmation))
     {
+        insert_address_confirmation->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New Email Confirmation Incorrect");
 
         return;
     }
+
+    insert_address_confirmation->setStyleSheet("border: 1px solid gray");
 
     std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
     prep_statement->setInt(1, account_number);
@@ -653,28 +733,46 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
 
     std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
+    {
+        insert_account_number_4->setStyleSheet("border: 1px solid red");
+
         return;
+    }
+
+    insert_account_number_4->setStyleSheet("border: 1px solid gray");
 
     if (!BANK ::verifying_password(password, hashed_password))
     {
+        insert_password_4->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(nullptr, "!!!", "Password Incorrect");
 
         return;
     }
 
+    insert_password_4->setStyleSheet("border: 1px solid gray");
+
     if (new_phone_number.empty())
     {
+        insert_phone_number->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "void", "Email left Blank, Enter a valid One");
 
         return;
     }
 
+    insert_phone_number->setStyleSheet("border: 1px solid gray");
+
     if (new_phone_number.compare(new_phone_number_confirmation))
     {
+        insert_phone_number_confirmation->setStyleSheet("border: 1px solid red");
+
         QMessageBox::warning(this, "Confirmation Incorrect", "New Email Confirmation Incorrect");
 
         return;
     }
+
+    insert_phone_number_confirmation->setStyleSheet("border: 1px solid gray");
 
     std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
     prep_statement->setInt(1, account_number);

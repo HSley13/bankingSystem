@@ -418,14 +418,24 @@ void option_main_window::confirm_button_balance()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_ba->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_ba->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_ba->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Balance Check", "Password Incorrect");
 
                 return;
         }
+
+        password_ba->setStyleSheet("border: 1px solid gray");
 
         BANK ::apply_interest_rate_to_balance(connection, account_number);
 
@@ -454,14 +464,24 @@ void option_main_window::confirm_button_deposit()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_de->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_de->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_de->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Deposit", "Password Incorrect");
 
                 return;
         }
+
+        password_de->setStyleSheet("border: 1px solid gray");
 
         Transactions ::Qt_deposit(connection, amount_to_deposit, account_number);
 
@@ -489,14 +509,24 @@ void option_main_window::confirm_button_withdrawal()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_with->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_with->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_with->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Withdrawal", "Password Incorrect");
 
                 return;
         }
+
+        password_with->setStyleSheet("border: 1px solid gray");
 
         Transactions ::Qt_withdrawal(connection, amount_to_withdraw, account_number);
 
@@ -524,14 +554,24 @@ void option_main_window::confirm_button_transfer()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number1);
 
         if (hashed_password == "")
+        {
+                account_number1_tran->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number1_tran->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_tran->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Transfer", "Password Incorrect");
 
                 return;
         }
+
+        password_tran->setStyleSheet("border: 1px solid gray");
 
         Transactions ::Qt_transfer(connection, amount_to_transfer, account_number1, account_number2);
 
@@ -574,7 +614,13 @@ void option_main_window::confirm_button_borrowal()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_borr->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_borr->setStyleSheet("border: 1px solid gray");
 
         std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
@@ -587,6 +633,17 @@ void option_main_window::confirm_button_borrowal()
 
                 return;
         }
+
+        if (!BANK ::verifying_password(password, hashed_password))
+        {
+                password_borr->setStyleSheet("border: 1px solid red");
+
+                QMessageBox::warning(nullptr, "Transfer", "Password Incorrect");
+
+                return;
+        }
+
+        password_borr->setStyleSheet("border: 1px solid gray");
 
         Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
@@ -620,14 +677,24 @@ void option_main_window::confirm_button_return_borrowal()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_ret->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_ret->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_ret->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Borrowal Return", "Password Incorrect");
 
                 return;
         }
+
+        password_ret->setStyleSheet("border: 1px solid gray");
 
         std ::unique_ptr<sql ::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
         prep_statement_call_update->setInt(1, account_number);
@@ -711,14 +778,24 @@ void option_main_window::confirm_button_transaction_history()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_transac->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_transac->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_transac->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Transac History", "Password Incorrect");
 
                 return;
         }
+
+        password_transac->setStyleSheet("border: 1px solid gray");
 
         Transactions ::Qt_display_transactions_history(connection, account_number);
 
@@ -744,14 +821,24 @@ void option_main_window::confirm_button_delete_account()
         std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
+        {
+                account_number_dele->setStyleSheet("border: 1px solid red");
+
                 return;
+        }
+
+        account_number_dele->setStyleSheet("border: 1px solid gray");
 
         if (!BANK ::verifying_password(password, hashed_password))
         {
+                password_dele->setStyleSheet("border: 1px solid red");
+
                 QMessageBox::warning(nullptr, "Delete Account", "Password Incorrect");
 
                 return;
         }
+
+        password_dele->setStyleSheet("border: 1px solid gray");
 
         Account::Qt_remove_accounts(connection, account_number);
 

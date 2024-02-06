@@ -25,7 +25,7 @@ main_window::main_window(QWidget *parent)
     setCentralWidget(central_widget);
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image(":images/bank.png");
+    QPixmap image(":/images/bank.png");
     if (image.isNull())
     {
         qDebug() << "Failed to load image.";
