@@ -3,7 +3,7 @@ project(MyQtProject)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Quick REQUIRED)
 qt_standard_project_setup()
 
 add_subdirectory(src/app)

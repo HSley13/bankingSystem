@@ -44,6 +44,8 @@ adm_main_window ::adm_main_window(QWidget *parent)
     hbox2->addWidget(insert_adm_password, Qt::AlignCenter);
 
     confirm_login = new QPushButton("Confirm", this);
+    confirm_login->setStyleSheet("color: black;"
+                                 "background-color: beige;");
     connect(confirm_login, &QPushButton::clicked, this, &adm_main_window::confirm_login_func);
 
     vbox = new QVBoxLayout(central_widget);

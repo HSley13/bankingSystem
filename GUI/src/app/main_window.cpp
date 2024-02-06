@@ -12,6 +12,7 @@
 #include <QFont>
 #include <QPixmap>
 #include <QPalette>
+#include <QLinearGradient>
 
 main_window::main_window(QWidget *parent)
     : QMainWindow(parent)
@@ -19,13 +20,17 @@ main_window::main_window(QWidget *parent)
     setWindowTitle("CROSS CONTINENTAL TREASURY BANK");
     resize(600, 600);
 
-    setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
+    setStyleSheet("QMainWindow::title { color: black; font-size: 16px; font-weight: bold; }");
+
+    setStyleSheet("font-family: Herculanum;"
+                  "font: bold italic 14px;"
+                  "font-size: 40;");
 
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image(":/images/bank.png");
+    QPixmap image(":/Users/test/Documents/banking_system/GUI/src/app/images/bank1.jpeg");
     if (image.isNull())
     {
         qDebug() << "Failed to load image.";
@@ -33,16 +38,23 @@ main_window::main_window(QWidget *parent)
 
     image_label->setPixmap(image);
     image_label->setScaledContents(true);
+    image_label->show();
 
     name = new QLabel("CROSS-CONTINENTAL TREASUTY BANK", this);
-    name->setStyleSheet("font-family: Zapfino; font-size: 20; font: bold italic 20px;");
+    name->setStyleSheet("font-family: Zapfino;"
+                        "font: bold italic 20px;"
+                        "font-size: 20;");
 
     welcome = new QLabel("Welcome to our Bank, Choose among the Options below what best suits your Status", this);
 
     admin = new QPushButton("1. Administrator", this);
+    admin->setStyleSheet("color: black;"
+                         "background-color: beige;");
     connect(admin, &QPushButton::clicked, this, &main_window::adm_button_clicked);
 
     client = new QPushButton("2. Regular Client", this);
+    client->setStyleSheet("color: black;"
+                          "background-color: beige;");
     connect(client, &QPushButton::clicked, this, &main_window::client_button_clicked);
 
     vbox = new QVBoxLayout(central_widget);

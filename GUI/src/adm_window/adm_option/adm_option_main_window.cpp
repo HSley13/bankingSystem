@@ -95,15 +95,18 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_1_hbox3->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_1_confirm_button = new QPushButton("Confirm", this);
+        wid_1_confirm_button->setStyleSheet("color: black;"
+                                            "background-color: beige;");
         connect(wid_1_confirm_button, &QPushButton::clicked, this, &adm_option_main_window::wid_1_config);
 
         back_button1 = new QPushButton("Previous Menu");
+
         connect(back_button1, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
         QVBoxLayout *wid_1_vbox = new QVBoxLayout();
-        wid_1_vbox->addLayout(wid_1_hbox1);
-        wid_1_vbox->addLayout(wid_1_hbox2);
-        wid_1_vbox->addLayout(wid_1_hbox3);
+        wid_1_vbox->addLayout(wid_1_hbox1, Qt::AlignCenter);
+        wid_1_vbox->addLayout(wid_1_hbox2, Qt::AlignCenter);
+        wid_1_vbox->addLayout(wid_1_hbox3, Qt::AlignCenter);
         wid_1_vbox->addWidget(wid_1_confirm_button, Qt::AlignCenter);
         wid_1_vbox->addWidget(back_button1, Qt::AlignCenter, Qt::AlignBottom);
         wid_1_vbox->setAlignment(Qt::AlignCenter);
@@ -115,6 +118,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_2->setWindowTitle("Display The Accounts Table");
 
         QPushButton *wid_2_button = new QPushButton("Confirm", this);
+        wid_2_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_2_button, &QPushButton::clicked, this, &adm_option_main_window::display_accounts_table);
 
         back_button2 = new QPushButton("Previous Menu");
@@ -139,6 +144,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_3_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_3_button = new QPushButton("Confirm", this);
+        wid_3_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_3_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_table);
 
         back_button3 = new QPushButton("Previous Menu", this);
@@ -157,6 +164,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_4->setWindowTitle("Display People in Debt");
 
         QPushButton *wid_4_button = new QPushButton("Confirm", this);
+        wid_4_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_4_button, &QPushButton::clicked, this, &adm_option_main_window::display_people_in_debt);
 
         back_button4 = new QPushButton("Previous Menu", this);
@@ -181,6 +190,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_5_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_5_button = new QPushButton("Confirm", this);
+        wid_5_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_5_button, &QPushButton::clicked, this, &adm_option_main_window::display_specific_accounts_in_debt);
 
         back_button5 = new QPushButton("Previous Menu", this);
@@ -206,6 +217,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_6_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_6_button = new QPushButton("Confirm", this);
+        wid_6_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_6_button, &QPushButton::clicked, this, &adm_option_main_window::display_transactions_history);
 
         back_button6 = new QPushButton("Previous Menu", this);
@@ -231,6 +244,8 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         wid_7_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_7_button = new QPushButton("Confirm", this);
+        wid_7_button->setStyleSheet("color: black;"
+                                    "background-color: beige;");
         connect(wid_7_button, &QPushButton::clicked, this, &adm_option_main_window::delete_accounts);
 
         back_button7 = new QPushButton("Previous Menu", this);

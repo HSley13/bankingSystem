@@ -109,6 +109,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     edit_hbox_3->addWidget(insert_name_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_edit_name_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);
@@ -153,6 +155,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     edit_email_hbox_3->addWidget(insert_email_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_edit_email_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);
@@ -197,6 +201,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     edit_address_hbox_3->addWidget(insert_address_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_edit_address_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);
@@ -241,6 +247,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     edit_phone_number_hbox_3->addWidget(insert_phone_number_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_edit_phone_number_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);
@@ -287,6 +295,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     change_hbox_4->addWidget(insert_new_password_confirmation_change, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_change_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);
@@ -338,6 +348,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     forget_hbox_5->addWidget(insert_new_password_confirmation_forget, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &edit_forget_main_window::confirm_forget_func);
 
     back_button = new QPushButton("Return to the Previous Menu", this);

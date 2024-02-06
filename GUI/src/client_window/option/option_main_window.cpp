@@ -99,6 +99,8 @@ option_main_window::option_main_window(QWidget *parent)
         ba_hbox2->addWidget(password_ba, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_balance);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -136,6 +138,8 @@ option_main_window::option_main_window(QWidget *parent)
         de_hbox3->addWidget(amount_de, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_deposit);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -174,6 +178,8 @@ option_main_window::option_main_window(QWidget *parent)
         with_hbox3->addWidget(amount_with, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_withdrawal);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -219,6 +225,8 @@ option_main_window::option_main_window(QWidget *parent)
         tran_hbox4->addWidget(amount_tran, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_transfer);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -274,6 +282,8 @@ option_main_window::option_main_window(QWidget *parent)
         grp_balance->setLayout(borr_hbox3);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_borrowal);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -307,6 +317,8 @@ option_main_window::option_main_window(QWidget *parent)
         ret_hbox2->addWidget(password_ret, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_return_borrowal);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -339,6 +351,8 @@ option_main_window::option_main_window(QWidget *parent)
         transac_hbox2->addWidget(password_transac, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_transaction_history);
 
         back_button = new QPushButton("Return to the Previous Menu", this);
@@ -370,6 +384,8 @@ option_main_window::option_main_window(QWidget *parent)
         dele_hbox2->addWidget(password_dele, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
         connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_delete_account);
 
         back_button = new QPushButton("Return to the Previous Menu", this);

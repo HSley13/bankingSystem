@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QHeaderView>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -1231,6 +1232,7 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
                                                        << "Balance"
                                                        << "Interes Rate"
                                                        << "Itinial Timestamp");
+        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1339,6 +1341,7 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
                                                        << "Balance"
                                                        << "Interes Rate"
                                                        << "Itinial Timestamp");
+        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1443,6 +1446,7 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"
                                                        << "Schedule Time");
+        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1547,6 +1551,7 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"
                                                        << "Schedule Time");
+        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);

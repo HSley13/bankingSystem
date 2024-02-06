@@ -128,6 +128,8 @@ client_main_window ::client_main_window(QWidget *parent)
     hbox10->addWidget(insert_password_confirmation, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black;"
+                                  "background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &client_main_window::confirm_button_func);
 
     back_button = new QPushButton("Previous Menu", this);
