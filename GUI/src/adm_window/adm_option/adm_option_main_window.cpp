@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QPixmap>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -20,14 +21,20 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
         window_stack = new QStackedWidget();
+        setWindowTitle("ADM window Management");
         setCentralWidget(window_stack);
-        setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
+        setStyleSheet("font-family: Herculanum;"
+                      "font-size: 20;"
+                      "font: bold italic 14px;");
+        resize(600, 600);
 
         central_widget = new QWidget(this);
+        central_widget->setStyleSheet("background-color: black;");
 
-        setWindowTitle("ADM window Management");
-
-        resize(600, 600);
+        image_label = new QLabel(this);
+        QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank2.jpeg");
+        image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
+        image_label->setScaledContents(true);
 
         button1 = new QPushButton("1. Create Administrator", this);
         connect(button1, &QPushButton::clicked, this, [=]()
@@ -60,6 +67,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         vbox = new QVBoxLayout(central_widget);
         vbox->setAlignment(Qt::AlignCenter);
 
+        vbox->addWidget(image_label);
         vbox->addWidget(button1);
         vbox->addWidget(button2);
         vbox->addWidget(button3);

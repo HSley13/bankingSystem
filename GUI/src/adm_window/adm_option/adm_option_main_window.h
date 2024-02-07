@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QLineEdit>
+#include <QLabel>
 
 class adm_option_main_window : public QMainWindow
 {
@@ -52,6 +53,8 @@ private:
     QVBoxLayout *vbox;
 
     QStackedWidget *window_stack;
+
+    QLabel *image_label;
 
 private slots:
     void back_button_func();

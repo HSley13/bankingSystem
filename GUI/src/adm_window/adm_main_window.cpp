@@ -11,6 +11,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QStyle>
+#include <QGroupBox>
+#include <QPixmap>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -23,7 +25,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
     setWindowTitle("Administrator");
     setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
 
-    resize(600, 600);
+    resize(600, 300);
 
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);
@@ -48,12 +50,24 @@ adm_main_window ::adm_main_window(QWidget *parent)
                                  "background-color: beige;");
     connect(confirm_login, &QPushButton::clicked, this, &adm_main_window::confirm_login_func);
 
-    vbox = new QVBoxLayout(central_widget);
-    vbox->setAlignment(Qt::AlignCenter);
-
+    vbox = new QVBoxLayout();
     vbox->addLayout(hbox1);
     vbox->addLayout(hbox2);
-    vbox->addWidget(confirm_login, Qt::AlignCenter);
+    vbox->addWidget(confirm_login);
+
+    box = new QGroupBox();
+    box->setLayout(vbox);
+    box->setFixedSize(500, 300);
+
+    image_label = new QLabel(this);
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/login.png");
+    image_label->setPixmap(image.scaled(300, 300, Qt::KeepAspectRatio));
+
+    hbox = new QHBoxLayout();
+    hbox->addWidget(image_label);
+    hbox->addWidget(box);
+
+    central_widget->setLayout(hbox);
 }
 
 void adm_main_window::confirm_login_func()

@@ -8,6 +8,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGroupBox>
 
 class adm_main_window : public QMainWindow
 {
@@ -19,6 +20,7 @@ public:
 private:
     QLabel *adm_account_number;
     QLabel *adm_password;
+    QLabel *image_label;
 
     QLineEdit *insert_adm_account_number;
     QLineEdit *insert_adm_password;
@@ -27,8 +29,11 @@ private:
 
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;
+    QHBoxLayout *hbox;
 
     QVBoxLayout *vbox;
+
+    QGroupBox *box;
 
 private slots:
     void confirm_login_func();
