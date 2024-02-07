@@ -30,15 +30,9 @@ main_window::main_window(QWidget *parent)
     setCentralWidget(central_widget);
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image(":/Users/test/Documents/banking_system/GUI/src/app/images/bank1.jpeg");
-    if (image.isNull())
-    {
-        qDebug() << "Failed to load image.";
-    }
-
-    image_label->setPixmap(image);
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/globe_transfer.gif");
+    image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
-    image_label->show();
 
     name = new QLabel("CROSS-CONTINENTAL TREASUTY BANK", this);
     name->setStyleSheet("font-family: Zapfino;"

@@ -1,7 +1,6 @@
 qt_add_executable(MyQtProject 
         main.cpp 
         main_window.cpp 
-        ressource.qrc
 )
 
 target_link_libraries(MyQtProject PRIVATE 
@@ -14,8 +13,6 @@ target_link_libraries(MyQtProject PRIVATE
                         )
 
 
-qt6_add_resources(RESOURCE_FILES ressource.qrc)
-                   
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)
 
 set(CMAKE_AUTORCC ON)

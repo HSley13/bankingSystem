@@ -1,6 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.1">
-    <qresource>
-        <file>image.qml</file>
+    <qresource prefix = "/resources">
+        <file>images/bank.png</file>
     </qresource>
 </RCC>
