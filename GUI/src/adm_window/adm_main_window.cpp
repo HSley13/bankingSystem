@@ -23,7 +23,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle("Administrator");
-    setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
+    setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px; background-color: black;");
 
     resize(600, 300);
 
@@ -60,8 +60,9 @@ adm_main_window ::adm_main_window(QWidget *parent)
     box->setFixedSize(500, 300);
 
     image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/login.png");
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank11.png");
     image_label->setPixmap(image.scaled(300, 300, Qt::KeepAspectRatio));
+    image_label->setScaledContents(true);
 
     hbox = new QHBoxLayout();
     hbox->addWidget(image_label);

@@ -24,7 +24,8 @@ main_window::main_window(QWidget *parent)
 
     setStyleSheet("font-family: Herculanum;"
                   "font: bold italic 14px;"
-                  "font-size: 40;");
+                  "font-size: 40;"
+                  "background-color: black;");
 
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);

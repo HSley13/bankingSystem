@@ -433,6 +433,8 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
 
         table->setHorizontalHeaderLabels(QStringList() << "Transaction Details"
                                                        << "Date & Time");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -472,7 +474,7 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
-        table->resize(400, 400);
+        table->resize(500, 700);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1232,7 +1234,8 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
                                                        << "Balance"
                                                        << "Interes Rate"
                                                        << "Itinial Timestamp");
-        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1275,7 +1278,7 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
-        table->resize(400, 400);
+        table->resize(900, 500);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1341,7 +1344,8 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
                                                        << "Balance"
                                                        << "Interes Rate"
                                                        << "Itinial Timestamp");
-        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1383,7 +1387,7 @@ void BANK ::Qt_display_specific_accounts(sql ::Connection *connection, int accou
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
-        table->resize(400, 400);
+        table->resize(900, 500);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1446,7 +1450,8 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"
                                                        << "Schedule Time");
-        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1488,7 +1493,7 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
-        table->resize(400, 400);
+        table->resize(900, 500);
         table->show();
     }
     catch (const sql ::SQLException &e)
@@ -1551,7 +1556,8 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"
                                                        << "Schedule Time");
-        table->horizontalHeader()->setStyleSheet("color: black; background-color: beige;");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
         table->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1592,7 +1598,7 @@ void BANK ::Qt_display_specific_accounts_in_debt(sql ::Connection *connection, i
 
         table->resizeColumnsToContents();
         table->resizeRowsToContents();
-        table->resize(400, 400);
+        table->resize(900, 500);
         table->show();
     }
     catch (const sql ::SQLException &e)
