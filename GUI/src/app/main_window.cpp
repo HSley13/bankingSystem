@@ -20,8 +20,6 @@ main_window::main_window(QWidget *parent)
     setWindowTitle("CROSS CONTINENTAL TREASURY BANK");
     resize(600, 600);
 
-    setStyleSheet("QMainWindow::title { color: black; font-size: 16px; font-weight: bold; }");
-
     setStyleSheet("font-family: Herculanum;"
                   "font: bold italic 14px;"
                   "font-size: 40;"

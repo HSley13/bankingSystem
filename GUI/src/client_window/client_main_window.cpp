@@ -11,6 +11,8 @@
 #include <QTextEdit>
 #include <QGroupBox>
 #include <QString>
+#include <QPixmap>
+#include <QLabel>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -22,13 +24,20 @@ client_main_window ::client_main_window(QWidget *parent)
 {
     window_stack = new QStackedWidget();
     setCentralWidget(window_stack);
-    setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
+    setStyleSheet("color: beige;"
+                  "font-family: Herculanum;"
+                  "font-size: 20;"
+                  "font: bold italic 14px;"
+                  "background-color: black;");
+    setWindowTitle("Client");
+    resize(600, 600);
 
     central_widget = new QWidget(this);
 
-    setWindowTitle("Client");
-
-    resize(600, 600);
+    QLabel *welcome = new QLabel("WELCOME TO THE CLIENTS' WINDOW", this);
+    welcome->setStyleSheet("font-family: Zapfino;"
+                           "font: bold italic 20px;"
+                           "font-size: 20;");
 
     create_account = new QPushButton("1. New to our Bank and Would like to Create an Account", this);
     connect(create_account, &QPushButton::clicked, this, [=]()
@@ -41,14 +50,21 @@ client_main_window ::client_main_window(QWidget *parent)
     connect(bank_info, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(2); });
 
-    vbox = new QVBoxLayout(central_widget);
-    vbox->setAlignment(Qt::AlignCenter);
+    QLabel *image_label = new QLabel(this);
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank14.jpeg");
+    image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
+    image_label->setScaledContents(true);
 
+    vbox = new QVBoxLayout();
+    vbox->addWidget(welcome, 2, Qt::AlignCenter);
+    vbox->addWidget(image_label, 2, Qt::AlignCenter);
     vbox->addWidget(create_account, Qt::AlignCenter);
     vbox->addWidget(account_inquiry, Qt::AlignCenter);
     vbox->addWidget(bank_info, Qt::AlignCenter);
 
+    central_widget->setLayout(vbox);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
     create_account_widget = new QWidget();
     create_account_widget->setWindowTitle("Create Account");
 
@@ -245,6 +261,7 @@ client_main_window ::client_main_window(QWidget *parent)
     information->setReadOnly(true);
     information->setLineWrapMode(QTextEdit::WidgetWidth);
     information->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    information->setStyleSheet("color: white;");
 
     back_button = new QPushButton("Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);

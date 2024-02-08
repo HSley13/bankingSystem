@@ -17,6 +17,7 @@
 #include <QTableWidgetItem>
 #include <QGroupBox>
 #include <QInputDialog>
+#include <QPixmap>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -28,12 +29,20 @@ option_main_window::option_main_window(QWidget *parent)
 {
         window_stack = new QStackedWidget();
         setCentralWidget(window_stack);
-        setStyleSheet("font-family: Herculanum; font-size: 20; font: bold italic 14px;");
-
+        setStyleSheet("color: beige;"
+                      "font-family: Herculanum;"
+                      "font-size: 20;"
+                      "font: bold italic 14px;"
+                      "background-color: black;");
         setWindowTitle("Client Inquiry Window");
         resize(600, 600);
 
         central_widget = new QWidget(this);
+
+        QLabel *welcome = new QLabel("WELCOME TO THE CLIENTS' INQUIRY WINDOW", this);
+        welcome->setStyleSheet("font-family: Zapfino;"
+                               "font: bold italic 20px;"
+                               "font-size: 20;");
 
         balance = new QPushButton("1. Check Balance", this);
         connect(balance, &QPushButton::clicked, this, [=]()
@@ -70,8 +79,14 @@ option_main_window::option_main_window(QWidget *parent)
         connect(delete_account, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(8); });
 
-        VBOX = new QVBoxLayout(central_widget);
-        VBOX->setAlignment(Qt::AlignCenter);
+        QLabel *image_label = new QLabel(this);
+        QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank8.jpeg");
+        image_label->setPixmap(image.scaled(500, 300, Qt::KeepAspectRatio));
+        image_label->setScaledContents(true);
+
+        VBOX = new QVBoxLayout();
+        VBOX->addWidget(welcome, 2, Qt::AlignCenter);
+        VBOX->addWidget(image_label, 2, Qt::AlignCenter);
         VBOX->addWidget(balance);
         VBOX->addWidget(deposit);
         VBOX->addWidget(withdrawal);
@@ -81,7 +96,11 @@ option_main_window::option_main_window(QWidget *parent)
         VBOX->addWidget(edit_and_forget);
         VBOX->addWidget(transaction_history);
         VBOX->addWidget(delete_account);
+        VBOX->setAlignment(Qt::AlignCenter);
+
+        central_widget->setLayout(VBOX);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
         balance_widget = new QWidget();
         balance_widget->setWindowTitle("Check Balance");
 
@@ -106,7 +125,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_1 = new QLabel(this);
+        QPixmap image_1("/Users/test/Documents/banking_system/GUI/src/ressources/balance.jpeg");
+        image_label_1->setPixmap(image_1.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_1->setScaledContents(true);
+
         vbox1 = new QVBoxLayout();
+        vbox1->addWidget(image_label_1, Qt::AlignCenter);
         vbox1->addLayout(ba_hbox1, Qt::AlignCenter);
         vbox1->addLayout(ba_hbox2, Qt::AlignCenter);
         vbox1->addWidget(confirm_button, Qt::AlignCenter);
@@ -145,7 +170,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_2 = new QLabel(this);
+        QPixmap image_2("/Users/test/Documents/banking_system/GUI/src/ressources/deposit.jpeg");
+        image_label_2->setPixmap(image_2.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_2->setScaledContents(true);
+
         vbox2 = new QVBoxLayout();
+        vbox2->addWidget(image_label_2, Qt::AlignCenter);
         vbox2->addLayout(de_hbox1, Qt::AlignCenter);
         vbox2->addLayout(de_hbox2, Qt::AlignCenter);
         vbox2->addLayout(de_hbox3, Qt::AlignCenter);
@@ -185,7 +216,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_3 = new QLabel(this);
+        QPixmap image_3("/Users/test/Documents/banking_system/GUI/src/ressources/withdraw.jpeg");
+        image_label_3->setPixmap(image_3.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_3->setScaledContents(true);
+
         vbox3 = new QVBoxLayout();
+        vbox3->addWidget(image_label_3, Qt::AlignCenter);
         vbox3->addLayout(with_hbox1, Qt::AlignCenter);
         vbox3->addLayout(with_hbox2, Qt::AlignCenter);
         vbox3->addLayout(with_hbox3, Qt::AlignCenter);
@@ -232,7 +269,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_4 = new QLabel(this);
+        QPixmap image_4("/Users/test/Documents/banking_system/GUI/src/ressources/transfer.jpeg");
+        image_label_4->setPixmap(image_4.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_4->setScaledContents(true);
+
         vbox4 = new QVBoxLayout();
+        vbox4->addWidget(image_label_4, Qt::AlignCenter);
         vbox4->addLayout(tran_hbox1, Qt::AlignCenter);
         vbox4->addLayout(tran_hbox2, Qt::AlignCenter);
         vbox4->addLayout(tran_hbox3, Qt::AlignCenter);
@@ -289,7 +332,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_5 = new QLabel(this);
+        QPixmap image_5("/Users/test/Documents/banking_system/GUI/src/ressources/borrow.jpeg");
+        image_label_5->setPixmap(image_5.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_5->setScaledContents(true);
+
         vbox5 = new QVBoxLayout();
+        vbox5->addWidget(image_label_5, Qt::AlignCenter);
         vbox5->addLayout(borr_hbox1, Qt::AlignCenter);
         vbox5->addLayout(borr_hbox2, Qt::AlignCenter);
         vbox5->addWidget(grp_balance, Qt::AlignCenter);
@@ -324,7 +373,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_6 = new QLabel(this);
+        QPixmap image_6("/Users/test/Documents/banking_system/GUI/src/ressources/return.webp");
+        image_label_6->setPixmap(image_6.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_6->setScaledContents(true);
+
         vbox6 = new QVBoxLayout();
+        vbox6->addWidget(image_label_6, Qt::AlignCenter);
         vbox6->addLayout(ret_hbox1, Qt::AlignCenter);
         vbox6->addLayout(ret_hbox2, Qt::AlignCenter);
         vbox6->addWidget(confirm_button, Qt::AlignCenter);
@@ -358,7 +413,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_7 = new QLabel(this);
+        QPixmap image_7("/Users/test/Documents/banking_system/GUI/src/ressources/transaction.jpeg");
+        image_label_7->setPixmap(image_7.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_7->setScaledContents(true);
+
         vbox8 = new QVBoxLayout();
+        vbox8->addWidget(image_label_7, Qt::AlignCenter);
         vbox8->addLayout(transac_hbox1, Qt::AlignCenter);
         vbox8->addLayout(transac_hbox2, Qt::AlignCenter);
         vbox8->addWidget(confirm_button, Qt::AlignCenter);
@@ -391,7 +452,13 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
+        QLabel *image_label_8 = new QLabel(this);
+        QPixmap image_8("/Users/test/Documents/banking_system/GUI/src/ressources/delete.jpeg");
+        image_label_8->setPixmap(image_8.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_8->setScaledContents(true);
+
         vbox9 = new QVBoxLayout();
+        vbox9->addWidget(image_label_8, Qt::AlignCenter);
         vbox9->addLayout(dele_hbox1, Qt::AlignCenter);
         vbox9->addLayout(dele_hbox2, Qt::AlignCenter);
         vbox9->addWidget(confirm_button, Qt::AlignCenter);
