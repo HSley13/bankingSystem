@@ -687,6 +687,7 @@ option_library_autogen/timestamp: \
 	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main.cpp \
 	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.cpp \
 	/Users/test/Documents/banking_system/GUI/src/client_window/option/option_main_window.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/QDate \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20functional.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20memory.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/q20type_traits.h \
@@ -706,6 +707,7 @@ option_library_autogen/timestamp: \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qbytearrayalgorithms.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qbytearraylist.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qbytearrayview.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qcalendar.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qchar.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qcompare.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qcompare_impl.h \
@@ -718,6 +720,7 @@ option_library_autogen/timestamp: \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qcontiguouscache.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qdarwinhelpers.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qdatastream.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qdatetime.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qdebug.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qexceptionhandling.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtCore.framework/Versions/A/Headers/qflags.h \
@@ -837,6 +840,8 @@ option_library_autogen/timestamp: \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtGui.framework/Versions/A/Headers/qtransform.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtGui.framework/Versions/A/Headers/qvalidator.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtGui.framework/Versions/A/Headers/qwindowdefs.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/QComboBox \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/QDateEdit \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/QHBoxLayout \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/QLabel \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/QLineEdit \
@@ -855,6 +860,8 @@ option_library_autogen/timestamp: \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qabstractslider.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qabstractspinbox.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qboxlayout.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qcombobox.h \
+	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qdatetimeedit.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qdialog.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qframe.h \
 	/opt/homebrew/Cellar/qt/6.6.1/lib/QtWidgets.framework/Versions/A/Headers/qgridlayout.h \

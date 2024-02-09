@@ -18,6 +18,9 @@
 #include <QGroupBox>
 #include <QInputDialog>
 #include <QPixmap>
+#include <QDateEdit>
+#include <QDate>
+#include <QComboBox>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -71,13 +74,17 @@ option_main_window::option_main_window(QWidget *parent)
         edit_and_forget = new QPushButton("7. Edit Account Information", this);
         connect(edit_and_forget, &QPushButton::clicked, this, &option_main_window::confirm_button_edit_perso);
 
-        transaction_history = new QPushButton("8. Transaction History", this);
+        transaction_history = new QPushButton("8. Transaction All History", this);
         connect(transaction_history, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(7); });
 
-        delete_account = new QPushButton("9. Delete Account", this);
-        connect(delete_account, &QPushButton::clicked, this, [=]()
+        specific_transaction_history = new QPushButton("9. All Transaction History Relative to a Specific Date", this);
+        connect(specific_transaction_history, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(8); });
+
+        delete_account = new QPushButton("10. Delete Account", this);
+        connect(delete_account, &QPushButton::clicked, this, [=]()
+                { window_stack->setCurrentIndex(9); });
 
         QLabel *image_label = new QLabel(this);
         QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank8.jpeg");
@@ -95,6 +102,7 @@ option_main_window::option_main_window(QWidget *parent)
         VBOX->addWidget(return_borrowal);
         VBOX->addWidget(edit_and_forget);
         VBOX->addWidget(transaction_history);
+        VBOX->addWidget(specific_transaction_history);
         VBOX->addWidget(delete_account);
         VBOX->setAlignment(Qt::AlignCenter);
 
@@ -428,6 +436,60 @@ option_main_window::option_main_window(QWidget *parent)
 
         transaction_history_widget->setLayout(vbox8);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        specific_transaction_history_widget = new QWidget();
+        specific_transaction_history_widget->setWindowTitle("Specific Transaction History");
+
+        specific_transaction_history_message1 = new QLabel("Enter Account Number", this);
+        specific_account_number_transac = new QLineEdit(this);
+        specific_transac_hbox1 = new QHBoxLayout();
+        specific_transac_hbox1->addWidget(specific_transaction_history_message1, Qt::AlignCenter);
+        specific_transac_hbox1->addWidget(specific_account_number_transac, Qt::AlignCenter);
+
+        specific_transaction_history_message2 = new QLabel("Enter Password", this);
+        specific_password_transac = new QLineEdit(this);
+        specific_password_transac->setEchoMode(QLineEdit::Password);
+        specific_transac_hbox2 = new QHBoxLayout();
+        specific_transac_hbox2->addWidget(specific_transaction_history_message2, Qt::AlignCenter);
+        specific_transac_hbox2->addWidget(specific_password_transac, Qt::AlignCenter);
+
+        calendar = new QDateEdit(this);
+        calendar->setCalendarPopup(true);
+        calendar->setDate(QDate::currentDate());
+        connect(calendar, &QDateEdit::dateChanged, this, [=]()
+                { selected_date = calendar->date(); });
+
+        choice = new QComboBox(this);
+        choice->addItem("All Before");
+        choice->addItem("All After");
+        choice->addItem("Only");
+
+        confirm_button = new QPushButton("Confirm", this);
+        confirm_button->setStyleSheet("color: black;"
+                                      "background-color: beige;");
+        connect(confirm_button, &QPushButton::clicked, this, &option_main_window::confirm_button_specific_transaction_history);
+
+        back_button = new QPushButton("Return to the Previous Menu", this);
+        connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
+
+        QLabel *image_label_8 = new QLabel(this);
+        QPixmap image_8("/Users/test/Documents/banking_system/GUI/src/ressources/transaction.jpeg");
+        image_label_8->setPixmap(image_8.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_8->setScaledContents(true);
+
+        vbox8 = new QVBoxLayout();
+        vbox8->addWidget(image_label_8, Qt::AlignCenter);
+        vbox8->addLayout(specific_transac_hbox1, Qt::AlignCenter);
+        vbox8->addLayout(specific_transac_hbox2, Qt::AlignCenter);
+        vbox8->addWidget(calendar, Qt::AlignCenter);
+        vbox8->addWidget(choice, Qt::AlignCenter);
+        vbox8->addWidget(confirm_button, Qt::AlignCenter);
+        vbox8->addWidget(back_button, Qt::AlignCenter);
+        vbox8->setAlignment(Qt::AlignCenter);
+
+        specific_transaction_history_widget->setLayout(vbox8);
+
+        /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         delete_account_widget = new QWidget();
         delete_account_widget->setWindowTitle("Delete Account");
 
@@ -452,20 +514,20 @@ option_main_window::option_main_window(QWidget *parent)
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        QLabel *image_label_8 = new QLabel(this);
-        QPixmap image_8("/Users/test/Documents/banking_system/GUI/src/ressources/delete.jpeg");
-        image_label_8->setPixmap(image_8.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_8->setScaledContents(true);
+        QLabel *image_label_9 = new QLabel(this);
+        QPixmap image_9("/Users/test/Documents/banking_system/GUI/src/ressources/delete.jpeg");
+        image_label_9->setPixmap(image_9.scaled(300, 300, Qt::KeepAspectRatio));
+        image_label_9->setScaledContents(true);
 
-        vbox9 = new QVBoxLayout();
-        vbox9->addWidget(image_label_8, Qt::AlignCenter);
-        vbox9->addLayout(dele_hbox1, Qt::AlignCenter);
-        vbox9->addLayout(dele_hbox2, Qt::AlignCenter);
-        vbox9->addWidget(confirm_button, Qt::AlignCenter);
-        vbox9->addWidget(back_button, Qt::AlignCenter);
-        vbox9->setAlignment(Qt::AlignCenter);
+        vbox10 = new QVBoxLayout();
+        vbox10->addWidget(image_label_9, Qt::AlignCenter);
+        vbox10->addLayout(dele_hbox1, Qt::AlignCenter);
+        vbox10->addLayout(dele_hbox2, Qt::AlignCenter);
+        vbox10->addWidget(confirm_button, Qt::AlignCenter);
+        vbox10->addWidget(back_button, Qt::AlignCenter);
+        vbox10->setAlignment(Qt::AlignCenter);
 
-        delete_account_widget->setLayout(vbox9);
+        delete_account_widget->setLayout(vbox10);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         window_stack->addWidget(central_widget);
         window_stack->addWidget(balance_widget);
@@ -475,6 +537,7 @@ option_main_window::option_main_window(QWidget *parent)
         window_stack->addWidget(borrowal_widget);
         window_stack->addWidget(return_borrowal_widget);
         window_stack->addWidget(transaction_history_widget);
+        window_stack->addWidget(specific_transaction_history_widget);
         window_stack->addWidget(delete_account_widget);
 }
 
@@ -884,6 +947,55 @@ void option_main_window::confirm_button_transaction_history()
 
         account_number_transac->clear();
         password_transac->clear();
+
+        password.clear();
+        hashed_password.clear();
+}
+
+void option_main_window::confirm_button_specific_transaction_history()
+{
+        int account_number = specific_account_number_transac->text().toInt();
+        std ::string password = specific_password_transac->text().toStdString();
+        QString date = selected_date.toString(Qt::ISODate);
+        QString selected_choice = choice->currentText();
+
+        // QString info = "Date: " + date + " Choice: " + QString::number(selected_choice) + "";
+
+        // QMessageBox::information(this, "OK", info);
+
+        connection_details ID;
+        ID.server = "localhost";
+        ID.user = "root";
+        ID.password = "sleyHortes1312";
+
+        sql ::Connection *connection = connection_setup(&ID);
+
+        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+
+        if (hashed_password == "")
+        {
+                specific_account_number_transac->setStyleSheet("border: 1px solid red");
+
+                return;
+        }
+
+        specific_account_number_transac->setStyleSheet("border: 1px solid gray");
+
+        if (!BANK ::verifying_password(password, hashed_password))
+        {
+                specific_password_transac->setStyleSheet("border: 1px solid red");
+
+                QMessageBox::warning(nullptr, "Transac History", "Password Incorrect");
+
+                return;
+        }
+
+        specific_password_transac->setStyleSheet("border: 1px solid gray");
+
+        Transactions ::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice.toInt());
+
+        specific_account_number_transac->clear();
+        specific_password_transac->clear();
 
         password.clear();
         hashed_password.clear();

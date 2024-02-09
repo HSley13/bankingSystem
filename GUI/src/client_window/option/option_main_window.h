@@ -11,6 +11,9 @@
 #include <QTableWidget>
 #include <QStackedWidget>
 #include <QTableWidgetItem>
+#include <QDateEdit>
+#include <QDate>
+#include <QComboBox>
 
 class option_main_window : public QMainWindow
 {
@@ -31,6 +34,7 @@ private:
     QWidget *return_borrowal_widget;
     QWidget *edit_and_forget_widget;
     QWidget *transaction_history_widget;
+    QWidget *specific_transaction_history_widget;
     QWidget *delete_account_widget;
 
     QPushButton *balance;
@@ -41,6 +45,7 @@ private:
     QPushButton *return_borrowal;
     QPushButton *edit_and_forget;
     QPushButton *transaction_history;
+    QPushButton *specific_transaction_history;
     QPushButton *delete_account;
     QPushButton *back_button;
 
@@ -70,6 +75,9 @@ private:
 
     QLineEdit *account_number_transac;
     QLineEdit *password_transac;
+
+    QLineEdit *specific_account_number_transac;
+    QLineEdit *specific_password_transac;
 
     QLineEdit *account_number_edit;
     QLineEdit *password_edit;
@@ -109,6 +117,9 @@ private:
     QLabel *transaction_history_message1;
     QLabel *transaction_history_message2;
 
+    QLabel *specific_transaction_history_message1;
+    QLabel *specific_transaction_history_message2;
+
     QLabel *delete_account_message1;
     QLabel *delete_account_message2;
 
@@ -122,6 +133,7 @@ private:
     QVBoxLayout *vbox7;
     QVBoxLayout *vbox8;
     QVBoxLayout *vbox9;
+    QVBoxLayout *vbox10;
 
     QHBoxLayout *ba_hbox1;
     QHBoxLayout *ba_hbox2;
@@ -153,11 +165,19 @@ private:
     QHBoxLayout *transac_hbox1;
     QHBoxLayout *transac_hbox2;
 
+    QHBoxLayout *specific_transac_hbox1;
+    QHBoxLayout *specific_transac_hbox2;
+
     QHBoxLayout *dele_hbox1;
     QHBoxLayout *dele_hbox2;
 
+    QComboBox *choice;
+    QDateEdit *calendar;
+    QDate selected_date;
+
 private slots:
-    void back_button_func();
+    void
+    back_button_func();
     void confirm_button_balance();
     void confirm_button_deposit();
     void confirm_button_withdrawal();
@@ -166,5 +186,6 @@ private slots:
     void confirm_button_return_borrowal();
     void confirm_button_edit_perso();
     void confirm_button_transaction_history();
+    void confirm_button_specific_transaction_history();
     void confirm_button_delete_account();
 };

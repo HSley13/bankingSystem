@@ -487,6 +487,80 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
     }
 }
 
+void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date_time, int choice)
+{
+    try
+    {
+        std ::string sign;
+
+        if (choice == 0)
+            sign = "<";
+        else if (choice == 1)
+            sign = ">";
+        else
+            sign = "=";
+
+        QTableWidget *table = new QTableWidget();
+        table->setRowCount(0);
+        table->setColumnCount(2);
+
+        table->setHorizontalHeaderLabels(QStringList() << "Transaction Details"
+                                                       << "Date & Time");
+        table->horizontalHeader()->setStyleSheet("color: black;"
+                                                 "background-color: beige;");
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        table->setShowGrid(true);
+        table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + " WHERE date_time " + sign + " ?;"));
+        prep_statement->setString(1, date_time);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        if (!result)
+        {
+            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
+
+            return;
+        }
+
+        QList<QTableWidgetItem *> items;
+        int row = table->rowCount();
+
+        while (result->next())
+        {
+            items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
+
+            table->insertRow(row);
+            table->setItem(row, 0, items[0]);
+            table->setItem(row, 1, items[1]);
+
+            row++;
+
+            items.clear();
+        }
+
+        table->resizeColumnsToContents();
+        table->resizeRowsToContents();
+        table->resize(500, 700);
+        table->show();
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
 void Transactions ::insert_borrowal(sql ::Connection *connection, int account_number, const double amount_to_borrow, const double borrowal_interest_rate)
 {
     try
