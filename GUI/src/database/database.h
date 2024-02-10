@@ -49,6 +49,8 @@ public:
 
     static void Qt_display_transactions_history(sql ::Connection *connection, int account_number);
 
+    static void display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date, int choice);
+
     static void Qt_display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date, int choice);
 
     static void insert_transactions(sql ::Connection *connection, int account_number, std ::string details, double amount);

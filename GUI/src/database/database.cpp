@@ -127,7 +127,7 @@ void Transactions ::insert_transactions(sql ::Connection *connection, int accoun
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        std ::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO " + table_name + " VALUES ( CONCAT(?, ?), NOW() );"));
+        std ::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("INSERT INTO " + table_name + " VALUES ( CONCAT(?, ?), CURDATE(), CURTIME());"));
         prep_statement->setString(1, details);
         prep_statement->setDouble(2, amount);
 
@@ -395,23 +395,14 @@ void Transactions ::display_transactions_history(sql ::Connection *connection, i
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (!result)
+        while (result->next())
         {
-            std ::cout << "The Account Number entered is not registered in out Database" << std ::endl;
-            return;
-        }
-
-        if (result->isBeforeFirst())
-        {
-            while (result->next())
-            {
-                std ::cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date_time") << std ::endl;
-                std ::cout << std ::endl;
-            }
-
-            std ::cout << std ::endl;
+            std ::cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date") << " at " << result->getString("time") << std ::endl;
             std ::cout << std ::endl;
         }
+
+        std ::cout << std ::endl;
+        std ::cout << std ::endl;
     }
     catch (const sql ::SQLException &e)
     {
@@ -429,10 +420,11 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
     {
         QTableWidget *table = new QTableWidget();
         table->setRowCount(0);
-        table->setColumnCount(2);
+        table->setColumnCount(3);
 
         table->setHorizontalHeaderLabels(QStringList() << "Transaction Details"
-                                                       << "Date & Time");
+                                                       << "Date"
+                                                       << "Time");
         table->horizontalHeader()->setStyleSheet("color: black;"
                                                  "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -448,24 +440,19 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (!result)
-        {
-            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
-
-            return;
-        }
-
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
         while (result->next())
         {
             items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("time")));
 
             table->insertRow(row);
             table->setItem(row, 0, items[0]);
             table->setItem(row, 1, items[1]);
+            table->setItem(row, 2, items[2]);
 
             row++;
 
@@ -487,7 +474,47 @@ void Transactions ::Qt_display_transactions_history(sql ::Connection *connection
     }
 }
 
-void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date_time, int choice)
+void Transactions ::display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date, int choice)
+{
+    try
+    {
+        std ::string sign;
+
+        if (choice == 0)
+            sign = "<";
+        else if (choice == 1)
+            sign = ">";
+        else
+            sign = "=";
+
+        std ::string table_name = "NO";
+        table_name.append(std::to_string(account_number));
+
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + " WHERE date " + sign + " ?;"));
+        prep_statement->setString(1, date);
+
+        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+
+        while (result->next())
+        {
+            std ::cout << "Transaction_details: " << result->getString("transaction_details") << " on " << result->getString("date") << " at " << result->getString("time") << std ::endl;
+            std ::cout << std ::endl;
+        }
+
+        std ::cout << std ::endl;
+        std ::cout << std ::endl;
+    }
+    catch (const sql ::SQLException &e)
+    {
+        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+    }
+    catch (const std ::exception &e)
+    {
+        std ::cerr << "C++ ERROR: " << e.what() << std ::endl;
+    }
+}
+
+void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *connection, int account_number, std ::string date, int choice)
 {
     try
     {
@@ -502,10 +529,11 @@ void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *c
 
         QTableWidget *table = new QTableWidget();
         table->setRowCount(0);
-        table->setColumnCount(2);
+        table->setColumnCount(3);
 
         table->setHorizontalHeaderLabels(QStringList() << "Transaction Details"
-                                                       << "Date & Time");
+                                                       << "Date"
+                                                       << "Time");
         table->horizontalHeader()->setStyleSheet("color: black;"
                                                  "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -517,17 +545,10 @@ void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *c
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + " WHERE date_time " + sign + " ?;"));
-        prep_statement->setString(1, date_time);
+        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT * FROM " + table_name + " WHERE date " + sign + " ?;"));
+        prep_statement->setString(1, date);
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
-
-        if (!result)
-        {
-            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
-
-            return;
-        }
 
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
@@ -535,11 +556,13 @@ void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *c
         while (result->next())
         {
             items << new QTableWidgetItem(QString::fromStdString(result->getString("transaction_details")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_time")));
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("time")));
 
             table->insertRow(row);
             table->setItem(row, 0, items[0]);
             table->setItem(row, 1, items[1]);
+            table->setItem(row, 2, items[2]);
 
             row++;
 
@@ -575,7 +598,7 @@ void Transactions ::insert_borrowal(sql ::Connection *connection, int account_nu
     }
     catch (const sql ::SQLException &e)
     {
-        std ::cerr << "SQL ERROR: " << e.what() << std ::endl;
+        std ::cerr << "SQL ERROR_1: " << e.what() << std ::endl;
     }
     catch (const std ::exception &e)
     {
@@ -639,10 +662,10 @@ void Account ::create_account(sql ::Connection *connection, int account_number, 
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date DATE, time TIME);"));
         prep_statement->executeUpdate();
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Created");
         prep_statement->executeUpdate();
 
@@ -698,10 +721,10 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date_time DATETIME DEFAULT NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("CREATE TABLE " + table_name + " (transaction_details VARCHAR(100), date DATE, time TIME );"));
         prep_statement->executeUpdate();
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Created");
         prep_statement->executeUpdate();
 
@@ -760,7 +783,7 @@ void Account ::remove_accounts(sql ::Connection *connection, int account_number)
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Deleted");
         prep_statement->executeUpdate();
 
@@ -819,7 +842,7 @@ void Account ::Qt_remove_accounts(sql ::Connection *connection, int account_numb
         std ::string table_name = "NO";
         table_name.append(std::to_string(account_number));
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, NOW() );"));
+        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Deleted");
         prep_statement->executeUpdate();
 
@@ -908,7 +931,7 @@ std ::string BANK ::retrieve_hashed_password(sql ::Connection *connection, int a
 
         if (!result->next())
         {
-            std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+            std ::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std ::endl;
             return "";
         }
 
@@ -941,7 +964,7 @@ std ::string BANK ::Qt_retrieve_hashed_password(sql ::Connection *connection, in
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our data, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
 
             return "";
         }
@@ -974,7 +997,7 @@ std ::string BANK ::retrieve_adm_hashed_password(sql ::Connection *connection, i
 
         if (!result->next())
         {
-            std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+            std ::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std ::endl;
             return "";
         }
 
@@ -1006,7 +1029,7 @@ std ::string BANK ::Qt_retrieve_adm_hashed_password(sql ::Connection *connection
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Warning!", "The Account you enter doesn't exist in our data, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
 
             return "";
         }
@@ -1327,8 +1350,8 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
             while (result->next())
             {
                 QList<QTableWidgetItem *> items;
-                items << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
-                      << new QTableWidgetItem(QString::number(result->getInt("account_number")))
+                items << new QTableWidgetItem(QString::number(result->getInt("account_number")))
+                      << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
                       << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
                       << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
                       << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))

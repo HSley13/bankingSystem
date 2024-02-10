@@ -356,8 +356,8 @@ void client_main_window::confirm_button_func()
     email1.clear();
     address1.clear();
     date_birth1.clear();
-    password->clear();
-    password_confirmation->clear();
+    password1.clear();
+    password_confirmation1.clear();
 
     insert_national_ID->clear();
     insert_last_name->clear();

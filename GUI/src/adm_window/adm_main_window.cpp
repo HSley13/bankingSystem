@@ -107,6 +107,7 @@ void adm_main_window::confirm_login_func()
     insert_adm_password->setStyleSheet("border: 1px solid gray");
 
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
+    hide();
 
     adm_option_main_window *new_window = new adm_option_main_window;
 

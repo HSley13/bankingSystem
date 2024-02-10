@@ -28,7 +28,7 @@
         ------- accounts
         CREATE TABLE accounts
         (
-            account_number INT PRIMARY KEY AUTO_INCREMENT,
+            account_number INT AUTO_INCREMENT PRIMARY KEY,
             national_ID VARCHAR(255) NOT NULL UNIQUE,
             first_name VARCHAR(255),
             last_name VARCHAR(1000),
@@ -40,8 +40,8 @@
             interest_rate DECIMAL(5,2),
             initial_timestamp DATETIME,
             borrowed_money DECIMAL(20,5) DEFAULT 0,
-            initial_borrowed_money_timestamp DATETIME,
-        )AUTO_INCREMENT = 1000000000;
+            initial_borrowed_money_timestamp DATETIME
+        ) AUTO_INCREMENT = 1000000000;
 
         ------- transactions
         CREATE TABLE transactions
@@ -123,6 +123,13 @@
                 END IF;
             END;
 
+        ------- new_borrowal
+        CREATE TRIGGER new_borrowal AFTER INSERT ON borrowal_record FOR EACH ROW
+            BEGIN
+                    UPDATE accounts SET balance = balance - NEW.borrowed_amount, initial_timestamp = NOW()
+                    WHERE account_number = NEW.account_number;
+            END;
+
 
         *************** ALL THE PROCEDURES ***************
         ------- update_and_log_name
@@ -138,7 +145,7 @@
 
                     SET @table_name = CONCAT('NO', account_number1);
                     SET @transaction_details = CONCAT('Name changed to ', new_first_name);
-                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, CURDATE(), CURTIME());');
 
                     PREPARE stmt FROM @sql_statement;
                     EXECUTE stmt USING @transaction_details;
@@ -159,7 +166,7 @@
 
                     SET @table_name = CONCAT('NO', account_number1);
                     SET @transaction_details = CONCAT('Email changed to ', new_email);
-                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, CURDATE(), CURTIME());');
 
                     PREPARE stmt FROM @sql_statement;
                     EXECUTE stmt USING @transaction_details;
@@ -168,7 +175,7 @@
             END;
 
         ------- update_and_log_address
-        CREATE PROCEDURE update_and_log_address (IN account_number1, IN new_address VARCHAR(255))
+        CREATE PROCEDURE update_and_log_address (IN account_number1 INT, IN new_address VARCHAR(255))
             BEGIN
                 DECLARE old_address VARCHAR(255);
 
@@ -180,7 +187,7 @@
 
                     SET @table_name = CONCAT('NO', account_number1);
                     SET @transaction_details = CONCAT('Address changed to ', new_address);
-                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, CURDATE(), CURTIME());');
 
                     PREPARE stmt FROM @sql_statement;
                     EXECUTE stmt USING @transaction_details;
@@ -189,7 +196,7 @@
             END;
 
         ------- update_and_log_phone_number
-        CREATE PROCEDURE update_and_log_phone_number (IN account_number1, IN new_phone_number VARCHAR(255))
+        CREATE PROCEDURE update_and_log_phone_number (IN account_number1 INT, IN new_phone_number VARCHAR(255))
             BEGIN
                 DECLARE old_phone_number INT;
 
@@ -201,7 +208,7 @@
 
                     SET @table_name = CONCAT('NO', account_number1);
                     SET @transaction_details = CONCAT('Phone Number changed to ', new_phone_number);
-                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, NOW());');
+                    SET @sql_statement = CONCAT('INSERT INTO ', @table_name, ' VALUES (?, CURDATE(), CURTIME());');
 
                     PREPARE stmt FROM @sql_statement;
                     EXECUTE stmt USING @transaction_details;
@@ -313,12 +320,10 @@
 
         ------- apply_interest_rate_to_balance
         CREATE EVENT apply_interest_rate_to_balance
-        ON EVERY 1 DAY//MONTH
+        ON SCHEDULE EVERY 1 DAY | Month
         STARTS CURRENT_TIMESTAMP
         DO
-        BEGIN
-            UPDATE accounts SET balance = (balance * interest_rate) + balance;
-        END;
+        UPDATE accounts SET balance = (balance * interest_rate) + balance;
 */
 
 // TODO LIST
@@ -348,9 +353,9 @@ int main(int argc, const char **argv)
 
         int adm_options, options, options1, options2, options3, options4;
 
-        std ::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp;
+        std ::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date;
 
-        int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3;
+        int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3, choice;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate, amount_to_borrow, amount_to_return, borrowal_interest_rate;
 
@@ -661,7 +666,9 @@ int main(int argc, const char **argv)
 
                             std ::cout << "8. Transaction History" << std ::endl;
 
-                            std ::cout << "9. Delete Account" << std ::endl;
+                            std ::cout << "9. Specific Transaction History" << std ::endl;
+
+                            std ::cout << "10. Delete Account" << std ::endl;
 
                             std ::cout << "0. Return to the Previous Menu" << std ::endl;
 
@@ -767,9 +774,6 @@ int main(int argc, const char **argv)
 
                                 do
                                 {
-                                    if (!BANK ::authentification_message(connection, account_number, hash_password))
-                                        break;
-
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
@@ -823,9 +827,6 @@ int main(int argc, const char **argv)
 
                                 do
                                 {
-                                    if (!BANK ::authentification_message(connection, account_number, hash_password))
-                                        break;
-
                                     std ::cout << "What is your Password: " << std ::endl;
                                     std ::cout << "You have 3 Chances" << std ::endl;
 
@@ -1409,7 +1410,56 @@ int main(int argc, const char **argv)
 
                                 break;
 
-                            case 9: // Delete an Account
+                            case 9: // Relative Transaction History
+                                if (!BANK ::authentification_message(connection, account_number, hash_password))
+                                    break;
+
+                                do
+                                {
+                                    std ::cout << "What is your Password: " << std ::endl;
+                                    std ::cout << "You have 3 Chances" << std ::endl;
+
+                                    std ::cin >> password;
+                                    std ::cout << std ::endl;
+
+                                    if (BANK ::verifying_password(password, hash_password))
+                                    {
+                                        std ::cout << "Enter the relative Date ( 2024-01-31 ): " << std ::endl;
+                                        std ::cin >> date;
+                                        std ::cout << std ::endl;
+
+                                        std ::cout << "0. Display All Transactions occured BEFORE the selected Date" << std ::endl;
+                                        std ::cout << "1. Display All Transactions occured AFTER the selected Date" << std ::endl;
+                                        std ::cout << "2. Display All Transactions occured ONLY ON the selected Date" << std ::endl;
+                                        std ::cout << std ::endl;
+
+                                        std ::cin >> choice;
+                                        std ::endl;
+
+                                        if (choice != 0 && choice != 1 && choice != 2)
+                                        {
+                                            std ::cout << "INVALID ENTER OPTION, PLEASE CHOOSE BETWEEN 1, 2 AND 3" << std ::endl;
+
+                                            break;
+                                        }
+
+                                        Transactions ::display_specific_transactions_history(connection, account_number, date, choice);
+
+                                        break;
+                                    }
+
+                                    password.clear();
+
+                                    std ::cout << "Incorrect password. Chances left: " << k - 1 << std ::endl;
+                                    k--;
+
+                                } while (k);
+
+                                k = 3;
+
+                                break;
+
+                            case 10: // Delete an Account
                                 if (!BANK ::authentification_message(connection, account_number, hash_password))
                                     break;
 

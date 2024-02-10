@@ -395,8 +395,8 @@ option_main_window::option_main_window(QWidget *parent)
         vbox6->setAlignment(Qt::AlignCenter);
 
         return_borrowal_widget->setLayout(vbox6);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
         transaction_history_widget = new QWidget();
         transaction_history_widget->setWindowTitle("Transaction History");
 
@@ -460,9 +460,9 @@ option_main_window::option_main_window(QWidget *parent)
                 { selected_date = calendar->date(); });
 
         choice = new QComboBox(this);
-        choice->addItem("All Before");
-        choice->addItem("All After");
-        choice->addItem("Only");
+        choice->addItem("Display All Transactions occured BEFORE the selected Date");
+        choice->addItem("Display All Transactions occured AFTER the selected Date");
+        choice->addItem("Display All Transactions occured ONLY on the selected Date");
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -784,7 +784,7 @@ void option_main_window::confirm_button_borrowal()
         {
                 password_borr->setStyleSheet("border: 1px solid red");
 
-                QMessageBox::warning(nullptr, "Transfer", "Password Incorrect");
+                QMessageBox::warning(nullptr, "Borrow", "Password Incorrect");
 
                 return;
         }
@@ -957,11 +957,7 @@ void option_main_window::confirm_button_specific_transaction_history()
         int account_number = specific_account_number_transac->text().toInt();
         std ::string password = specific_password_transac->text().toStdString();
         QString date = selected_date.toString(Qt::ISODate);
-        QString selected_choice = choice->currentText();
-
-        // QString info = "Date: " + date + " Choice: " + QString::number(selected_choice) + "";
-
-        // QMessageBox::information(this, "OK", info);
+        int selected_choice = choice->currentIndex();
 
         connection_details ID;
         ID.server = "localhost";
@@ -992,7 +988,10 @@ void option_main_window::confirm_button_specific_transaction_history()
 
         specific_password_transac->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice.toInt());
+        Transactions ::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice);
+
+        std ::cout << date.toStdString() << std ::endl;
+        std ::cout << selected_choice << std ::endl;
 
         specific_account_number_transac->clear();
         specific_password_transac->clear();
