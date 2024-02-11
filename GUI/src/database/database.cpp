@@ -15,6 +15,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QHeaderView>
+#include <QDate>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -478,6 +479,15 @@ void Transactions ::display_specific_transactions_history(sql ::Connection *conn
 {
     try
     {
+        std ::string current_date = QDate::currentDate().toString(Qt::ISODate).toStdString();
+
+        if (current_date < date)
+        {
+            std ::cerr << "The Entered date can't be Greater than the Current Date!!!!" << std ::endl;
+
+            return;
+        }
+
         std ::string sign;
 
         if (choice == 0)
@@ -518,6 +528,15 @@ void Transactions ::Qt_display_specific_transactions_history(sql ::Connection *c
 {
     try
     {
+        std ::string current_date = QDate::currentDate().toString(Qt::ISODate).toStdString();
+
+        if (current_date < date)
+        {
+            QMessageBox::warning(nullptr, "!!!!", "The Entered date can't be Greater than the Current Date !!!!");
+
+            return;
+        }
+
         std ::string sign;
 
         if (choice == 0)
