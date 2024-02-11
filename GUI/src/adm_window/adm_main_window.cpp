@@ -18,7 +18,7 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-adm_main_window ::adm_main_window(QWidget *parent)
+adm_main_window::adm_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle("Administrator");
@@ -74,16 +74,16 @@ void adm_main_window::confirm_login_func()
 {
     int account_number = insert_adm_account_number->text().toInt();
 
-    std ::string password = insert_adm_password->text().toStdString();
+    std::string password = insert_adm_password->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_adm_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_adm_hashed_password(connection, account_number);
 
     if (hashed_password == "")
     {
@@ -94,7 +94,7 @@ void adm_main_window::confirm_login_func()
 
     insert_adm_account_number->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_adm_password->setStyleSheet("border: 1px solid red");
 

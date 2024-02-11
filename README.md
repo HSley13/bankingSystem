@@ -5,10 +5,12 @@
         ----- Download Argon 2 in order to use its library for the password hashing process
         ----- Change the Include Directories Path to find all the preinstalled libraries required to run this project on your PC
         ----- When Running Your Program, Pass your Database's Password as the Second Argument
-        ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account
-        ----- I have also set the Interest rate according to how many days have passed since the last modification in your balance.
+        ----- The Interest Rate works in a way that it updates the Balance everytime there is a change in the latter; By Change I mean New Deposit, New Withdrawal, New Transfer and New Money Recceived from another Account
+        ----- I have also set the Interest rate according to how many days have passed since the last modification occured in your balance.
         ----- If You want to apply the Interest Rate Daily or Monthly for all Accounts, I will leave an SQL Event which will help you doing so. Event Name----> apply_interest_rate_to_balance
         ----- By appliying the Interest Rate Event to your database remember deleting or commenting the //BANK :: apply_interest_rate_to_balance()// function, everywhere I have used it throughout the program
+        -----
+        -----
         -----
         -----
 

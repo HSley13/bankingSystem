@@ -67,7 +67,7 @@ option_main_window::option_main_window(QWidget *parent)
         edit_and_forget = new QPushButton("7. Edit Account Information", this);
         connect(edit_and_forget, &QPushButton::clicked, this, &option_main_window::confirm_button_edit_perso);
 
-        transaction_history = new QPushButton("8. Transaction All History", this);
+        transaction_history = new QPushButton("8. All Transaction History", this);
         connect(transaction_history, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(7); });
 
@@ -413,6 +413,7 @@ option_main_window::option_main_window(QWidget *parent)
         choice->addItem("Display All Transactions occured BEFORE the selected Date");
         choice->addItem("Display All Transactions occured AFTER the selected Date");
         choice->addItem("Display All Transactions occured ONLY on the selected Date");
+        choice->setStyleSheet("color: red;");
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -490,16 +491,16 @@ void option_main_window::back_button_func()
 void option_main_window::confirm_button_balance()
 {
         int account_number = account_number_ba->text().toInt();
-        std ::string password = password_ba->text().toStdString();
+        std::string password = password_ba->text().toStdString();
 
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -510,7 +511,7 @@ void option_main_window::confirm_button_balance()
 
         account_number_ba->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_ba->setStyleSheet("border: 1px solid red");
 
@@ -521,7 +522,7 @@ void option_main_window::confirm_button_balance()
 
         password_ba->setStyleSheet("border: 1px solid gray");
 
-        BANK ::apply_interest_rate_to_balance(connection, account_number);
+        BANK::apply_interest_rate_to_balance(connection, account_number);
 
         Qt_display_balance(connection, account_number);
 
@@ -535,7 +536,7 @@ void option_main_window::confirm_button_balance()
 void option_main_window::confirm_button_deposit()
 {
         int account_number = account_number_de->text().toInt();
-        std ::string password = password_de->text().toStdString();
+        std::string password = password_de->text().toStdString();
         double amount_to_deposit = amount_de->text().toDouble();
 
         connection_details ID;
@@ -543,9 +544,9 @@ void option_main_window::confirm_button_deposit()
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -556,7 +557,7 @@ void option_main_window::confirm_button_deposit()
 
         account_number_de->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_de->setStyleSheet("border: 1px solid red");
 
@@ -567,7 +568,7 @@ void option_main_window::confirm_button_deposit()
 
         password_de->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_deposit(connection, amount_to_deposit, account_number);
+        Transactions::Qt_deposit(connection, amount_to_deposit, account_number);
 
         password.clear();
         hashed_password.clear();
@@ -580,7 +581,7 @@ void option_main_window::confirm_button_deposit()
 void option_main_window::confirm_button_withdrawal()
 {
         int account_number = account_number_with->text().toInt();
-        std ::string password = password_with->text().toStdString();
+        std::string password = password_with->text().toStdString();
         double amount_to_withdraw = amount_with->text().toDouble();
 
         connection_details ID;
@@ -588,9 +589,9 @@ void option_main_window::confirm_button_withdrawal()
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -601,7 +602,7 @@ void option_main_window::confirm_button_withdrawal()
 
         account_number_with->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_with->setStyleSheet("border: 1px solid red");
 
@@ -612,7 +613,7 @@ void option_main_window::confirm_button_withdrawal()
 
         password_with->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_withdrawal(connection, amount_to_withdraw, account_number);
+        Transactions::Qt_withdrawal(connection, amount_to_withdraw, account_number);
 
         password.clear();
         hashed_password.clear();
@@ -625,7 +626,7 @@ void option_main_window::confirm_button_transfer()
 {
         int account_number1 = account_number1_tran->text().toInt();
         int account_number2 = account_number2_tran->text().toInt();
-        std ::string password = password_tran->text().toStdString();
+        std::string password = password_tran->text().toStdString();
         double amount_to_transfer = amount_tran->text().toDouble();
 
         connection_details ID;
@@ -633,9 +634,9 @@ void option_main_window::confirm_button_transfer()
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number1);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number1);
 
         if (hashed_password == "")
         {
@@ -646,7 +647,7 @@ void option_main_window::confirm_button_transfer()
 
         account_number1_tran->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_tran->setStyleSheet("border: 1px solid red");
 
@@ -657,7 +658,7 @@ void option_main_window::confirm_button_transfer()
 
         password_tran->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_transfer(connection, amount_to_transfer, account_number1, account_number2);
+        Transactions::Qt_transfer(connection, amount_to_transfer, account_number1, account_number2);
 
         password.clear();
         hashed_password.clear();
@@ -671,7 +672,7 @@ void option_main_window::confirm_button_transfer()
 void option_main_window::confirm_button_borrowal()
 {
         int account_number = account_number_borr->text().toInt();
-        std ::string password = password_borr->text().toStdString();
+        std::string password = password_borr->text().toStdString();
         double amount_to_borrow = amount_borr->text().toDouble();
 
         double borrowal_interest_rate;
@@ -693,9 +694,9 @@ void option_main_window::confirm_button_borrowal()
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -706,10 +707,10 @@ void option_main_window::confirm_button_borrowal()
 
         account_number_borr->setStyleSheet("border: 1px solid gray");
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
-        std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
+        std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
         if (result->next())
         {
@@ -718,7 +719,7 @@ void option_main_window::confirm_button_borrowal()
                 return;
         }
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_borr->setStyleSheet("border: 1px solid red");
 
@@ -729,14 +730,14 @@ void option_main_window::confirm_button_borrowal()
 
         password_borr->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
+        Transactions::insert_borrowal(connection, account_number, amount_to_borrow, borrowal_interest_rate);
 
-        prep_statement = std ::unique_ptr<sql ::PreparedStatement>(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
+        prep_statement = std::unique_ptr<sql::PreparedStatement>(connection->prepareStatement("INSERT INTO event_schedule (account_number, scheduled_time) VALUES (?, CURRENT_TIMESTAMP + INTERVAL 96 HOUR);"));
         prep_statement->setInt(1, account_number);
 
         prep_statement->executeUpdate();
 
-        Transactions ::Qt_borrow(connection, amount_to_borrow, account_number);
+        Transactions::Qt_borrow(connection, amount_to_borrow, account_number);
 
         password.clear();
         hashed_password.clear();
@@ -749,16 +750,16 @@ void option_main_window::confirm_button_borrowal()
 void option_main_window::confirm_button_return_borrowal()
 {
         int account_number = account_number_ret->text().toInt();
-        std ::string password = password_ret->text().toStdString();
+        std::string password = password_ret->text().toStdString();
 
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -769,7 +770,7 @@ void option_main_window::confirm_button_return_borrowal()
 
         account_number_ret->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_ret->setStyleSheet("border: 1px solid red");
 
@@ -780,15 +781,15 @@ void option_main_window::confirm_button_return_borrowal()
 
         password_ret->setStyleSheet("border: 1px solid gray");
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement_call_update(connection->prepareStatement("CALL update_borrowed_money(?);"));
         prep_statement_call_update->setInt(1, account_number);
 
         prep_statement_call_update->executeUpdate();
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement_select_borrowal(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement_select_borrowal(connection->prepareStatement("SELECT borrowed_amount FROM borrowal_record WHERE account_number = ?;"));
         prep_statement_select_borrowal->setInt(1, account_number);
 
-        std ::unique_ptr<sql ::ResultSet> result(prep_statement_select_borrowal->executeQuery());
+        std::unique_ptr<sql::ResultSet> result(prep_statement_select_borrowal->executeQuery());
 
         double due_returned;
 
@@ -817,17 +818,17 @@ void option_main_window::confirm_button_return_borrowal()
                 }
         }
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_borrowal(connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement_delete_borrowal(connection->prepareStatement("DELETE FROM borrowal_record WHERE account_number = ?;"));
         prep_statement_delete_borrowal->setInt(1, account_number);
 
         prep_statement_delete_borrowal->executeUpdate();
 
-        std ::unique_ptr<sql ::PreparedStatement> prep_statement_delete_event(connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement_delete_event(connection->prepareStatement("DELETE FROM event_schedule WHERE account_number = ?;"));
         prep_statement_delete_event->setInt(1, account_number);
 
         prep_statement_delete_event->executeUpdate();
 
-        Transactions ::insert_transactions(connection, account_number, "New Money Returned, Sum of ", due_returned);
+        Transactions::insert_transactions(connection, account_number, "New Money Returned, Sum of ", due_returned);
 
         QMessageBox::information(this, "Debt paid", "Thanks, You have officially paid your debt and are now allowed to make another one");
 
@@ -850,16 +851,16 @@ void option_main_window::confirm_button_edit_perso()
 void option_main_window::confirm_button_transaction_history()
 {
         int account_number = account_number_transac->text().toInt();
-        std ::string password = password_transac->text().toStdString();
+        std::string password = password_transac->text().toStdString();
 
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -870,7 +871,7 @@ void option_main_window::confirm_button_transaction_history()
 
         account_number_transac->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_transac->setStyleSheet("border: 1px solid red");
 
@@ -881,7 +882,7 @@ void option_main_window::confirm_button_transaction_history()
 
         password_transac->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_display_transactions_history(connection, account_number);
+        Transactions::Qt_display_transactions_history(connection, account_number);
 
         account_number_transac->clear();
         password_transac->clear();
@@ -893,7 +894,7 @@ void option_main_window::confirm_button_transaction_history()
 void option_main_window::confirm_button_specific_transaction_history()
 {
         int account_number = specific_account_number_transac->text().toInt();
-        std ::string password = specific_password_transac->text().toStdString();
+        std::string password = specific_password_transac->text().toStdString();
         QString date = selected_date.toString(Qt::ISODate);
         int selected_choice = choice->currentIndex();
 
@@ -902,9 +903,9 @@ void option_main_window::confirm_button_specific_transaction_history()
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -915,7 +916,7 @@ void option_main_window::confirm_button_specific_transaction_history()
 
         specific_account_number_transac->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 specific_password_transac->setStyleSheet("border: 1px solid red");
 
@@ -926,10 +927,7 @@ void option_main_window::confirm_button_specific_transaction_history()
 
         specific_password_transac->setStyleSheet("border: 1px solid gray");
 
-        Transactions ::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice);
-
-        std ::cout << date.toStdString() << std ::endl;
-        std ::cout << selected_choice << std ::endl;
+        Transactions::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice);
 
         specific_account_number_transac->clear();
         specific_password_transac->clear();
@@ -941,16 +939,16 @@ void option_main_window::confirm_button_specific_transaction_history()
 void option_main_window::confirm_button_delete_account()
 {
         int account_number = account_number_dele->text().toInt();
-        std ::string password = password_dele->text().toStdString();
+        std::string password = password_dele->text().toStdString();
 
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
         ID.password = "sleyHortes1312";
 
-        sql ::Connection *connection = connection_setup(&ID);
+        sql::Connection *connection = connection_setup(&ID);
 
-        std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+        std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
         {
@@ -961,7 +959,7 @@ void option_main_window::confirm_button_delete_account()
 
         account_number_dele->setStyleSheet("border: 1px solid gray");
 
-        if (!BANK ::verifying_password(password, hashed_password))
+        if (!BANK::verifying_password(password, hashed_password))
         {
                 password_dele->setStyleSheet("border: 1px solid red");
 

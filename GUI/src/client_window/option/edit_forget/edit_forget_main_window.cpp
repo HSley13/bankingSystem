@@ -410,19 +410,19 @@ void edit_forget_main_window::back_button_func2()
 void edit_forget_main_window::confirm_change_func()
 {
     int account_number = insert_account_number_change->text().toInt();
-    std ::string password = insert_password_change->text().toStdString();
+    std::string password = insert_password_change->text().toStdString();
 
-    std ::string new_password = insert_new_password_change->text().toStdString();
-    std ::string new_password_confirmation = insert_new_password_confirmation_change->text().toStdString();
+    std::string new_password = insert_new_password_change->text().toStdString();
+    std::string new_password_confirmation = insert_new_password_confirmation_change->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
     if (hashed_password == "")
     {
@@ -433,7 +433,7 @@ void edit_forget_main_window::confirm_change_func()
 
     insert_account_number_change->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_password_change->setStyleSheet("border: 1px solid red");
 
@@ -455,7 +455,7 @@ void edit_forget_main_window::confirm_change_func()
 
     insert_new_password_confirmation_change->setStyleSheet("border: 1px solid gray");
 
-    std ::string new_hash_password = BANK ::hashing_password(new_password);
+    std::string new_hash_password = BANK::hashing_password(new_password);
 
     call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
@@ -476,20 +476,20 @@ void edit_forget_main_window::confirm_forget_func()
 {
     int account_number = insert_account_number_forget->text().toInt();
 
-    std ::string new_password = insert_new_password_forget->text().toStdString();
-    std ::string new_password_confirmation = insert_new_password_confirmation_forget->text().toStdString();
+    std::string new_password = insert_new_password_forget->text().toStdString();
+    std::string new_password_confirmation = insert_new_password_confirmation_forget->text().toStdString();
 
-    std ::string national_ID = insert_national_ID_forget->text().toStdString();
-    std ::string date_birth = insert_date_birth_forget->text().toStdString();
+    std::string national_ID = insert_national_ID_forget->text().toStdString();
+    std::string date_birth = insert_date_birth_forget->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    if (!BANK ::authentification_check(connection, account_number, national_ID, date_birth))
+    if (!BANK::authentification_check(connection, account_number, national_ID, date_birth))
     {
         insert_account_number_forget->setStyleSheet("border: 1px solid red");
         insert_national_ID_forget->setStyleSheet("border: 1px solid red");
@@ -515,7 +515,7 @@ void edit_forget_main_window::confirm_forget_func()
 
     insert_new_password_confirmation_forget->setStyleSheet("border: 1px solid gray");
 
-    std ::string new_hash_password = BANK ::hashing_password(new_password);
+    std::string new_hash_password = BANK::hashing_password(new_password);
 
     call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
@@ -537,18 +537,18 @@ void edit_forget_main_window::confirm_forget_func()
 void edit_forget_main_window::confirm_edit_name_func()
 {
     int account_number = insert_account_number_1->text().toInt();
-    std ::string new_first_name = insert_name->text().toStdString();
-    std ::string new_first_name_confirmation = insert_name_confirmation->text().toStdString();
-    std ::string password = insert_password_1->text().toStdString();
+    std::string new_first_name = insert_name->text().toStdString();
+    std::string new_first_name_confirmation = insert_name_confirmation->text().toStdString();
+    std::string password = insert_password_1->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
         insert_account_number_1->setStyleSheet("border: 1px solid red");
@@ -558,7 +558,7 @@ void edit_forget_main_window::confirm_edit_name_func()
 
     insert_account_number_1->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_password_1->setStyleSheet("border: 1px solid red");
 
@@ -591,7 +591,7 @@ void edit_forget_main_window::confirm_edit_name_func()
 
     insert_name_confirmation->setStyleSheet("border: 1px solid gray");
 
-    std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
+    std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_name(?,?);"));
     prep_statement->setInt(1, account_number);
     prep_statement->setString(2, new_first_name);
 
@@ -613,18 +613,18 @@ void edit_forget_main_window::confirm_edit_name_func()
 void edit_forget_main_window::confirm_edit_email_func()
 {
     int account_number = insert_account_number_2->text().toInt();
-    std ::string new_email = insert_email->text().toStdString();
-    std ::string new_email_confirmation = insert_email_confirmation->text().toStdString();
-    std ::string password = insert_password_2->text().toStdString();
+    std::string new_email = insert_email->text().toStdString();
+    std::string new_email_confirmation = insert_email_confirmation->text().toStdString();
+    std::string password = insert_password_2->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
         insert_account_number_2->setStyleSheet("border: 1px solid red");
@@ -634,7 +634,7 @@ void edit_forget_main_window::confirm_edit_email_func()
 
     insert_account_number_2->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_password_2->setStyleSheet("border: 1px solid red");
 
@@ -667,7 +667,7 @@ void edit_forget_main_window::confirm_edit_email_func()
 
     insert_email_confirmation->setStyleSheet("border: 1px solid gray");
 
-    std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
+    std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_email(?,?);"));
     prep_statement->setInt(1, account_number);
     prep_statement->setString(2, new_email);
 
@@ -679,18 +679,18 @@ void edit_forget_main_window::confirm_edit_email_func()
 void edit_forget_main_window::confirm_edit_address_func()
 {
     int account_number = insert_account_number_3->text().toInt();
-    std ::string new_address = insert_address->text().toStdString();
-    std ::string new_address_confirmation = insert_address_confirmation->text().toStdString();
-    std ::string password = insert_password_3->text().toStdString();
+    std::string new_address = insert_address->text().toStdString();
+    std::string new_address_confirmation = insert_address_confirmation->text().toStdString();
+    std::string password = insert_password_3->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
         insert_account_number_3->setStyleSheet("border: 1px solid red");
@@ -700,7 +700,7 @@ void edit_forget_main_window::confirm_edit_address_func()
 
     insert_account_number_3->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_password_3->setStyleSheet("border: 1px solid red");
 
@@ -733,7 +733,7 @@ void edit_forget_main_window::confirm_edit_address_func()
 
     insert_address_confirmation->setStyleSheet("border: 1px solid gray");
 
-    std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
+    std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_address(?,?);"));
     prep_statement->setInt(1, account_number);
     prep_statement->setString(2, new_address);
 
@@ -745,18 +745,18 @@ void edit_forget_main_window::confirm_edit_address_func()
 void edit_forget_main_window::confirm_edit_phone_number_func()
 {
     int account_number = insert_account_number_4->text().toInt();
-    std ::string new_phone_number = insert_phone_number->text().toStdString();
-    std ::string new_phone_number_confirmation = insert_phone_number_confirmation->text().toStdString();
-    std ::string password = insert_password_4->text().toStdString();
+    std::string new_phone_number = insert_phone_number->text().toStdString();
+    std::string new_phone_number_confirmation = insert_phone_number_confirmation->text().toStdString();
+    std::string password = insert_password_4->text().toStdString();
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hashed_password = BANK ::Qt_retrieve_hashed_password(connection, account_number);
+    std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
         insert_account_number_4->setStyleSheet("border: 1px solid red");
@@ -766,7 +766,7 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
 
     insert_account_number_4->setStyleSheet("border: 1px solid gray");
 
-    if (!BANK ::verifying_password(password, hashed_password))
+    if (!BANK::verifying_password(password, hashed_password))
     {
         insert_password_4->setStyleSheet("border: 1px solid red");
 
@@ -799,7 +799,7 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
 
     insert_phone_number_confirmation->setStyleSheet("border: 1px solid gray");
 
-    std ::unique_ptr<sql ::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
+    std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
     prep_statement->setInt(1, account_number);
     prep_statement->setString(2, new_phone_number);
 

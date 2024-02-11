@@ -8,6 +8,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QGroupBox>
+#include <QDateEdit>
+#include <QComboBox>
 
 class adm_option_main_window : public QMainWindow
 {
@@ -25,6 +27,9 @@ private:
     QLineEdit *wid_5_account_number;
     QLineEdit *wid_6_account_number;
     QLineEdit *wid_7_account_number;
+    QLineEdit *wid_8_account_number;
+
+    QLineEdit *specific_account_number_transac;
 
     QPushButton *button1;
     QPushButton *button2;
@@ -33,14 +38,10 @@ private:
     QPushButton *button5;
     QPushButton *button6;
     QPushButton *button7;
+    QPushButton *button8;
 
-    QPushButton *back_button1;
-    QPushButton *back_button2;
-    QPushButton *back_button3;
-    QPushButton *back_button4;
-    QPushButton *back_button5;
-    QPushButton *back_button6;
-    QPushButton *back_button7;
+    QPushButton *back_button;
+    QPushButton *confirm_button;
 
     QStackedWidget *window_stack;
     QWidget *central_widget;
@@ -51,6 +52,7 @@ private:
     QWidget *wid_5;
     QWidget *wid_6;
     QWidget *wid_7;
+    QWidget *wid_8;
 
     QGroupBox *box_1;
     QGroupBox *box_2;
@@ -59,6 +61,7 @@ private:
     QGroupBox *box_5;
     QGroupBox *box_6;
     QGroupBox *box_7;
+    QGroupBox *box_8;
 
     QHBoxLayout *HBOX_1;
     QHBoxLayout *HBOX_2;
@@ -67,17 +70,14 @@ private:
     QHBoxLayout *HBOX_5;
     QHBoxLayout *HBOX_6;
     QHBoxLayout *HBOX_7;
+    QHBoxLayout *HBOX_8;
+
+    QHBoxLayout *specific_transac_hbox1;
 
     QVBoxLayout *vbox;
 
     QLabel *image_label;
-    QLabel *image_label_1;
-    QLabel *image_label_2;
-    QLabel *image_label_3;
-    QLabel *image_label_4;
-    QLabel *image_label_5;
-    QLabel *image_label_6;
-    QLabel *image_label_7;
+    QLabel *specific_transaction_history_message1;
 
     QVBoxLayout *wid_1_vbox;
     QVBoxLayout *wid_2_vbox;
@@ -86,6 +86,11 @@ private:
     QVBoxLayout *wid_5_vbox;
     QVBoxLayout *wid_6_vbox;
     QVBoxLayout *wid_7_vbox;
+    QVBoxLayout *wid_8_vbox;
+
+    QComboBox *choice;
+    QDateEdit *calendar;
+    QDate selected_date;
 
 private slots:
     void
@@ -96,5 +101,6 @@ private slots:
     void display_people_in_debt();
     void display_specific_accounts_in_debt();
     void display_transactions_history();
+    void display_relative_transactions_history();
     void delete_accounts();
 };

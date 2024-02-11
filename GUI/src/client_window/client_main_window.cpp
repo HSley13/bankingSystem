@@ -20,7 +20,7 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-client_main_window ::client_main_window(QWidget *parent)
+client_main_window::client_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
     window_stack = new QStackedWidget();
@@ -305,12 +305,14 @@ void client_main_window::confirm_button_func()
         {
             insert_balance->setStyleSheet("border: 1px solid red");
             QMessageBox::warning(this, "Balance XXX", "Insufficient Balance, Enter an amount >= 100");
+
             return;
         }
         else
         {
             insert_password_confirmation->setStyleSheet("border: 1px solid red");
             QMessageBox::warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
+
             return;
         }
     }
