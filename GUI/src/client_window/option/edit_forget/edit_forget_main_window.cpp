@@ -43,8 +43,8 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
             { window_stack->setCurrentIndex(3); });
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/edit.jpeg");
-    image_label->setPixmap(image.scaled(300, 300, Qt::KeepAspectRatio));
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/password.jpeg");
+    image_label->setPixmap(image.scaled(500, 300, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
     VBOX = new QVBoxLayout(central_widget);
@@ -74,16 +74,16 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     connect(phone_number_button, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(7); });
 
-    QLabel *image_label_0 = new QLabel(this);
-    QPixmap image_0("/Users/test/Documents/banking_system/GUI/src/ressources/bank18.jpeg");
-    image_label_0->setPixmap(image_0.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_0->setScaledContents(true);
-
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func);
 
+    QLabel *image_label_1 = new QLabel(this);
+    QPixmap image_1("/Users/test/Documents/banking_system/GUI/src/ressources/edit.jpeg");
+    image_label_1->setPixmap(image_1.scaled(500, 300, Qt::KeepAspectRatio));
+    image_label_1->setScaledContents(true);
+
     vbox_1 = new QVBoxLayout();
-    vbox_1->addWidget(image_label_0, Qt::AlignCenter);
+    VBOX->addWidget(image_label_1, Qt::AlignCenter);
     vbox_1->addWidget(name_button, Qt::AlignCenter);
     vbox_1->addWidget(email_button, Qt::AlignCenter);
     vbox_1->addWidget(address_button, Qt::AlignCenter);
@@ -129,13 +129,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func2);
 
-    QLabel *image_label_1 = new QLabel(this);
-    QPixmap image_1("/Users/test/Documents/banking_system/GUI/src/ressources/edit_name.jpeg");
-    image_label_1->setPixmap(image_1.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_1->setScaledContents(true);
-
     vbox_4 = new QVBoxLayout();
-    vbox_4->addWidget(image_label_1, Qt::AlignCenter);
     vbox_4->addLayout(edit_hbox_0, Qt::AlignCenter);
     vbox_4->addLayout(edit_hbox_1, Qt::AlignCenter);
     vbox_4->addLayout(edit_hbox_2, Qt::AlignCenter);
@@ -181,13 +175,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func2);
 
-    QLabel *image_label_2 = new QLabel(this);
-    QPixmap image_2("/Users/test/Documents/banking_system/GUI/src/ressources/edit_email.jpeg");
-    image_label_2->setPixmap(image_2.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_2->setScaledContents(true);
-
     vbox_5 = new QVBoxLayout();
-    vbox_5->addWidget(image_label_2, Qt::AlignCenter);
     vbox_5->addLayout(edit_email_hbox_0, Qt::AlignCenter);
     vbox_5->addLayout(edit_email_hbox_1, Qt::AlignCenter);
     vbox_5->addLayout(edit_email_hbox_2, Qt::AlignCenter);
@@ -233,13 +221,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func2);
 
-    QLabel *image_label_3 = new QLabel(this);
-    QPixmap image_3("/Users/test/Documents/banking_system/GUI/src/ressources/edit_address.jpeg");
-    image_label_3->setPixmap(image_3.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_3->setScaledContents(true);
-
     vbox_6 = new QVBoxLayout();
-    vbox_6->addWidget(image_label_3, Qt::AlignCenter);
     vbox_6->addLayout(edit_address_hbox_0, Qt::AlignCenter);
     vbox_6->addLayout(edit_address_hbox_1, Qt::AlignCenter);
     vbox_6->addLayout(edit_address_hbox_2, Qt::AlignCenter);
@@ -285,13 +267,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func2);
 
-    QLabel *image_label_4 = new QLabel(this);
-    QPixmap image_4("/Users/test/Documents/banking_system/GUI/src/ressources/phone_number.jpeg");
-    image_label_4->setPixmap(image_4.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_4->setScaledContents(true);
-
     vbox_7 = new QVBoxLayout();
-    vbox_7->addWidget(image_label_4, Qt::AlignCenter);
     vbox_7->addLayout(edit_phone_number_hbox_0, Qt::AlignCenter);
     vbox_7->addLayout(edit_phone_number_hbox_1, Qt::AlignCenter);
     vbox_7->addLayout(edit_phone_number_hbox_2, Qt::AlignCenter);
@@ -339,13 +315,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func);
 
-    QLabel *image_label_5 = new QLabel(this);
-    QPixmap image_5("/Users/test/Documents/banking_system/GUI/src/ressources/change_password.jpeg");
-    image_label_5->setPixmap(image_5.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_5->setScaledContents(true);
-
     vbox_2 = new QVBoxLayout();
-    vbox_2->addWidget(image_label_5, Qt::AlignCenter);
     vbox_2->addLayout(change_hbox_1, Qt::AlignCenter);
     vbox_2->addLayout(change_hbox_2, Qt::AlignCenter);
     vbox_2->addLayout(change_hbox_3, Qt::AlignCenter);
@@ -398,13 +368,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func);
 
-    QLabel *image_label_6 = new QLabel(this);
-    QPixmap image_6("/Users/test/Documents/banking_system/GUI/src/ressources/forget_password.webp");
-    image_label_6->setPixmap(image_6.scaled(300, 300, Qt::KeepAspectRatio));
-    image_label_6->setScaledContents(true);
-
     vbox_3 = new QVBoxLayout();
-    vbox_3->addWidget(image_label_6, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_1, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_2, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_3, Qt::AlignCenter);

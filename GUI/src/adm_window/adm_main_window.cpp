@@ -59,7 +59,7 @@ adm_main_window ::adm_main_window(QWidget *parent)
     box->setFixedSize(500, 300);
 
     image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank11.png");
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/adm.jpeg");
     image_label->setPixmap(image.scaled(300, 300, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 

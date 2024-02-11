@@ -35,11 +35,6 @@ client_main_window ::client_main_window(QWidget *parent)
 
     central_widget = new QWidget(this);
 
-    QLabel *welcome = new QLabel("WELCOME TO THE CLIENTS' WINDOW", this);
-    welcome->setStyleSheet("font-family: Zapfino;"
-                           "font: bold italic 20px;"
-                           "font-size: 20;");
-
     create_account = new QPushButton("1. New to our Bank and Would like to Create an Account", this);
     connect(create_account, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(1); });
@@ -52,12 +47,11 @@ client_main_window ::client_main_window(QWidget *parent)
             { window_stack->setCurrentIndex(2); });
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/vault1.jpeg");
-    image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/client.jpeg");
+    image_label->setPixmap(image.scaled(600, 600, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
     vbox = new QVBoxLayout();
-    vbox->addWidget(welcome, 2, Qt::AlignCenter);
     vbox->addWidget(image_label, 2, Qt::AlignCenter);
     vbox->addWidget(create_account, Qt::AlignCenter);
     vbox->addWidget(account_inquiry, Qt::AlignCenter);

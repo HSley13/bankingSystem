@@ -32,7 +32,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         central_widget->resize(600, 300);
 
         image_label = new QLabel(this);
-        QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank2.jpeg");
+        QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/adm_option.jpeg");
         image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
         image_label->setScaledContents(true);
 
@@ -118,13 +118,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         box_1->setLayout(wid_1_vbox);
         box_1->setFixedSize(500, 300);
 
-        image_label_1 = new QLabel(this);
-        QPixmap image_1("/Users/test/Documents/banking_system/GUI/src/ressources/login.png");
-        image_label_1->setPixmap(image_1.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_1->setScaledContents(true);
-
         HBOX_1 = new QHBoxLayout();
-        HBOX_1->addWidget(image_label_1);
         HBOX_1->addWidget(box_1);
 
         wid_1->setLayout(HBOX_1);
@@ -143,30 +137,32 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
 
         QLabel *message_2 = new QLabel("Are sure you want to display The Accounts Table?", this);
 
-        image_label_2 = new QLabel(this);
-        QPixmap image_2("/Users/test/Documents/banking_system/GUI/src/ressources/bank5.jpeg");
-        image_label_2->setPixmap(image_2.scaled(500, 500, Qt::KeepAspectRatio));
-        image_label_2->setScaledContents(true);
-
         wid_2_vbox = new QVBoxLayout();
-        wid_2_vbox->addWidget(image_label_2, Qt::AlignCenter);
-        wid_2_vbox->addWidget(message_2, Qt::AlignCenter);
-        wid_2_vbox->addWidget(wid_2_button, Qt::AlignCenter);
-        wid_2_vbox->addWidget(back_button2, Qt::AlignCenter | Qt::AlignBottom);
-        wid_2_vbox->setAlignment(Qt::AlignCenter);
+        wid_2_vbox->addWidget(message_2);
+        wid_2_vbox->addWidget(wid_2_button);
+        wid_2_vbox->addWidget(back_button2);
 
-        wid_2->setLayout(wid_2_vbox);
+        box_2 = new QGroupBox();
+        box_2->setLayout(wid_2_vbox);
+        box_2->setFixedSize(500, 300);
+
+        HBOX_2 = new QHBoxLayout();
+        HBOX_2->addWidget(box_2);
+
+        wid_2->setLayout(HBOX_2);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         wid_3 = new QWidget();
         wid_3->setWindowTitle("Display Specific Account through the Account number");
         wid_3->resize(600, 300);
 
-        QLabel *wid_3_label = new QLabel("Enter the Account You want to display", this);
+        QLabel *wid_3_label = new QLabel("DISPLAY SPECIFIC ACCOUNT INFO", this);
         wid_3_account_number = new QLineEdit(this);
         QHBoxLayout *wid_3_hbox = new QHBoxLayout();
         wid_3_hbox->addWidget(wid_3_label, Qt::AlignCenter);
         wid_3_hbox->addWidget(wid_3_account_number, Qt::AlignCenter);
+
+        QLabel *message_3 = new QLabel("Are sure you want to display the entered Account?", this);
 
         QPushButton *wid_3_button = new QPushButton("Confirm", this);
         wid_3_button->setStyleSheet("color: black;"
@@ -176,22 +172,20 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         back_button3 = new QPushButton("Previous Menu", this);
         connect(back_button3, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        image_label_3 = new QLabel(this);
-        QPixmap image_3("/Users/test/Documents/banking_system/GUI/src/ressources/bank18.jpeg");
-        image_label_3->setPixmap(image_3.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_3->setScaledContents(true);
-
-        QLabel *message_3 = new QLabel("Are sure you want to display the entered Account?", this);
-
         wid_3_vbox = new QVBoxLayout();
-        wid_3_vbox->addWidget(image_label_3, Qt::AlignCenter);
-        wid_3_vbox->addLayout(wid_3_hbox, Qt::AlignCenter);
-        wid_3_vbox->addWidget(message_3, Qt::AlignCenter);
-        wid_3_vbox->addWidget(wid_3_button, Qt::AlignCenter);
-        wid_3_vbox->addWidget(back_button3, Qt::AlignCenter | Qt::AlignBottom);
-        wid_3_vbox->setAlignment(Qt::AlignCenter);
+        wid_3_vbox->addLayout(wid_3_hbox);
+        wid_3_vbox->addWidget(message_3);
+        wid_3_vbox->addWidget(wid_3_button);
+        wid_3_vbox->addWidget(back_button3);
 
-        wid_3->setLayout(wid_3_vbox);
+        box_3 = new QGroupBox();
+        box_3->setLayout(wid_3_vbox);
+        box_3->setFixedSize(500, 300);
+
+        HBOX_3 = new QHBoxLayout();
+        HBOX_3->addWidget(box_3);
+
+        wid_3->setLayout(HBOX_3);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         wid_4 = new QWidget();
@@ -208,31 +202,30 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
 
         QLabel *message_4 = new QLabel("Are sure you want to display all People in bebt??", this);
 
-        image_label_4 = new QLabel(this);
-        QPixmap image_4("/Users/test/Documents/banking_system/GUI/src/ressources/bank10.jpeg");
-        image_label_4->setPixmap(image_4.scaled(500, 500, Qt::KeepAspectRatio));
-        image_label_4->setScaledContents(true);
-
         wid_4_vbox = new QVBoxLayout();
-        wid_4_vbox->addWidget(image_label_4, Qt::AlignCenter);
         wid_4_vbox->addWidget(message_4, Qt::AlignCenter);
         wid_4_vbox->addWidget(wid_4_button, Qt::AlignCenter);
         wid_4_vbox->addWidget(back_button4, Qt::AlignCenter | Qt::AlignBottom);
-        wid_4_vbox->setAlignment(Qt::AlignCenter);
 
-        wid_4->setLayout(wid_4_vbox);
+        box_4 = new QGroupBox();
+        box_4->setLayout(wid_4_vbox);
+        box_4->setFixedSize(500, 300);
+
+        HBOX_4 = new QHBoxLayout();
+        HBOX_4->addWidget(box_4);
+
+        wid_4->setLayout(HBOX_4);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         wid_5 = new QWidget();
         wid_5->setWindowTitle("Display Specific Person in Debt through the Account_number");
         wid_5->resize(600, 300);
 
-        QLabel *wid_5_label = new QLabel("Enter the Account You want to display to see their debt", this);
+        QLabel *wid_5_label = new QLabel("DISPLAY SPECIFIC ACCOUNT IN DEBT", this);
         wid_5_account_number = new QLineEdit(this);
         QHBoxLayout *wid_5_hbox = new QHBoxLayout();
         wid_5_hbox->addWidget(wid_5_label, Qt::AlignCenter);
         wid_5_hbox->addWidget(wid_5_account_number, Qt::AlignCenter);
-        wid_5_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_5_button = new QPushButton("Confirm", this);
         wid_5_button->setStyleSheet("color: black;"
@@ -242,34 +235,33 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         back_button5 = new QPushButton("Previous Menu", this);
         connect(back_button5, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        image_label_5 = new QLabel(this);
-        QPixmap image_5("/Users/test/Documents/banking_system/GUI/src/ressources/bank6.jpeg");
-        image_label_5->setPixmap(image_5.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_5->setScaledContents(true);
-
         QLabel *message_5 = new QLabel("Are sure you want to display the entered Account?", this);
 
         wid_5_vbox = new QVBoxLayout();
-        wid_5_vbox->addWidget(image_label_5, Qt::AlignCenter);
         wid_5_vbox->addLayout(wid_5_hbox, Qt::AlignCenter);
         wid_5_vbox->addWidget(message_5, Qt::AlignCenter);
         wid_5_vbox->addWidget(wid_5_button, Qt::AlignCenter);
         wid_5_vbox->addWidget(back_button5, Qt::AlignCenter | Qt::AlignBottom);
-        wid_5_vbox->setAlignment(Qt::AlignCenter);
 
-        wid_5->setLayout(wid_5_vbox);
+        box_5 = new QGroupBox();
+        box_5->setLayout(wid_5_vbox);
+        box_5->setFixedSize(500, 300);
+
+        HBOX_5 = new QHBoxLayout();
+        HBOX_5->addWidget(box_5);
+
+        wid_5->setLayout(HBOX_5);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         wid_6 = new QWidget();
         wid_6->setWindowTitle("Display all Transactions History for an Account_number");
         wid_6->resize(600, 300);
 
-        QLabel *wid_6_label = new QLabel("Enter the Account You want to Display all Transactions History for", this);
+        QLabel *wid_6_label = new QLabel("DISPLAY TRANSACTION HISTORY", this);
         wid_6_account_number = new QLineEdit(this);
         QHBoxLayout *wid_6_hbox = new QHBoxLayout();
         wid_6_hbox->addWidget(wid_6_label, Qt::AlignCenter);
         wid_6_hbox->addWidget(wid_6_account_number, Qt::AlignCenter);
-        wid_6_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_6_button = new QPushButton("Confirm", this);
         wid_6_button->setStyleSheet("color: black;"
@@ -279,34 +271,33 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         back_button6 = new QPushButton("Previous Menu", this);
         connect(back_button6, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        image_label_6 = new QLabel(this);
-        QPixmap image_6("/Users/test/Documents/banking_system/GUI/src/ressources/bank13.jpeg");
-        image_label_6->setPixmap(image_6.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_6->setScaledContents(true);
-
-        QLabel *message_6 = new QLabel("Are sure you want to display the Transaction History for the entered Account?", this);
+        QLabel *message_6 = new QLabel("Are sure you want to display the Transaction History?", this);
 
         wid_6_vbox = new QVBoxLayout();
-        wid_6_vbox->addWidget(image_label_6, Qt::AlignCenter);
         wid_6_vbox->addLayout(wid_6_hbox, Qt::AlignCenter);
         wid_6_vbox->addWidget(message_6, Qt::AlignCenter);
         wid_6_vbox->addWidget(wid_6_button, Qt::AlignCenter);
         wid_6_vbox->addWidget(back_button6, Qt::AlignCenter | Qt::AlignBottom);
-        wid_6_vbox->setAlignment(Qt::AlignCenter);
 
-        wid_6->setLayout(wid_6_vbox);
+        box_6 = new QGroupBox();
+        box_6->setLayout(wid_6_vbox);
+        box_6->setFixedSize(500, 300);
+
+        HBOX_6 = new QHBoxLayout();
+        HBOX_6->addWidget(box_6);
+
+        wid_6->setLayout(HBOX_6);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         wid_7 = new QWidget();
         wid_7->setWindowTitle("Remove Accounts through the Account_number");
         wid_7->resize(600, 300);
 
-        QLabel *wid_7_label = new QLabel("Enter the Account You want to delete", this);
+        QLabel *wid_7_label = new QLabel("DELETE ACCOUNT", this);
         wid_7_account_number = new QLineEdit(this);
         QHBoxLayout *wid_7_hbox = new QHBoxLayout();
         wid_7_hbox->addWidget(wid_7_label, Qt::AlignCenter);
         wid_7_hbox->addWidget(wid_7_account_number, Qt::AlignCenter);
-        wid_7_hbox->setAlignment(Qt::AlignCenter);
 
         QPushButton *wid_7_button = new QPushButton("Confirm", this);
         wid_7_button->setStyleSheet("color: black;"
@@ -316,22 +307,22 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         back_button7 = new QPushButton("Previous Menu", this);
         connect(back_button7, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        image_label_7 = new QLabel(this);
-        QPixmap image_7("/Users/test/Documents/banking_system/GUI/src/ressources/bank19.png");
-        image_label_7->setPixmap(image_7.scaled(300, 300, Qt::KeepAspectRatio));
-        image_label_7->setScaledContents(true);
-
         QLabel *message_7 = new QLabel("Are sure you want to delete the entered Account?", this);
 
         wid_7_vbox = new QVBoxLayout();
-        wid_7_vbox->addWidget(image_label_7, Qt::AlignCenter);
         wid_7_vbox->addLayout(wid_7_hbox, Qt::AlignCenter);
         wid_7_vbox->addWidget(message_7, Qt::AlignCenter);
         wid_7_vbox->addWidget(wid_7_button, Qt::AlignCenter);
         wid_7_vbox->addWidget(back_button7, Qt::AlignCenter | Qt::AlignBottom);
-        wid_7_vbox->setAlignment(Qt::AlignCenter);
 
-        wid_7->setLayout(wid_7_vbox);
+        box_7 = new QGroupBox();
+        box_7->setLayout(wid_7_vbox);
+        box_7->setFixedSize(500, 300);
+
+        HBOX_7 = new QHBoxLayout();
+        HBOX_7->addWidget(box_7);
+
+        wid_7->setLayout(HBOX_7);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         window_stack->addWidget(central_widget);

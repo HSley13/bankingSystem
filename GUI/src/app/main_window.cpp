@@ -27,11 +27,6 @@ main_window::main_window(QWidget *parent)
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);
 
-    QLabel *image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/globe_transfer.gif");
-    image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
-    image_label->setScaledContents(true);
-
     name = new QLabel("CROSS-CONTINENTAL TREASUTY BANK", this);
     name->setStyleSheet("font-family: Zapfino;"
                         "font: bold italic 20px;"
@@ -48,6 +43,11 @@ main_window::main_window(QWidget *parent)
     client->setStyleSheet("color: black;"
                           "background-color: beige;");
     connect(client, &QPushButton::clicked, this, &main_window::client_button_clicked);
+
+    QLabel *image_label = new QLabel(this);
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/globe_transfer.gif");
+    image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
+    image_label->setScaledContents(true);
 
     vbox = new QVBoxLayout(central_widget);
     vbox->addWidget(name, 2, Qt ::AlignCenter);
