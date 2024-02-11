@@ -10,7 +10,6 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QStyle>
 #include <QGroupBox>
 #include <QPixmap>
 

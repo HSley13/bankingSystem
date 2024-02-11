@@ -14,12 +14,10 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <QStackedWidget>
-#include <QTableWidgetItem>
 #include <QGroupBox>
 #include <QInputDialog>
 #include <QPixmap>
 #include <QDateEdit>
-#include <QDate>
 #include <QComboBox>
 
 #include <mysql_driver.h>

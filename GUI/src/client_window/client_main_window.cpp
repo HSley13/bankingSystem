@@ -23,6 +23,7 @@ client_main_window ::client_main_window(QWidget *parent)
     : QMainWindow(parent)
 {
     window_stack = new QStackedWidget();
+    window_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setCentralWidget(window_stack);
     setStyleSheet("color: beige;"
                   "font-family: Herculanum;"
@@ -30,7 +31,7 @@ client_main_window ::client_main_window(QWidget *parent)
                   "font: bold italic 14px;"
                   "background-color: black;");
     setWindowTitle("Client");
-    resize(600, 600);
+    resize(500, 500);
 
     central_widget = new QWidget(this);
 
@@ -51,7 +52,7 @@ client_main_window ::client_main_window(QWidget *parent)
             { window_stack->setCurrentIndex(2); });
 
     QLabel *image_label = new QLabel(this);
-    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/bank14.jpeg");
+    QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/vault1.jpeg");
     image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
@@ -122,6 +123,7 @@ client_main_window ::client_main_window(QWidget *parent)
     QTextEdit *interest_rate_info = new QTextEdit(this);
     interest_rate_info->setPlainText(info_text);
     interest_rate_info->setReadOnly(true);
+
     insert_balance = new QLineEdit(this);
 
     hbox8 = new QHBoxLayout();

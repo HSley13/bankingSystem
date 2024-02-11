@@ -7,9 +7,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QTableWidget>
 #include <QStackedWidget>
-#include <QTableWidgetItem>
 
 class edit_forget_main_window : public QMainWindow
 {

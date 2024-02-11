@@ -54,8 +54,8 @@
            account_number INT PRIMARY KEY,
            borrowed_amount DECIMAL(20, 5),
            interest_rate DECIMAL(5,3),
-           initial_timestamp TIMESTAMP DEFAULT NULL,
-           paid_timestamp TIMESTAMP DEFAULT NULL
+           initial_timestamp TIMESTAMP,
+           paid_timestamp TIMESTAMP
         );
 
         ------- event_schedule

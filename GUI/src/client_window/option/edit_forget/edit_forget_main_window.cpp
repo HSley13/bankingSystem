@@ -8,10 +8,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QTableWidget>
 #include <QStackedWidget>
-#include <QTableWidgetItem>
-#include <QInputDialog>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -77,10 +74,16 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     connect(phone_number_button, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(7); });
 
+    QLabel *image_label_0 = new QLabel(this);
+    QPixmap image_0("/Users/test/Documents/banking_system/GUI/src/ressources/bank18.jpeg");
+    image_label_0->setPixmap(image_0.scaled(300, 300, Qt::KeepAspectRatio));
+    image_label_0->setScaledContents(true);
+
     back_button = new QPushButton("Return to the Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &edit_forget_main_window::back_button_func);
 
     vbox_1 = new QVBoxLayout();
+    vbox_1->addWidget(image_label_0, Qt::AlignCenter);
     vbox_1->addWidget(name_button, Qt::AlignCenter);
     vbox_1->addWidget(email_button, Qt::AlignCenter);
     vbox_1->addWidget(address_button, Qt::AlignCenter);

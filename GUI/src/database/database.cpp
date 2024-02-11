@@ -932,6 +932,7 @@ std ::string BANK ::retrieve_hashed_password(sql ::Connection *connection, int a
         if (!result->next())
         {
             std ::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std ::endl;
+            std ::cout << std ::endl;
             return "";
         }
 
@@ -1343,34 +1344,32 @@ void BANK ::Qt_display_accounts_table(sql ::Connection *connection)
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->isBeforeFirst())
+        int row = table->rowCount();
+
+        while (result->next())
         {
-            int row = table->rowCount();
+            QList<QTableWidgetItem *> items;
 
-            while (result->next())
-            {
-                QList<QTableWidgetItem *> items;
-                items << new QTableWidgetItem(QString::number(result->getInt("account_number")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
-                      << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
+            items << new QTableWidgetItem(QString::number(result->getInt("account_number")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("date_birth")))
+                  << new QTableWidgetItem(QString::number(result->getInt("phone_number")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("email")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("address")))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("interest_rate"))))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("initial_timestamp")));
 
-                table->insertRow(row);
+            table->insertRow(row);
 
-                for (int i = 0; i < items.size(); i++)
-                    table->setItem(row, i, items[i]);
+            for (int i = 0; i < items.size(); i++)
+                table->setItem(row, i, items[i]);
 
-                items.clear();
+            items.clear();
 
-                row++;
-            }
+            row++;
         }
 
         table->resizeColumnsToContents();
@@ -1505,18 +1504,21 @@ void BANK ::display_people_in_debt(sql ::Connection *connection)
 
         std ::unique_ptr<sql ::ResultSet> result(prep_statement->executeQuery());
 
-        if (result->isBeforeFirst())
+        if (!result->next())
         {
-            while (result->next())
-            {
-                std ::cout << "Account Number: " << result->getInt("A") << " | National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
+            std ::cout << "There is no People in Debt" << std ::endl;
+            std ::cout << std ::endl;
 
-                std ::cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
+            return;
+        }
 
-                std ::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << std ::endl;
-                std ::cout << std ::endl;
-                std ::cout << std ::endl;
-            }
+        while (result->next())
+        {
+            std ::cout << "Account Number: " << result->getInt("A") << " | National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
+            std ::cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
+            std ::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << std ::endl;
+            std ::cout << std ::endl;
+            std ::cout << std ::endl;
         }
     }
     catch (const sql ::SQLException &e)
@@ -1562,30 +1564,34 @@ void BANK ::Qt_display_people_in_debt(sql ::Connection *connection)
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (result->isBeforeFirst())
+        if (!result->next())
         {
-            while (result->next())
-            {
-                items << new QTableWidgetItem(QString::number(result->getInt("A")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
-                      << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
-                      << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
+            QMessageBox::information(nullptr, "!!!!!", "There is no People in Debt");
 
-                table->insertRow(row);
+            return;
+        }
 
-                for (int i = 0; i < items.size(); i++)
-                    table->setItem(row, i, items[i]);
+        while (result->next())
+        {
+            items << new QTableWidgetItem(QString::number(result->getInt("A")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("national_ID")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("first_name")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("last_name")))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("balance"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("B"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
+                  << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
 
-                items.clear();
+            table->insertRow(row);
 
-                row++;
-            }
+            for (int i = 0; i < items.size(); i++)
+                table->setItem(row, i, items[i]);
+
+            items.clear();
+
+            row++;
         }
 
         table->resizeColumnsToContents();
@@ -1614,7 +1620,8 @@ void BANK ::display_specific_accounts_in_debt(sql ::Connection *connection, int 
 
         if (!result->next())
         {
-            std ::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std ::endl;
+            std ::cout << "Account " << account_number << " Not in Debt, Verify the Number and try again" << std ::endl;
+
             return;
         }
 

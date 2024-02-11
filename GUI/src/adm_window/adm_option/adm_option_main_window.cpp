@@ -8,8 +8,6 @@
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QMessageBox>
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QPixmap>
 
 #include <mysql_driver.h>

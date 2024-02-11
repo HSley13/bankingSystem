@@ -70,6 +70,20 @@
             "name": "GUI",
             "database": "BankingSystemDatabase",
             "username": "root"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "sql6.freesqldatabase.com",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "online_database",
+            "database": "sql6683296",
+            "username": "sql6683296",
+            "password": "KFaZGMd3kW"
         }
     ]
 }

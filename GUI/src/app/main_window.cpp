@@ -9,7 +9,6 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QVBoxLayout>
-#include <QFont>
 #include <QPixmap>
 #include <QPalette>
 #include <QLinearGradient>
