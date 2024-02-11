@@ -37,7 +37,7 @@ int main(int argc, const char **argv)
 
         int adm_options, options, options1, options2, options3, options4;
 
-        std ::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date;
+        std ::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date, confirmation, confirmation_answer;
 
         int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3, choice;
 
@@ -344,6 +344,27 @@ int main(int argc, const char **argv)
                         } while (password.compare(password_confirmation));
 
                         hash_password = BANK ::hashing_password(password);
+
+                        std ::cout << "National ID: " << national_ID << std ::endl;
+                        std ::cout << "First Name: " << first_name << std ::endl;
+                        std ::cout << "Last Name: " << last_name << std ::endl;
+                        std ::cout << "Date Of Birth: " << date_birth << std ::endl;
+                        std ::cout << "Phone Number: " << phone_number << std ::endl;
+                        std ::cout << "Email: " << email << std ::endl;
+                        std ::cout << "Address: " << address << std ::endl;
+                        std ::cout << "Balance: " << balance << std ::endl;
+                        std ::cout << std ::endl;
+
+                        std ::cout << "Type YES to confirm and NO to cancel: ";
+                        std ::cin >> confirmation_answer;
+
+                        if (confirmation_answer != "YES")
+                        {
+                            std ::cout << "Cancelling..." << std ::endl;
+                            std ::cout << std ::endl;
+
+                            break;
+                        }
 
                         Account ::create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, hash_password);
 

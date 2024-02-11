@@ -13,6 +13,7 @@
 #include <QString>
 #include <QPixmap>
 #include <QLabel>
+#include <QInputDialog>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -285,35 +286,31 @@ void client_main_window::back_button_func()
 
 void client_main_window::confirm_button_func()
 {
-    std ::string national_ID1 = insert_national_ID->text().toStdString();
-    std ::string first_name1 = insert_first_name->text().toStdString();
-    std ::string last_name1 = insert_last_name->text().toStdString();
-    std ::string date_birth1 = insert_date_birth->text().toStdString();
+    std::string national_ID1 = insert_national_ID->text().toStdString();
+    std::string first_name1 = insert_first_name->text().toStdString();
+    std::string last_name1 = insert_last_name->text().toStdString();
+    std::string date_birth1 = insert_date_birth->text().toStdString();
     int phone_number1 = insert_phone_number->text().toInt();
-    std ::string email1 = insert_email->text().toStdString();
-    std ::string address1 = insert_address->text().toStdString();
+    std::string email1 = insert_email->text().toStdString();
+    std::string address1 = insert_address->text().toStdString();
     double balance = insert_balance->text().toDouble();
     int account_number;
 
-    std ::string password1 = insert_password->text().toStdString();
-    std ::string password_confirmation1 = insert_password_confirmation->text().toStdString();
+    std::string password1 = insert_password->text().toStdString();
+    std::string password_confirmation1 = insert_password_confirmation->text().toStdString();
 
-    if (balance < 100 || password1.compare(password_confirmation1))
+    if (balance < 100 || password1 != password_confirmation1)
     {
         if (balance < 100)
         {
             insert_balance->setStyleSheet("border: 1px solid red");
-
-            QMessageBox::warning(this, "Balance XXX", "Unsufficient Balance, Enter an amount >= 100");
-
+            QMessageBox::warning(this, "Balance XXX", "Insufficient Balance, Enter an amount >= 100");
             return;
         }
         else
         {
             insert_password_confirmation->setStyleSheet("border: 1px solid red");
-
             QMessageBox::warning(this, "Password XXX", "Password Confirmation Incorrect, check and try again");
-
             return;
         }
     }
@@ -321,30 +318,62 @@ void client_main_window::confirm_button_func()
     insert_balance->setStyleSheet("border: 1px solid gray");
     insert_password_confirmation->setStyleSheet("border: 1px solid gray");
 
-    double interest_rate;
-
-    if (balance == 100)
-        interest_rate = 0;
-
-    else if (balance > 100 && balance < 500)
+    double interest_rate = 0;
+    if (balance > 100 && balance < 500)
         interest_rate = 0.02;
-
     else if (balance < 1000 && balance >= 500)
         interest_rate = 0.05;
-
-    else
+    else if (balance >= 1000)
         interest_rate = 0.07;
+
+    bool OK;
+
+    QString info = "National ID: " + QString::fromStdString(national_ID1) + "\n"
+                                                                            "First Name: " +
+                   QString::fromStdString(first_name1) + "\n"
+                                                         "Last Name: " +
+                   QString::fromStdString(last_name1) + "\n"
+                                                        "Date of Birth: " +
+                   QString::fromStdString(date_birth1) + "\n"
+                                                         "Phone Number: " +
+                   QString::number(phone_number1) + "\n"
+                                                    "Email: " +
+                   QString::fromStdString(email1) + "\n"
+                                                    "Address: " +
+                   QString::fromStdString(address1) + "\n"
+                                                      "Balance: " +
+                   QString::number(balance) + "\n\n"
+                                              "Type YES to confirm and NO to cancel";
+
+    QString input = QInputDialog::getText(this, "Confirmation", info, QLineEdit::Normal, "", &OK);
+
+    if (input.isEmpty())
+    {
+        QMessageBox::warning(this, "void", "Input Empty");
+
+        return;
+    }
+
+    if (OK && !input.isEmpty())
+    {
+        if (input != "YES")
+        {
+            QMessageBox::warning(this, "Unsufficient amount", "CANCELLING...");
+
+            return;
+        }
+    }
 
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
     ID.password = "sleyHortes1312";
 
-    sql ::Connection *connection = connection_setup(&ID);
+    sql::Connection *connection = connection_setup(&ID);
 
-    std ::string hash_password = BANK ::hashing_password(password1);
+    std::string hash_password = BANK::hashing_password(password1);
 
-    Account ::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1, phone_number1, email1, address1, balance, interest_rate, hash_password);
+    Account::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1, phone_number1, email1, address1, balance, interest_rate, hash_password);
 
     national_ID1.clear();
     last_name1.clear();

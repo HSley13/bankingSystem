@@ -644,6 +644,16 @@ void Account ::create_account(sql ::Connection *connection, int account_number, 
 {
     try
     {
+        QDate birth_date = QDate::fromString(QString::fromStdString(date_birth), Qt::ISODate);
+        QDate current_date = QDate::currentDate();
+
+        if (birth_date.addYears(18) > current_date)
+        {
+            std::cout << "You are Less than 18 years old, You aren't allowed to create an account on your own" << std::endl;
+
+            return;
+        }
+
         if (Account::are_all_same(phone_number))
         {
             std ::cerr << "Enter a valid Phone number where all the digits aren't the same" << std ::endl;
@@ -704,6 +714,16 @@ void Account::Qt_create_account(sql ::Connection *connection, int account_number
 {
     try
     {
+        QDate birth_date = QDate::fromString(QString::fromStdString(date_birth), Qt::ISODate);
+        QDate current_date = QDate::currentDate();
+
+        if (birth_date.addYears(18) > current_date)
+        {
+            QMessageBox::warning(nullptr, "!!!!!", "You are Less than 18 years old, You aren't allowed to create an account on your own");
+
+            return;
+        }
+
         if (Account ::are_all_same(phone_number))
         {
             QMessageBox::warning(nullptr, "Phone Number Error", "Enter a valid Phone number where all the digits aren't the same");
