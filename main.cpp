@@ -35,9 +35,9 @@ int main(int argc, const char **argv)
 
         int adm_options, options, options1, options2, options3, options4;
 
-        std::string first_name, last_name, new_first_name, date_birth, email, new_email, national_ID, address, new_address, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date, confirmation, confirmation_answer;
+        std::string first_name, last_name, new_first_name, new_first_name_confirmation, date_birth, email, new_email, new_email_confirmation, national_ID, address, new_address, new_address_confirmation, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date, confirmation, confirmation_answer;
 
-        int phone_number, new_phone_number, account_number, account_number1, account_number2, k = 3, choice;
+        int phone_number, new_phone_number, new_phone_number_confirmation, account_number, account_number1, account_number2, k = 3, choice;
 
         double balance, amount_to_deposit, amount_to_withdraw, amount_to_transfer, interest_rate, amount_to_borrow, amount_to_return, borrowal_interest_rate;
 
@@ -838,6 +838,19 @@ int main(int argc, const char **argv)
                                                         while (new_first_name.empty())
                                                         {
                                                             std::cout << "Name left Blank, Enter a valid One" << std::endl;
+                                                            std::cin >> new_first_name;
+
+                                                            std::cout << std::endl;
+                                                        }
+
+                                                        std::cout << "Enter the New First Name Confirmation: ";
+                                                        std::cin >> new_first_name_confirmation;
+                                                        std::cout << std::endl;
+
+                                                        while (new_first_name.compare(new_first_name_confirmation))
+                                                        {
+                                                            std::cout << "New first Name Confirmation Incorrect" << std::endl;
+                                                            std::cin >> new_first_name_confirmation;
 
                                                             std::cout << std::endl;
                                                         }
@@ -849,6 +862,7 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         std::cout << "Name changed Successfully" << std::endl;
+                                                        std::cout << std::endl;
 
                                                         password.clear();
 
@@ -886,6 +900,19 @@ int main(int argc, const char **argv)
                                                         while (new_email.empty())
                                                         {
                                                             std::cout << "Email left Blank, Enter a valid One" << std::endl;
+                                                            std::cin >> new_email;
+
+                                                            std::cout << std::endl;
+                                                        }
+
+                                                        std::cout << "Enter the New Email Confirmation: ";
+                                                        std::cin >> new_email_confirmation;
+                                                        std::cout << std::endl;
+
+                                                        while (new_email.compare(new_email_confirmation))
+                                                        {
+                                                            std::cout << "New Email Confirmation Incorrect" << std::endl;
+                                                            std::cin >> new_email_confirmation;
 
                                                             std::cout << std::endl;
                                                         }
@@ -897,6 +924,7 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         std::cout << "Email changed Successfully" << std::endl;
+                                                        std::cout << std::endl;
 
                                                         password.clear();
 
@@ -915,7 +943,7 @@ int main(int argc, const char **argv)
                                                 break;
 
                                             case 3: // Edit address
-                                                if (BANK::authentification_message(connection, account_number, hash_password))
+                                                if (!BANK::authentification_message(connection, account_number, hash_password))
                                                     break;
 
                                                 do
@@ -935,6 +963,19 @@ int main(int argc, const char **argv)
                                                         while (new_address.empty())
                                                         {
                                                             std::cout << "Address left Blank, Enter a valid One" << std::endl;
+                                                            std::cin >> new_address;
+
+                                                            std::cout << std::endl;
+                                                        }
+
+                                                        std::cout << "Enter the New Address Confirmation: ";
+                                                        std::cin >> new_address_confirmation;
+                                                        std::cout << std::endl;
+
+                                                        while (new_address.compare(new_address_confirmation))
+                                                        {
+                                                            std::cout << "New Address Confirmation Incorrect" << std::endl;
+                                                            std::cin >> new_address_confirmation;
 
                                                             std::cout << std::endl;
                                                         }
@@ -948,6 +989,7 @@ int main(int argc, const char **argv)
                                                         password.clear();
 
                                                         std::cout << "Address changed Successfully" << std::endl;
+                                                        std::cout << std::endl;
 
                                                         break;
                                                     }
@@ -981,6 +1023,26 @@ int main(int argc, const char **argv)
                                                         std::cin >> new_phone_number;
                                                         std::cout << std::endl;
 
+                                                        while (Account::are_all_same(new_phone_number))
+                                                        {
+                                                            std::cerr << "Enter a valid Phone number where all the digits aren't the same" << std::endl;
+                                                            std::cin >> new_phone_number;
+
+                                                            std::cout << std::endl;
+                                                        }
+
+                                                        std::cout << "Enter the New Phone Number Confirmation: ";
+                                                        std::cin >> new_phone_number_confirmation;
+                                                        std::cout << std::endl;
+
+                                                        while (new_phone_number != new_phone_number_confirmation)
+                                                        {
+                                                            std::cout << "New Address Confirmation Incorrect" << std::endl;
+                                                            std::cin >> new_phone_number_confirmation;
+
+                                                            std::cout << std::endl;
+                                                        }
+
                                                         std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("CALL update_and_log_phone_number(?,?);"));
                                                         prep_statement->setInt(1, account_number);
                                                         prep_statement->setInt(2, new_phone_number);
@@ -988,6 +1050,7 @@ int main(int argc, const char **argv)
                                                         prep_statement->executeUpdate();
 
                                                         std::cout << "Phone Number changed Successfully" << std::endl;
+                                                        std::cout << std::endl;
 
                                                         password.clear();
 
@@ -1040,6 +1103,9 @@ int main(int argc, const char **argv)
 
                                                 call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
 
+                                                std::cout << "Password changed Successfully" << std::endl;
+                                                std::cout << std::endl;
+
                                                 password.clear();
                                                 new_password.clear();
 
@@ -1090,6 +1156,9 @@ int main(int argc, const char **argv)
                                             new_hash_password = BANK::hashing_password(new_password);
 
                                             call_insert_or_update_hashed_password(connection, account_number, new_hash_password);
+
+                                            std::cout << "Password changed Successfully" << std::endl;
+                                            std::cout << std::endl;
 
                                             new_password.clear();
                                             new_password_confirmation.clear();

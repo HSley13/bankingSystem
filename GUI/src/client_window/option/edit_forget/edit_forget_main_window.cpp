@@ -83,7 +83,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     image_label_1->setScaledContents(true);
 
     vbox_1 = new QVBoxLayout();
-    VBOX->addWidget(image_label_1, Qt::AlignCenter);
+    vbox_1->addWidget(image_label_1, Qt::AlignCenter);
     vbox_1->addWidget(name_button, Qt::AlignCenter);
     vbox_1->addWidget(email_button, Qt::AlignCenter);
     vbox_1->addWidget(address_button, Qt::AlignCenter);
@@ -715,7 +715,7 @@ void edit_forget_main_window::confirm_edit_address_func()
     {
         insert_address->setStyleSheet("border: 1px solid red");
 
-        QMessageBox::warning(this, "void", "Email left Blank, Enter a valid One");
+        QMessageBox::warning(this, "void", "Address left Blank, Enter a valid One");
 
         return;
     }
@@ -726,7 +726,7 @@ void edit_forget_main_window::confirm_edit_address_func()
     {
         insert_address_confirmation->setStyleSheet("border: 1px solid red");
 
-        QMessageBox::warning(this, "Confirmation Incorrect", "New Email Confirmation Incorrect");
+        QMessageBox::warning(this, "Confirmation Incorrect", "New Address Confirmation Incorrect");
 
         return;
     }
@@ -781,7 +781,7 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
     {
         insert_phone_number->setStyleSheet("border: 1px solid red");
 
-        QMessageBox::warning(this, "void", "Email left Blank, Enter a valid One");
+        QMessageBox::warning(this, "void", "Phone Number left Blank, Enter a valid One");
 
         return;
     }
@@ -792,7 +792,7 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
     {
         insert_phone_number_confirmation->setStyleSheet("border: 1px solid red");
 
-        QMessageBox::warning(this, "Confirmation Incorrect", "New Email Confirmation Incorrect");
+        QMessageBox::warning(this, "Confirmation Incorrect", "New Phone Number Confirmation Incorrect");
 
         return;
     }

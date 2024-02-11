@@ -73,7 +73,8 @@
             "driver": "MySQL",
             "name": "HI",
             "database": "BankingSystemDatabase",
-            "username": "root"
+            "username": "root",
+            "password": "sleyHortes1312"
         }
     ]
 }

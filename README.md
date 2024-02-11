@@ -116,7 +116,7 @@
         ------- new_borrowal
         CREATE TRIGGER new_borrowal AFTER INSERT ON borrowal_record FOR EACH ROW
             BEGIN
-                    UPDATE accounts SET balance = balance - NEW.borrowed_amount, initial_timestamp = NOW()
+                    UPDATE accounts SET balance = balance + NEW.borrowed_amount, initial_timestamp = NOW()
                     WHERE account_number = NEW.account_number;
             END;
 

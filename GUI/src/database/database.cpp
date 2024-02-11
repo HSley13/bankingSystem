@@ -651,7 +651,7 @@ void Account::create_account(sql::Connection *connection, int account_number, st
         QDate birth_date = QDate::fromString(QString::fromStdString(date_birth), Qt::ISODate);
         QDate current_date = QDate::currentDate();
 
-        if ((birth_date < current_date) || (birth_date.addYears(18) > current_date))
+        if ((birth_date > current_date) || (birth_date.addYears(18) > current_date))
         {
             std::cout << "You are Less than 18 years old , You aren't allowed to create an account on your own or Invalid Birth Date" << std::endl;
 
@@ -721,7 +721,7 @@ void Account::Qt_create_account(sql::Connection *connection, int account_number,
         QDate birth_date = QDate::fromString(QString::fromStdString(date_birth), Qt::ISODate);
         QDate current_date = QDate::currentDate();
 
-        if ((birth_date < current_date) || (birth_date.addYears(18) > current_date))
+        if ((birth_date > current_date) || (birth_date.addYears(18) > current_date))
         {
             QMessageBox::warning(nullptr, "!!!!!", "You are Less than 18 years old, You aren't allowed to create an account on your own or Invalid Birth Date");
 
