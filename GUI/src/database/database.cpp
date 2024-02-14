@@ -16,6 +16,7 @@
 #include <QTableWidgetItem>
 #include <QHeaderView>
 #include <QDate>
+#include <QInputDialog>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -1284,24 +1285,70 @@ void BANK::apply_interest_rate_to_balance(sql::Connection *connection, int accou
     }
 }
 
-bool BANK::authentification_check(sql::Connection *connection, int account_number, std::string national_ID, std::string date_birth)
+bool BANK::authentification_check(sql::Connection *connection, int account_number, std::string question, std::string answer)
 {
     try
     {
-        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT national_ID, date_birth FROM accounts WHERE account_number = ?;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT question, answer FROM password_recovery WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string national_ID1, date_birth1;
+        std::string answer1;
 
         if (result->next())
         {
-            national_ID1 = result->getString("national_ID");
-            date_birth1 = result->getString("date_birth");
+            question = result->getString("question");
+            answer1 = result->getString("answer");
         }
 
-        return (!national_ID1.compare(national_ID) && !date_birth1.compare(date_birth));
+        std::cout << question << std::endl;
+        std::cin >> answer;
+
+        return (!answer1.compare(answer));
+    }
+    catch (const sql::SQLException &e)
+    {
+        std::cerr << "SQL ERROR: " << e.what() << std::endl;
+
+        return false;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "C++ ERROR: " << e.what() << std::endl;
+
+        return false;
+    }
+}
+
+bool BANK::Qt_authentification_check(sql::Connection *connection, int account_number, std::string question, std::string answer)
+{
+    try
+    {
+        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT question, answer FROM password_recovery WHERE account_number = ?;"));
+        prep_statement->setInt(1, account_number);
+
+        std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
+
+        if (result->next())
+        {
+            question = result->getString("question");
+            answer = result->getString("answer");
+        }
+
+        QString info = QString::fromStdString(question);
+
+        bool OK;
+        QString input = QInputDialog::getText(nullptr, "Confirmation", info, QLineEdit::Normal, "", &OK);
+
+        if (input.isEmpty())
+        {
+            QMessageBox::warning(nullptr, "void", "Input Empty");
+
+            return false;
+        }
+
+        return (!answer.compare(input.toStdString()));
     }
     catch (const sql::SQLException &e)
     {

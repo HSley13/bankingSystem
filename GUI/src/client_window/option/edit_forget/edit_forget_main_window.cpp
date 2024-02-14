@@ -335,30 +335,18 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     forget_hbox_1->addWidget(account_number_forget, Qt::AlignCenter);
     forget_hbox_1->addWidget(insert_account_number_forget, Qt::AlignCenter);
 
-    national_ID_forget = new QLabel("Enter Your National ID", this);
-    insert_national_ID_forget = new QLineEdit(this);
-    forget_hbox_2 = new QHBoxLayout();
-    forget_hbox_2->addWidget(national_ID_forget, Qt::AlignCenter);
-    forget_hbox_2->addWidget(insert_national_ID_forget, Qt::AlignCenter);
-
-    date_birth_forget = new QLabel("Enter Date of Birth", this);
-    insert_date_birth_forget = new QLineEdit(this);
-    forget_hbox_3 = new QHBoxLayout();
-    forget_hbox_3->addWidget(date_birth_forget, Qt::AlignCenter);
-    forget_hbox_3->addWidget(insert_date_birth_forget, Qt::AlignCenter);
-
     new_password_forget = new QLabel("Enter new  Password", this);
     insert_new_password_forget = new QLineEdit(this);
-    forget_hbox_4 = new QHBoxLayout();
-    forget_hbox_4->addWidget(new_password_forget, Qt::AlignCenter);
-    forget_hbox_4->addWidget(insert_new_password_forget, Qt::AlignCenter);
+    forget_hbox_2 = new QHBoxLayout();
+    forget_hbox_2->addWidget(new_password_forget, Qt::AlignCenter);
+    forget_hbox_2->addWidget(insert_new_password_forget, Qt::AlignCenter);
 
     new_password_confirmation_forget = new QLabel("Enter new Password Confirmation", this);
     insert_new_password_confirmation_forget = new QLineEdit(this);
     insert_new_password_confirmation_forget->setEchoMode(QLineEdit::Password);
-    forget_hbox_5 = new QHBoxLayout();
-    forget_hbox_5->addWidget(new_password_confirmation_forget, Qt::AlignCenter);
-    forget_hbox_5->addWidget(insert_new_password_confirmation_forget, Qt::AlignCenter);
+    forget_hbox_3 = new QHBoxLayout();
+    forget_hbox_3->addWidget(new_password_confirmation_forget, Qt::AlignCenter);
+    forget_hbox_3->addWidget(insert_new_password_confirmation_forget, Qt::AlignCenter);
 
     confirm_button = new QPushButton("Confirm", this);
     confirm_button->setStyleSheet("color: black;"
@@ -372,8 +360,6 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     vbox_3->addLayout(forget_hbox_1, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_2, Qt::AlignCenter);
     vbox_3->addLayout(forget_hbox_3, Qt::AlignCenter);
-    vbox_3->addLayout(forget_hbox_4, Qt::AlignCenter);
-    vbox_3->addLayout(forget_hbox_5, Qt::AlignCenter);
     vbox_3->addWidget(confirm_button, Qt::AlignCenter);
     vbox_3->addWidget(back_button, Qt::AlignCenter);
     vbox_3->setAlignment(Qt::AlignCenter);
@@ -479,9 +465,6 @@ void edit_forget_main_window::confirm_forget_func()
     std::string new_password = insert_new_password_forget->text().toStdString();
     std::string new_password_confirmation = insert_new_password_confirmation_forget->text().toStdString();
 
-    std::string national_ID = insert_national_ID_forget->text().toStdString();
-    std::string date_birth = insert_date_birth_forget->text().toStdString();
-
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
@@ -489,20 +472,14 @@ void edit_forget_main_window::confirm_forget_func()
 
     sql::Connection *connection = connection_setup(&ID);
 
-    if (!BANK::authentification_check(connection, account_number, national_ID, date_birth))
+    std::string question;
+    std::string answer;
+    if (!BANK::Qt_authentification_check(connection, account_number, question, answer))
     {
-        insert_account_number_forget->setStyleSheet("border: 1px solid red");
-        insert_national_ID_forget->setStyleSheet("border: 1px solid red");
-        insert_date_birth_forget->setStyleSheet("border: 1px solid red");
-
-        QMessageBox::warning(this, "Information Incorrect", "The provided Information are Incorrect, check the National ID and the Date of Birth");
+        QMessageBox::warning(this, "Information Incorrect", "The provided Answer is Incorrect");
 
         return;
     }
-
-    insert_account_number_forget->setStyleSheet("border: 1px solid gray");
-    insert_national_ID_forget->setStyleSheet("border: 1px solid gray");
-    insert_date_birth_forget->setStyleSheet("border: 1px solid gray");
 
     if (new_password.compare(new_password_confirmation))
     {
@@ -524,13 +501,9 @@ void edit_forget_main_window::confirm_forget_func()
     insert_account_number_forget->clear();
     insert_new_password_forget->clear();
     insert_new_password_confirmation_forget->clear();
-    insert_national_ID_forget->clear();
-    insert_date_birth_forget->clear();
 
     new_password.clear();
     new_password_confirmation.clear();
-    national_ID.clear();
-    date_birth.clear();
     new_hash_password.clear();
 }
 

@@ -1141,22 +1141,14 @@ int main(int argc, const char **argv)
                                         break;
 
                                     case 3: // Forget Password
-                                        std::cout << "In order to Change the password, We shall make sure that One is Who is proclaims to be, so Please Provide us with the Following Information for the Authentification Process" << std::endl;
-                                        std::cout << std::endl;
-
                                         std::cout << "Enter Account Number: " << std::endl;
                                         std::cin >> account_number;
                                         std::cout << std::endl;
 
-                                        std::cout << "Enter National ID Number: " << std::endl;
-                                        std::cin >> national_ID;
+                                        std::cout << "In order to Change the password, We shall make sure that One is Who is proclaims to be, so Please Provide us the answer of the following question for the Authentification Process" << std::endl;
                                         std::cout << std::endl;
 
-                                        std::cout << "Enter Date of Birth: " << std::endl;
-                                        std::cin >> date_birth;
-                                        std::cout << std::endl;
-
-                                        if (BANK::authentification_check(connection, account_number, national_ID, date_birth))
+                                        if (BANK::authentification_check(connection, account_number, question, answer))
                                         {
                                             std::cout << "Enter New Password: ";
                                             std::cin >> new_password;
@@ -1182,7 +1174,7 @@ int main(int argc, const char **argv)
                                         }
 
                                         else
-                                            std::cout << "The provided Information are Incorrect" << std::endl;
+                                            std::cout << "The provided Answer is Incorrect" << std::endl;
 
                                         break;
                                     }

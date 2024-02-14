@@ -97,7 +97,9 @@ public:
 
     static void apply_interest_rate_to_balance(sql ::Connection *connection, int account_number);
 
-    static bool authentification_check(sql ::Connection *connection, int account_number, std ::string national_ID, std ::string date_birth);
+    static bool authentification_check(sql ::Connection *connection, int account_number, std::string question, std ::string answer);
+
+    static bool Qt_authentification_check(sql ::Connection *connection, int account_number, std::string question, std ::string answer);
 
     static bool authentification_message(sql ::Connection *connection, int &account_number, std ::string &hash_password);
 
