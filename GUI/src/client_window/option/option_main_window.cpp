@@ -31,7 +31,7 @@ option_main_window::option_main_window(QWidget *parent)
         window_stack = new QStackedWidget();
         setCentralWidget(window_stack);
         setStyleSheet("color: beige;"
-                      "font-family: Herculanum;"
+                      "font-family: Arial Black;"
                       "font-size: 20;"
                       "font: bold italic 14px;"
                       "background-color: black;");

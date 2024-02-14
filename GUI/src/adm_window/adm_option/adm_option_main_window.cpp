@@ -23,7 +23,7 @@ adm_option_main_window::adm_option_main_window(QWidget *parent)
         window_stack = new QStackedWidget();
         setWindowTitle("ADM window Management");
         setCentralWidget(window_stack);
-        setStyleSheet("font-family: Herculanum;"
+        setStyleSheet("font-family: Arial Black;"
                       "font-size: 20;"
                       "font: bold italic 14px;"
                       "color: beige;"

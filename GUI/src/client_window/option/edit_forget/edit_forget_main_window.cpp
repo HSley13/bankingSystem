@@ -22,7 +22,7 @@ edit_forget_main_window::edit_forget_main_window(QWidget *parent)
     setCentralWidget(window_stack);
     setWindowTitle("Edit Personal Information/ change Password");
     setStyleSheet("color: beige;"
-                  "font-family: Herculanum;"
+                  "font-family: Arial Black;"
                   "font-size: 20;"
                   "font: bold italic 14px;"
                   "background-color: black;");
