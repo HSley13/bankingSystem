@@ -644,7 +644,7 @@ bool Account::are_all_same(int phone_number)
     return true;
 }
 
-void Account::create_account(sql::Connection *connection, int account_number, std::string national_ID, std::string first_name, std::string last_name, std::string date_birth, int phone_number, std::string email, std::string address, const double balance, const double interest_rate, std::string hash_password)
+void Account::create_account(sql::Connection *connection, int account_number, std::string national_ID, std::string first_name, std::string last_name, std::string date_birth, int phone_number, std::string email, std::string address, const double balance, const double interest_rate, std::string hash_password, std::string question, std::string answer)
 {
     try
     {
@@ -700,6 +700,14 @@ void Account::create_account(sql::Connection *connection, int account_number, st
 
         prep_statement = std::unique_ptr<sql::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Created");
+
+        prep_statement->executeUpdate();
+
+        prep_statement = std::unique_ptr<sql::PreparedStatement>(connection->prepareStatement("INSERT INTO password_recovery VALUES (?, ?, ?);"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->setString(2, question);
+        prep_statement->setString(3, answer);
+
         prep_statement->executeUpdate();
 
         call_insert_or_update_hashed_password(connection, account_number, hash_password);
@@ -714,7 +722,7 @@ void Account::create_account(sql::Connection *connection, int account_number, st
     }
 }
 
-void Account::Qt_create_account(sql::Connection *connection, int account_number, std::string national_ID, std::string first_name, std::string last_name, std::string date_birth, int phone_number, std::string email, std::string address, const double balance, const double interest_rate, std::string hash_password)
+void Account::Qt_create_account(sql::Connection *connection, int account_number, std::string national_ID, std::string first_name, std::string last_name, std::string date_birth, int phone_number, std::string email, std::string address, const double balance, const double interest_rate, std::string hash_password, std::string question, std::string answer)
 {
     try
     {
@@ -769,6 +777,14 @@ void Account::Qt_create_account(sql::Connection *connection, int account_number,
 
         prep_statement = std::unique_ptr<sql::PreparedStatement>(connection->prepareStatement("INSERT INTO " + table_name + " VALUES (?, CURDATE(), CURTIME() );"));
         prep_statement->setString(1, "Account Created");
+
+        prep_statement->executeUpdate();
+
+        prep_statement = std::unique_ptr<sql::PreparedStatement>(connection->prepareStatement("INSERT INTO password_recovery VALUES (?, ?, ?);"));
+        prep_statement->setInt(1, account_number);
+        prep_statement->setString(2, question);
+        prep_statement->setString(3, answer);
+
         prep_statement->executeUpdate();
 
         call_insert_or_update_hashed_password(connection, account_number, hash_password);

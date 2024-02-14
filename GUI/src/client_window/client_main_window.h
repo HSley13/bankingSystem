@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QTextEdit>
+#include <QDateEdit>
+#include <QString>
 
 class client_main_window : public QMainWindow
 {
@@ -40,17 +42,22 @@ private:
     QLabel *address;
     QLabel *password;
     QLabel *password_confirmation;
+    QLabel *question;
+    QLabel *answer;
+    QLabel *confirm_answer;
 
     QLineEdit *insert_national_ID;
     QLineEdit *insert_first_name;
     QLineEdit *insert_last_name;
-    QLineEdit *insert_date_birth;
     QLineEdit *insert_phone_number;
     QLineEdit *insert_email;
     QLineEdit *insert_address;
     QLineEdit *insert_balance;
     QLineEdit *insert_password;
     QLineEdit *insert_password_confirmation;
+    QLineEdit *insert_question;
+    QLineEdit *insert_answer;
+    QLineEdit *insert_confirm_answer;
 
     QHBoxLayout *hbox1;
     QHBoxLayout *hbox2;
@@ -62,8 +69,14 @@ private:
     QHBoxLayout *hbox8;
     QHBoxLayout *hbox9;
     QHBoxLayout *hbox10;
+    QHBoxLayout *hbox11;
+    QHBoxLayout *hbox12;
+    QHBoxLayout *hbox13;
 
     QVBoxLayout *vbox;
+
+    QDateEdit *calendar;
+    QDate selected_date;
 
 private slots:
     void back_button_func();

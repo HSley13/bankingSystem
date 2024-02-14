@@ -35,7 +35,7 @@ int main(int argc, const char **argv)
 
         int adm_options, options, options1, options2, options3, options4;
 
-        std::string first_name, last_name, new_first_name, new_first_name_confirmation, date_birth, email, new_email, new_email_confirmation, national_ID, address, new_address, new_address_confirmation, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date, confirmation, confirmation_answer;
+        std::string first_name, last_name, new_first_name, new_first_name_confirmation, date_birth, email, new_email, new_email_confirmation, national_ID, address, new_address, new_address_confirmation, password, password_confirmation, new_password, new_password_confirmation, hash_password, new_hash_password, initial_timestamp, date, confirmation, confirmation_answer, question, answer, confirm_answer;
 
         int phone_number, new_phone_number, new_phone_number_confirmation, account_number, account_number1, account_number2, k = 3, choice;
 
@@ -341,7 +341,21 @@ int main(int argc, const char **argv)
 
                         } while (password.compare(password_confirmation));
 
-                        hash_password = BANK::hashing_password(password);
+                        std::cout << "Ask Yourself question which is gonna be used for Password Recovery";
+                        std::cin >> question;
+                        std::cout << std::endl;
+
+                        std::cout << "Answer to the Question: ";
+                        std::cin >> answer;
+                        std::cout << std::endl;
+
+                        do
+                        {
+                            std::cout << "Confirm Answer: ";
+                            std::cin >> confirm_answer;
+                            std::cout << std::endl;
+
+                        } while (answer.compare(confirm_answer));
 
                         std::cout << "National ID: " << national_ID << std::endl;
                         std::cout << "First Name: " << first_name << std::endl;
@@ -351,6 +365,8 @@ int main(int argc, const char **argv)
                         std::cout << "Email: " << email << std::endl;
                         std::cout << "Address: " << address << std::endl;
                         std::cout << "Balance: " << balance << std::endl;
+                        std::cout << "Question: " << question << std::endl;
+                        std::cout << "Answer: " << answer << std::endl;
                         std::cout << std::endl;
 
                         std::cout << "Type YES to confirm and NO to cancel: ";
@@ -364,7 +380,8 @@ int main(int argc, const char **argv)
                             break;
                         }
 
-                        Account::create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, hash_password);
+                        hash_password = BANK::hashing_password(password);
+                        Account::create_account(connection, account_number, national_ID, first_name, last_name, date_birth, phone_number, email, address, balance, interest_rate, hash_password, question, answer);
 
                         password.clear();
                         password_confirmation.clear();

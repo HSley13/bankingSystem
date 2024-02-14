@@ -14,6 +14,8 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QInputDialog>
+#include <QDateEdit>
+#include <QString>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -27,7 +29,7 @@ client_main_window::client_main_window(QWidget *parent)
     window_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setCentralWidget(window_stack);
     setStyleSheet("color: beige;"
-                  "font-family: Herculanum;"
+                  "font-family: Arial Black;"
                   "font-size: 20;"
                   "font: bold italic 14px;"
                   "background-color: black;");
@@ -84,11 +86,16 @@ client_main_window::client_main_window(QWidget *parent)
     hbox3->addWidget(last_name, Qt::AlignCenter);
     hbox3->addWidget(insert_last_name, Qt::AlignCenter);
 
-    date_birth = new QLabel("Date of Birth ( 2024-01-31 ): ", this);
-    insert_date_birth = new QLineEdit(this);
+    date_birth = new QLabel("Date of Birth: ", this);
+    calendar = new QDateEdit(this);
+    calendar->setCalendarPopup(true);
+    calendar->setDate(QDate::currentDate());
+    connect(calendar, &QDateEdit::dateChanged, this, [=]()
+            { selected_date = calendar->date(); });
+
     hbox4 = new QHBoxLayout();
     hbox4->addWidget(date_birth, Qt::AlignCenter);
-    hbox4->addWidget(insert_date_birth, Qt::AlignCenter);
+    hbox4->addWidget(calendar, Qt::AlignCenter);
 
     phone_number = new QLabel("Phone Number: ", this);
     insert_phone_number = new QLineEdit(this);
@@ -140,6 +147,24 @@ client_main_window::client_main_window(QWidget *parent)
     hbox10->addWidget(password_confirmation, Qt::AlignCenter);
     hbox10->addWidget(insert_password_confirmation, Qt::AlignCenter);
 
+    question = new QLabel("Ask Yourself question which is gonna be used for Password Recovery", this);
+    insert_question = new QLineEdit(this);
+    hbox11 = new QHBoxLayout();
+    hbox11->addWidget(question, Qt::AlignCenter);
+    hbox11->addWidget(insert_question, Qt::AlignCenter);
+
+    answer = new QLabel("Enter the Answer", this);
+    insert_answer = new QLineEdit(this);
+    hbox12 = new QHBoxLayout();
+    hbox12->addWidget(answer, Qt::AlignCenter);
+    hbox12->addWidget(insert_answer, Qt::AlignCenter);
+
+    confirm_answer = new QLabel("Confirm the Answer", this);
+    insert_confirm_answer = new QLineEdit(this);
+    hbox13 = new QHBoxLayout();
+    hbox13->addWidget(confirm_answer, Qt::AlignCenter);
+    hbox13->addWidget(insert_confirm_answer, Qt::AlignCenter);
+
     confirm_button = new QPushButton("Confirm", this);
     confirm_button->setStyleSheet("color: black;"
                                   "background-color: beige;");
@@ -160,6 +185,9 @@ client_main_window::client_main_window(QWidget *parent)
     VBOX->addWidget(grp_balance, Qt::AlignCenter);
     VBOX->addLayout(hbox9, Qt::AlignCenter);
     VBOX->addLayout(hbox10, Qt::AlignCenter);
+    VBOX->addLayout(hbox11, Qt::AlignCenter);
+    VBOX->addLayout(hbox12, Qt::AlignCenter);
+    VBOX->addLayout(hbox13, Qt::AlignCenter);
     VBOX->addWidget(confirm_button, Qt::AlignCenter);
     VBOX->addWidget(back_button, Qt::AlignCenter);
 
@@ -289,11 +317,14 @@ void client_main_window::confirm_button_func()
     std::string national_ID1 = insert_national_ID->text().toStdString();
     std::string first_name1 = insert_first_name->text().toStdString();
     std::string last_name1 = insert_last_name->text().toStdString();
-    std::string date_birth1 = insert_date_birth->text().toStdString();
     int phone_number1 = insert_phone_number->text().toInt();
+    QString date_birth1 = selected_date.toString(Qt::ISODate);
     std::string email1 = insert_email->text().toStdString();
     std::string address1 = insert_address->text().toStdString();
     double balance = insert_balance->text().toDouble();
+    std::string question = insert_question->text().toStdString();
+    std::string answer = insert_answer->text().toStdString();
+    std::string confirm_answer = insert_confirm_answer->text().toStdString();
     int account_number;
 
     std::string password1 = insert_password->text().toStdString();
@@ -328,6 +359,36 @@ void client_main_window::confirm_button_func()
     else if (balance >= 1000)
         interest_rate = 0.07;
 
+    if (question.empty())
+    {
+        QMessageBox::warning(this, "void!!!", "Question left empty!!!");
+        insert_question->setStyleSheet("border: 1px solid red;");
+
+        return;
+    }
+
+    insert_question->setStyleSheet("border: 1px solid gray;");
+
+    if (answer.empty())
+    {
+        QMessageBox::warning(this, "void!!!", "Answer left empty!!!");
+        insert_answer->setStyleSheet("border: 1px solid red;");
+
+        return;
+    }
+
+    insert_answer->setStyleSheet("border: 1px solid gray;");
+
+    if (answer.compare(confirm_answer))
+    {
+        QMessageBox::warning(this, "Confirmation Incorrect!!", "The Answer's Confirmation is Incorrect!!");
+        insert_confirm_answer->setStyleSheet("border: 1px solid red;");
+
+        return;
+    }
+
+    insert_confirm_answer->setStyleSheet("border: 1px solid gray;");
+
     bool OK;
 
     QString info = "National ID: " + QString::fromStdString(national_ID1) + "\n"
@@ -336,16 +397,20 @@ void client_main_window::confirm_button_func()
                                                          "Last Name: " +
                    QString::fromStdString(last_name1) + "\n"
                                                         "Date of Birth: " +
-                   QString::fromStdString(date_birth1) + "\n"
-                                                         "Phone Number: " +
+                   date_birth1 + "\n"
+                                 "Phone Number: " +
                    QString::number(phone_number1) + "\n"
                                                     "Email: " +
                    QString::fromStdString(email1) + "\n"
                                                     "Address: " +
                    QString::fromStdString(address1) + "\n"
                                                       "Balance: " +
-                   QString::number(balance) + "\n\n"
-                                              "Type YES to confirm and NO to cancel";
+                   QString::number(balance) + "\n"
+                                              "Question: " +
+                   QString::fromStdString(question) + "\n"
+                                                      "Answer: " +
+                   QString::fromStdString(answer) + "\n\n"
+                                                    "Type YES to confirm and NO to cancel";
 
     QString input = QInputDialog::getText(this, "Confirmation", info, QLineEdit::Normal, "", &OK);
 
@@ -375,16 +440,18 @@ void client_main_window::confirm_button_func()
 
     std::string hash_password = BANK::hashing_password(password1);
 
-    Account::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1, phone_number1, email1, address1, balance, interest_rate, hash_password);
+    Account::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1.toStdString(), phone_number1, email1, address1, balance, interest_rate, hash_password, question, answer);
 
     national_ID1.clear();
     last_name1.clear();
     first_name1.clear();
     email1.clear();
     address1.clear();
-    date_birth1.clear();
     password1.clear();
     password_confirmation1.clear();
+    question.clear();
+    answer.clear();
+    confirm_answer.clear();
 
     insert_national_ID->clear();
     insert_last_name->clear();
@@ -392,10 +459,12 @@ void client_main_window::confirm_button_func()
     insert_email->clear();
     insert_address->clear();
     insert_phone_number->clear();
-    insert_date_birth->clear();
     insert_balance->clear();
     insert_password->clear();
     insert_password_confirmation->clear();
+    insert_question->clear();
+    insert_answer->clear();
+    insert_confirm_answer->clear();
 }
 
 void client_main_window::account_inquiry_func()
