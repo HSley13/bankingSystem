@@ -638,7 +638,7 @@ bool Account::are_all_same(int phone_number)
 
     for (size_t i = 1; i < phone_number_str.length(); i++)
     {
-        if (phone_number_str[i] != phone_number_str[0])
+        if (phone_number_str[0] != phone_number_str[i])
             return false;
     }
 
