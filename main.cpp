@@ -145,6 +145,9 @@ int main(int argc, const char **argv)
 
                                 BANK::create_adm(connection, account_number, hash_password);
 
+                                std::cout << "ADM account " << account_number << " created successfully" << std::endl;
+                                std::cout << std::endl;
+
                                 password.clear();
                                 password_confirmation.clear();
 
