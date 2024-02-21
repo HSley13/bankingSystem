@@ -68,20 +68,6 @@
                 "enableSsl": "Disabled"
             },
             "previewLimit": 50,
-            "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
-            "name": "HI",
-            "database": "BankingSystemDatabase",
-            "username": "root",
-            "password": "sleyHortes1312"
-        },
-        {
-            "mysqlOptions": {
-                "authProtocol": "default",
-                "enableSsl": "Disabled"
-            },
-            "previewLimit": 50,
             "server": "134.208.2.14",
             "port": 3307,
             "driver": "MySQL",
@@ -89,6 +75,20 @@
             "database": "bankingSystem",
             "username": "bankingSystem",
             "password": "sleyHortes@1312"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "local_database",
+            "database": "bankingSystemDatabase",
+            "username": "root",
+            "password": "sleyHortes1312"
         }
     ]
 }
