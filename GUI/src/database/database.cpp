@@ -821,7 +821,7 @@ void Account::remove_accounts(sql::Connection *connection, int account_number)
 
         result = std::unique_ptr<sql::ResultSet>(prep_statement->executeQuery());
 
-        if (result->isBeforeFirst())
+        if (result->next())
         {
             std::cerr << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std::endl;
 

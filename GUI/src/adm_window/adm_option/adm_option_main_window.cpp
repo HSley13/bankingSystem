@@ -543,9 +543,9 @@ void adm_option_main_window::delete_accounts()
 
         sql::Connection *connection = connection_setup(&ID);
 
-        int account_number = wid_7_account_number->text().toInt();
+        int account_number = wid_8_account_number->text().toInt();
 
         Account::Qt_remove_accounts(connection, account_number);
 
-        wid_7_account_number->clear();
+        wid_8_account_number->clear();
 }

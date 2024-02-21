@@ -1,0 +1,68 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"src/adm_window/adm_option/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "database_library::@f1aa34bc7b1afc1810b8"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "QtInternalTargets"
+	},
+	"id" : "adm_option_library_autogen_timestamp_deps::@0cce4503b55b3185006c",
+	"isGeneratorProvided" : true,
+	"name" : "adm_option_library_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "src/adm_window/adm_option",
+		"source" : "src/adm_window/adm_option"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen_timestamp_deps",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/src/adm_window/adm_option/CMakeFiles/adm_option_library_autogen_timestamp_deps.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}
