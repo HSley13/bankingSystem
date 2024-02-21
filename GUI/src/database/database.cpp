@@ -31,9 +31,15 @@ sql::Connection *connection_setup(connection_details *ID)
         sql::Connection *connection;
 
         driver = sql::mysql::get_driver_instance();
-        connection = driver->connect(ID->server, ID->user, ID->password);
 
-        connection->setSchema("bankingSystemDatabase");
+        sql::ConnectOptionsMap connection_properties;
+        connection_properties["hostName"] = ID->server;
+        connection_properties["port"] = ID->port;
+        connection_properties["userName"] = ID->user;
+        connection_properties["password"] = ID->password;
+
+        connection = driver->connect(connection_properties);
+        connection->setSchema("bankingSystem");
 
         return connection;
     }
@@ -368,12 +374,6 @@ void Transactions::Qt_borrow(sql::Connection *connection, const double amount_to
 {
     try
     {
-        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("Update accounts set balance = balance + ? WHERE account_number = ?;"));
-        prep_statement->setDouble(1, amount_to_borrow);
-        prep_statement->setInt(2, account_number);
-
-        prep_statement->executeUpdate();
-
         insert_transactions(connection, account_number, "New Money Borrowed, Sum of ", amount_to_borrow);
 
         QString info = "You have Borrowed: $" + QString::number(static_cast<double>(amount_to_borrow)) + " and Your new balance is: $" + QString::number(static_cast<double>(check_balance(connection, account_number))) + " ";
@@ -692,6 +692,7 @@ void Account::create_account(sql::Connection *connection, int account_number, st
         account_number = result->getInt("account_number");
 
         std::cout << account_number << std::endl;
+        std::cout << std::endl;
 
         std::string table_name = "NO";
         table_name.append(std::to_string(account_number));
@@ -821,7 +822,7 @@ void Account::remove_accounts(sql::Connection *connection, int account_number)
 
         result = std::unique_ptr<sql::ResultSet>(prep_statement->executeQuery());
 
-        if (result->isBeforeFirst())
+        if (result->next())
         {
             std::cerr << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std::endl;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <database.h>
 #include <iostream>
 #include <QWidget>
 #include <QMainWindow>
@@ -13,10 +14,10 @@ class main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    main_window(const std::string &db_password, QWidget *parent = nullptr);
+    main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
 
 private:
-    std::string database_password;
+    sql::Connection *connection;
 
     QLabel *name;
     QLabel *welcome;

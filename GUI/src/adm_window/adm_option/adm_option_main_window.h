@@ -1,5 +1,6 @@
 #pragma once
 
+#include <database.h>
 #include <QMainWindow>
 #include <QWidget>
 #include <QPushButton>
@@ -16,10 +17,10 @@ class adm_option_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    adm_option_main_window(const std::string &db_password, QWidget *parent = nullptr);
+    adm_option_main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
 
 private:
-    std::string database_password;
+    sql::Connection *connection;
 
     QLineEdit *new_adm_account_number;
     QLineEdit *new_adm_password;

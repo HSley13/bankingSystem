@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include <database.h>
 #include <adm_main_window.h>
 #include <client_main_window.h>
 #include <iostream>
@@ -13,8 +14,8 @@
 #include <QPalette>
 #include <QLinearGradient>
 
-main_window::main_window(const std::string &db_password, QWidget *parent)
-    : QMainWindow(parent), database_password(db_password)
+main_window::main_window(sql::Connection *db_connection, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection)
 {
     setWindowTitle("CROSS CONTINENTAL TREASURY BANK");
     resize(600, 600);
@@ -59,14 +60,14 @@ main_window::main_window(const std::string &db_password, QWidget *parent)
 
 void main_window::client_button_clicked()
 {
-    client_main_window *new_window = new client_main_window(database_password);
+    client_main_window *new_window = new client_main_window(connection);
 
     new_window->show();
 }
 
 void main_window::adm_button_clicked()
 {
-    adm_main_window *new_window = new adm_main_window(database_password);
+    adm_main_window *new_window = new adm_main_window(connection);
 
     new_window->show();
 }

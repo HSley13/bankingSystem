@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include <database.h>
 #include <QApplication>
 #include <QMessageBox>
 
@@ -13,7 +14,15 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    main_window *Main_window = new main_window(argv[1]);
+    connection_details ID;
+    ID.server = "134.208.2.14";
+    ID.port = 3307;
+    ID.user = "bankingSystem";
+    ID.password = argv[1];
+
+    sql::Connection *db_connection = connection_setup(&ID);
+
+    main_window *Main_window = new main_window(db_connection);
     Main_window->show();
 
     return app.exec();

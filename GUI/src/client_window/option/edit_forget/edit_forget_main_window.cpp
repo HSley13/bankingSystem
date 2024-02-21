@@ -15,8 +15,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-edit_forget_main_window::edit_forget_main_window(const std::string &db_password, QWidget *parent)
-    : QMainWindow(parent), database_password(db_password)
+edit_forget_main_window::edit_forget_main_window(sql::Connection *db_connection, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection)
 {
     window_stack = new QStackedWidget();
     setCentralWidget(window_stack);
@@ -401,13 +401,6 @@ void edit_forget_main_window::confirm_change_func()
     std::string new_password = insert_new_password_change->text().toStdString();
     std::string new_password_confirmation = insert_new_password_confirmation_change->text().toStdString();
 
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
-
     std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
     if (hashed_password == "")
@@ -465,13 +458,6 @@ void edit_forget_main_window::confirm_forget_func()
     std::string new_password = insert_new_password_forget->text().toStdString();
     std::string new_password_confirmation = insert_new_password_confirmation_forget->text().toStdString();
 
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
-
     std::string question;
     std::string answer;
     if (!BANK::Qt_authentification_check(connection, account_number, question, answer))
@@ -513,13 +499,6 @@ void edit_forget_main_window::confirm_edit_name_func()
     std::string new_first_name = insert_name->text().toStdString();
     std::string new_first_name_confirmation = insert_name_confirmation->text().toStdString();
     std::string password = insert_password_1->text().toStdString();
-
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
 
     std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
@@ -590,13 +569,6 @@ void edit_forget_main_window::confirm_edit_email_func()
     std::string new_email_confirmation = insert_email_confirmation->text().toStdString();
     std::string password = insert_password_2->text().toStdString();
 
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
-
     std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
@@ -656,13 +628,6 @@ void edit_forget_main_window::confirm_edit_address_func()
     std::string new_address_confirmation = insert_address_confirmation->text().toStdString();
     std::string password = insert_password_3->text().toStdString();
 
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
-
     std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")
     {
@@ -721,13 +686,6 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
     std::string new_phone_number = insert_phone_number->text().toStdString();
     std::string new_phone_number_confirmation = insert_phone_number_confirmation->text().toStdString();
     std::string password = insert_password_4->text().toStdString();
-
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
 
     std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
     if (hashed_password == "")

@@ -17,8 +17,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-adm_option_main_window::adm_option_main_window(const std::string &db_password, QWidget *parent)
-    : QMainWindow(parent), database_password(db_password)
+adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection)
 {
         window_stack = new QStackedWidget();
         setWindowTitle("ADM window Management");
@@ -407,13 +407,6 @@ void adm_option_main_window::back_button_func()
 
 void adm_option_main_window::wid_1_config()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         int account_number = new_adm_account_number->text().toInt();
         std::string password = new_adm_password->text().toStdString();
         std::string password_confirmation = new_adm_password_confirmation->text().toStdString();
@@ -446,25 +439,11 @@ void adm_option_main_window::wid_1_config()
 
 void adm_option_main_window::display_accounts_table()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         BANK::Qt_display_accounts_table(connection);
 }
 
 void adm_option_main_window::display_specific_accounts_table()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         int account_number = wid_3_account_number->text().toInt();
 
         BANK::Qt_display_specific_accounts(connection, account_number);
@@ -474,25 +453,11 @@ void adm_option_main_window::display_specific_accounts_table()
 
 void adm_option_main_window::display_people_in_debt()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         BANK::Qt_display_people_in_debt(connection);
 }
 
 void adm_option_main_window::display_specific_accounts_in_debt()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         int account_number = wid_5_account_number->text().toInt();
 
         BANK::Qt_display_specific_accounts_in_debt(connection, account_number);
@@ -500,13 +465,6 @@ void adm_option_main_window::display_specific_accounts_in_debt()
 
 void adm_option_main_window::display_transactions_history()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         int account_number = wid_6_account_number->text().toInt();
 
         Transactions::Qt_display_transactions_history(connection, account_number);
@@ -520,13 +478,6 @@ void adm_option_main_window::display_relative_transactions_history()
         QString date = selected_date.toString(Qt::ISODate);
         int selected_choice = choice->currentIndex();
 
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         Transactions::Qt_display_specific_transactions_history(connection, account_number, date.toStdString(), selected_choice);
@@ -536,13 +487,6 @@ void adm_option_main_window::display_relative_transactions_history()
 
 void adm_option_main_window::delete_accounts()
 {
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         int account_number = wid_7_account_number->text().toInt();
 
         Account::Qt_remove_accounts(connection, account_number);

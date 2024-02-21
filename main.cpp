@@ -21,9 +21,10 @@ int main(int argc, const char **argv)
         }
 
         connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = (argc >= 2) ? argv[1] : "";
+        ID.server = "134.208.2.14";
+        ID.port = 3307;
+        ID.user = "bankingSystem";
+        ID.password = argv[1];
 
         sql::Connection *connection = connection_setup(&ID);
         if (!connection)
@@ -341,18 +342,20 @@ int main(int argc, const char **argv)
 
                         } while (password.compare(password_confirmation));
 
-                        std::cout << "Ask Yourself question which is gonna be used for Password Recovery";
-                        std::cin >> question;
+                        std::cin.ignore();
+
+                        std::cout << "Ask Yourself question which is gonna be used for Password Recovery: ";
+                        std::getline(std::cin, question);
                         std::cout << std::endl;
 
                         std::cout << "Answer to the Question: ";
-                        std::cin >> answer;
+                        std::getline(std::cin, answer);
                         std::cout << std::endl;
 
                         do
                         {
                             std::cout << "Confirm Answer: ";
-                            std::cin >> confirm_answer;
+                            std::getline(std::cin, confirm_answer);
                             std::cout << std::endl;
 
                         } while (answer.compare(confirm_answer));

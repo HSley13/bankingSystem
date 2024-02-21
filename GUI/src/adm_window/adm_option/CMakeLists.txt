@@ -4,7 +4,7 @@ qt_add_library(adm_option_library STATIC
     adm_option_main_window.h
 )
 
-target_link_libraries(adm_option_library PRIVATE
+target_link_libraries(adm_option_library PUBLIC
                             Qt6::Core 
                             Qt6::Widgets
                             database_library 

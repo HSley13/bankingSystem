@@ -15,6 +15,7 @@ class connection_details
 {
 public:
     std ::string server, user, password;
+    int port;
 };
 
 sql ::Connection *connection_setup(connection_details *ID);

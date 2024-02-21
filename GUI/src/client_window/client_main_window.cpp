@@ -22,8 +22,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-client_main_window::client_main_window(const std::string &db_password, QWidget *parent)
-    : QMainWindow(parent), database_password(db_password)
+client_main_window::client_main_window(sql::Connection *db_connection, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection)
 {
     window_stack = new QStackedWidget();
     window_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -431,13 +431,6 @@ void client_main_window::confirm_button_func()
         }
     }
 
-    connection_details ID;
-    ID.server = "localhost";
-    ID.user = "root";
-    ID.password = database_password;
-
-    sql::Connection *connection = connection_setup(&ID);
-
     std::string hash_password = BANK::hashing_password(password1);
 
     Account::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1.toStdString(), phone_number1, email1, address1, balance, interest_rate, hash_password, question, answer);
@@ -471,7 +464,7 @@ void client_main_window::account_inquiry_func()
 {
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
 
-    option_main_window *new_window = new option_main_window(database_password);
+    option_main_window *new_window = new option_main_window(connection);
 
     new_window->show();
 }

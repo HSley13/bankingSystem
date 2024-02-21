@@ -25,8 +25,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-option_main_window::option_main_window(const std::string &db_password, QWidget *parent)
-    : QMainWindow(parent), database_password(db_password)
+option_main_window::option_main_window(sql::Connection *db_connection, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection)
 {
         window_stack = new QStackedWidget();
         setCentralWidget(window_stack);
@@ -493,13 +493,6 @@ void option_main_window::confirm_button_balance()
         int account_number = account_number_ba->text().toInt();
         std::string password = password_ba->text().toStdString();
 
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
@@ -539,13 +532,6 @@ void option_main_window::confirm_button_deposit()
         std::string password = password_de->text().toStdString();
         double amount_to_deposit = amount_de->text().toDouble();
 
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
@@ -584,13 +570,6 @@ void option_main_window::confirm_button_withdrawal()
         std::string password = password_with->text().toStdString();
         double amount_to_withdraw = amount_with->text().toDouble();
 
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
@@ -628,13 +607,6 @@ void option_main_window::confirm_button_transfer()
         int account_number2 = account_number2_tran->text().toInt();
         std::string password = password_tran->text().toStdString();
         double amount_to_transfer = amount_tran->text().toDouble();
-
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
 
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number1);
 
@@ -688,13 +660,6 @@ void option_main_window::confirm_button_borrowal()
 
         else
                 borrowal_interest_rate = 0.1;
-
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
 
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
@@ -751,13 +716,6 @@ void option_main_window::confirm_button_return_borrowal()
 {
         int account_number = account_number_ret->text().toInt();
         std::string password = password_ret->text().toStdString();
-
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
 
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
@@ -843,7 +801,7 @@ void option_main_window::confirm_button_edit_perso()
 {
         QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the account editing official webpage");
 
-        edit_forget_main_window *new_window = new edit_forget_main_window(database_password);
+        edit_forget_main_window *new_window = new edit_forget_main_window(connection);
 
         new_window->show();
 }
@@ -852,13 +810,6 @@ void option_main_window::confirm_button_transaction_history()
 {
         int account_number = account_number_transac->text().toInt();
         std::string password = password_transac->text().toStdString();
-
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
 
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
@@ -898,13 +849,6 @@ void option_main_window::confirm_button_specific_transaction_history()
         QString date = selected_date.toString(Qt::ISODate);
         int selected_choice = choice->currentIndex();
 
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
-
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
         if (hashed_password == "")
@@ -940,13 +884,6 @@ void option_main_window::confirm_button_delete_account()
 {
         int account_number = account_number_dele->text().toInt();
         std::string password = password_dele->text().toStdString();
-
-        connection_details ID;
-        ID.server = "localhost";
-        ID.user = "root";
-        ID.password = database_password;
-
-        sql::Connection *connection = connection_setup(&ID);
 
         std::string hashed_password = BANK::Qt_retrieve_hashed_password(connection, account_number);
 
