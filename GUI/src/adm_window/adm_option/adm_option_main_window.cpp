@@ -17,8 +17,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-adm_option_main_window::adm_option_main_window(QWidget *parent)
-    : QMainWindow(parent)
+adm_option_main_window::adm_option_main_window(const std::string &db_password, QWidget *parent)
+    : QMainWindow(parent), database_password(db_password)
 {
         window_stack = new QStackedWidget();
         setWindowTitle("ADM window Management");
@@ -410,7 +410,7 @@ void adm_option_main_window::wid_1_config()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -449,7 +449,7 @@ void adm_option_main_window::display_accounts_table()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -461,7 +461,7 @@ void adm_option_main_window::display_specific_accounts_table()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -477,7 +477,7 @@ void adm_option_main_window::display_people_in_debt()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -489,7 +489,7 @@ void adm_option_main_window::display_specific_accounts_in_debt()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -503,7 +503,7 @@ void adm_option_main_window::display_transactions_history()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -523,7 +523,7 @@ void adm_option_main_window::display_relative_transactions_history()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -539,13 +539,13 @@ void adm_option_main_window::delete_accounts()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
-        int account_number = wid_8_account_number->text().toInt();
+        int account_number = wid_7_account_number->text().toInt();
 
         Account::Qt_remove_accounts(connection, account_number);
 
-        wid_8_account_number->clear();
+        wid_7_account_number->clear();
 }

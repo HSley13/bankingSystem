@@ -13,9 +13,11 @@ class main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    main_window(QWidget *parent = nullptr);
+    main_window(const std::string &db_password, QWidget *parent = nullptr);
 
 private:
+    std::string database_password;
+
     QLabel *name;
     QLabel *welcome;
 

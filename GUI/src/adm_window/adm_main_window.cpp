@@ -18,8 +18,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-adm_main_window::adm_main_window(QWidget *parent)
-    : QMainWindow(parent)
+adm_main_window::adm_main_window(const std::string &db_password, QWidget *parent)
+    : QMainWindow(parent), database_password(db_password)
 {
     setWindowTitle("Administrator");
     setStyleSheet("font-family: Arial Black;"
@@ -82,7 +82,7 @@ void adm_main_window::confirm_login_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -111,7 +111,7 @@ void adm_main_window::confirm_login_func()
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Administrator's Official Page");
     hide();
 
-    adm_option_main_window *new_window = new adm_option_main_window;
+    adm_option_main_window *new_window = new adm_option_main_window(database_password);
 
     new_window->show();
 

@@ -821,7 +821,7 @@ void Account::remove_accounts(sql::Connection *connection, int account_number)
 
         result = std::unique_ptr<sql::ResultSet>(prep_statement->executeQuery());
 
-        if (result->next())
+        if (result->isBeforeFirst())
         {
             std::cerr << "Aren't allowed to Delete this Account Cause it owes the Bank. First Pay the Debt and then the Deletion will be possible" << std::endl;
 
@@ -1637,7 +1637,7 @@ void BANK::display_people_in_debt(sql::Connection *connection)
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        if (!result->next())
+        if (!result->isBeforeFirst())
         {
             std::cout << "There is no People in Debt" << std::endl;
             std::cout << std::endl;
@@ -1697,13 +1697,6 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
         QList<QTableWidgetItem *> items;
         int row = table->rowCount();
 
-        if (!result->next())
-        {
-            QMessageBox::information(nullptr, "!!!!!", "There is no People in Debt");
-
-            return;
-        }
-
         while (result->next())
         {
             items << new QTableWidgetItem(QString::number(result->getInt("A")))
@@ -1725,6 +1718,13 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
             items.clear();
 
             row++;
+        }
+
+        if (!row)
+        {
+            QMessageBox::information(nullptr, "!!!!!", "There is no People in Debt");
+
+            return;
         }
 
         table->resizeColumnsToContents();

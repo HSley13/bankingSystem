@@ -22,8 +22,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-client_main_window::client_main_window(QWidget *parent)
-    : QMainWindow(parent)
+client_main_window::client_main_window(const std::string &db_password, QWidget *parent)
+    : QMainWindow(parent), database_password(db_password)
 {
     window_stack = new QStackedWidget();
     window_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -434,7 +434,7 @@ void client_main_window::confirm_button_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -471,7 +471,7 @@ void client_main_window::account_inquiry_func()
 {
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
 
-    option_main_window *new_window = new option_main_window;
+    option_main_window *new_window = new option_main_window(database_password);
 
     new_window->show();
 }

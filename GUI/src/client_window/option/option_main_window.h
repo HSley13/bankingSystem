@@ -20,9 +20,11 @@ class option_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    option_main_window(QWidget *parent = nullptr);
+    option_main_window(const std::string &db_password, QWidget *parent = nullptr);
 
 private:
+    std::string database_password;
+
     QStackedWidget *window_stack;
 
     QWidget *central_widget;

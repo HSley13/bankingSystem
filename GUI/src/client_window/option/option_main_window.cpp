@@ -25,8 +25,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-option_main_window::option_main_window(QWidget *parent)
-    : QMainWindow(parent)
+option_main_window::option_main_window(const std::string &db_password, QWidget *parent)
+    : QMainWindow(parent), database_password(db_password)
 {
         window_stack = new QStackedWidget();
         setCentralWidget(window_stack);
@@ -496,7 +496,7 @@ void option_main_window::confirm_button_balance()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -542,7 +542,7 @@ void option_main_window::confirm_button_deposit()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -587,7 +587,7 @@ void option_main_window::confirm_button_withdrawal()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -632,7 +632,7 @@ void option_main_window::confirm_button_transfer()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -692,7 +692,7 @@ void option_main_window::confirm_button_borrowal()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -755,7 +755,7 @@ void option_main_window::confirm_button_return_borrowal()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -843,7 +843,7 @@ void option_main_window::confirm_button_edit_perso()
 {
         QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the account editing official webpage");
 
-        edit_forget_main_window *new_window = new edit_forget_main_window;
+        edit_forget_main_window *new_window = new edit_forget_main_window(database_password);
 
         new_window->show();
 }
@@ -856,7 +856,7 @@ void option_main_window::confirm_button_transaction_history()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -901,7 +901,7 @@ void option_main_window::confirm_button_specific_transaction_history()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 
@@ -944,7 +944,7 @@ void option_main_window::confirm_button_delete_account()
         connection_details ID;
         ID.server = "localhost";
         ID.user = "root";
-        ID.password = "sleyHortes1312";
+        ID.password = database_password;
 
         sql::Connection *connection = connection_setup(&ID);
 

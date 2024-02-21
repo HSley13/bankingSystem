@@ -15,8 +15,8 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-edit_forget_main_window::edit_forget_main_window(QWidget *parent)
-    : QMainWindow(parent)
+edit_forget_main_window::edit_forget_main_window(const std::string &db_password, QWidget *parent)
+    : QMainWindow(parent), database_password(db_password)
 {
     window_stack = new QStackedWidget();
     setCentralWidget(window_stack);
@@ -404,7 +404,7 @@ void edit_forget_main_window::confirm_change_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -468,7 +468,7 @@ void edit_forget_main_window::confirm_forget_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -517,7 +517,7 @@ void edit_forget_main_window::confirm_edit_name_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -593,7 +593,7 @@ void edit_forget_main_window::confirm_edit_email_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -659,7 +659,7 @@ void edit_forget_main_window::confirm_edit_address_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 
@@ -725,7 +725,7 @@ void edit_forget_main_window::confirm_edit_phone_number_func()
     connection_details ID;
     ID.server = "localhost";
     ID.user = "root";
-    ID.password = "sleyHortes1312";
+    ID.password = database_password;
 
     sql::Connection *connection = connection_setup(&ID);
 

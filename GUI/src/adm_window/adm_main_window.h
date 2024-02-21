@@ -15,9 +15,11 @@ class adm_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    adm_main_window(QWidget *parent = nullptr);
+    adm_main_window(const std::string &db_password, QWidget *parent = nullptr);
 
 private:
+    std::string database_password;
+
     QLabel *adm_account_number;
     QLabel *adm_password;
     QLabel *image_label;

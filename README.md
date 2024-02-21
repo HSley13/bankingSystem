@@ -15,58 +15,66 @@
         -----
 
         *************** ALL THE TABLES ***************
-        ------- accounts
-        CREATE TABLE accounts
-        (
-            account_number INT AUTO_INCREMENT PRIMARY KEY,
-            national_ID VARCHAR(255) NOT NULL UNIQUE,
-            first_name VARCHAR(255),
-            last_name VARCHAR(1000),
-            date_birth VARCHAR(255),
-            phone_number INT,
-            email VARCHAR(255),
-            address VARCHAR(255),
-            balance DECIMAL(20,5),
-            interest_rate DECIMAL(5,2),
-            initial_timestamp DATETIME,
-            borrowed_money DECIMAL(20,5) DEFAULT 0,
-            initial_borrowed_money_timestamp DATETIME
-        ) AUTO_INCREMENT = 1000000000;
+            -- -- -- -accounts
+            CREATE TABLE
+            accounts(
+                account_number INT AUTO_INCREMENT PRIMARY KEY,
+                national_ID VARCHAR(255) NOT NULL UNIQUE,
+                first_name VARCHAR(255),
+                last_name VARCHAR(1000),
+                date_birth VARCHAR(255),
+                phone_number INT,
+                email VARCHAR(255),
+                address VARCHAR(255),
+                balance DECIMAL(20, 5),
+                interest_rate DECIMAL(5, 2),
+                initial_timestamp DATETIME,
+                borrowed_money DECIMAL(20, 5) DEFAULT 0,
+                initial_borrowed_money_timestamp DATETIME) AUTO_INCREMENT = 1000000000;
 
-        ------- transactions
-        CREATE TABLE transactions
-        (
-            account_number INT PRIMARY KEY AUTO_INCREMENT,
-            deposit DECIMAL(20,5) DEFAULT 0,
-            withdrawal DECIMAL(20,5) DEFAULT 0,
-            transfer DECIMAL(20,5) DEFAULT 0,
-            receive DECIMAL(20,5) DEFAULT 0
-        )AUTO_INCREMENT = 1000000000;
+            -- -- -- -transactions
+            CREATE TABLE
+            transactions(
+                account_number INT PRIMARY KEY AUTO_INCREMENT,
+                deposit DECIMAL(20, 5) DEFAULT 0,
+                withdrawal DECIMAL(20, 5) DEFAULT 0,
+                transfer DECIMAL(20, 5) DEFAULT 0,
+                receive DECIMAL(20, 5) DEFAULT 0) AUTO_INCREMENT = 1000000000;
 
-       ------- hashed_password
-        CREATE TABLE hashed_password
-        (
-            account_number INT PRIMARY KEY,
-            hashed_password VARBINARY(500)
-        );
+            -- -- -- -password_security
+            CREATE TABLE
+            password_security(
+                account_number INT PRIMARY KEY,
+                hashed_password VARBINARY(500));
 
-        ------- borrowal_record
-        CREATE TABLE borrowal_record
-        (
-           account_number INT PRIMARY KEY,
-           borrowed_amount DECIMAL(20, 5),
-           interest_rate DECIMAL(5,3),
-           initial_timestamp TIMESTAMP,
-           paid_timestamp TIMESTAMP
-        );
+            -- -- -- -adm_password_security
+            CREATE TABLE
+            adm_password_security(
+                account_number INT PRIMARY KEY,
+                hashed_password VARBINARY(500));
 
-        ------- event_schedule
-        CREATE TABLE event_schedule
-        (
-            account_number INT PRIMARY KEY,
-            scheduled_time TIMESTAMP,
-            triggered INT DEFAULT 0
-        );
+            -- -- -- -password_recovery
+            CREATE TABLE
+            password_recovery(
+                account_number INT PRIMARY KEY,
+                question VARCHAR(255),
+                answer VARCHAR(255));
+
+            -- -- -- -borrowal_record
+            CREATE TABLE
+            borrowal_record(
+                account_number INT PRIMARY KEY,
+                borrowed_amount DECIMAL(20, 5),
+                interest_rate DECIMAL(5, 3),
+                initial_timestamp TIMESTAMP,
+                paid_timestamp TIMESTAMP);
+
+            -------event_schedule
+            CREATE TABLE
+            event_schedule(
+                account_number INT PRIMARY KEY,
+                scheduled_time TIMESTAMP,
+                triggered INT DEFAULT 0);
 
 
         *************** ALL THE TRIGGERS  ***************
