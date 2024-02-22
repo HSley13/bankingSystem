@@ -14,5 +14,3 @@ target_link_libraries(MyQtProject PRIVATE
 
 
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)
-
-set(CMAKE_AUTORCC ON)
