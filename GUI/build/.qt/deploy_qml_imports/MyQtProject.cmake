@@ -9,7 +9,7 @@ endif()
 
 _qt_internal_deploy_qml_imports_for_target(
     ${__qt_opts}
-    IMPORTS_FILE "/Users/test/Documents/banking_system/GUI/src/app/build/src/app/.qt_plugins/Qt6_QmlPlugins_Imports_MyQtProject.cmake"
+    IMPORTS_FILE "/Users/test/Documents/banking_system/GUI/build/src/app/.qt_plugins/Qt6_QmlPlugins_Imports_MyQtProject.cmake"
     PLUGINS_FOUND __qt_internal_plugins_found
     QML_DIR     "MyQtProject.app/Contents/Resources/qml"
     PLUGINS_DIR "MyQtProject.app/Contents/PlugIns"
