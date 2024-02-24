@@ -1,7 +1,6 @@
 qt_add_library(option_library STATIC
     option_main.cpp
     option_main_window.cpp
-    option_main_window.h
 )
 
 target_link_libraries(option_library PRIVATE

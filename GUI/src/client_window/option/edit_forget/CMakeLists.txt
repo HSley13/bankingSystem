@@ -1,7 +1,6 @@
 qt_add_library(edit_forget_library STATIC
             edit_forget_main.cpp
             edit_forget_main_window.cpp
-            edit_forget_main_window.h
 )
 
 target_link_libraries(edit_forget_library PRIVATE

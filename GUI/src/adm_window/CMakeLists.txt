@@ -1,7 +1,6 @@
 qt_add_library(adm_library STATIC
         adm_main.cpp
         adm_main_window.cpp
-        adm_main_window.h
 )
 
 target_link_libraries(adm_library PRIVATE

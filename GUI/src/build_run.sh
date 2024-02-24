@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 echo "Enter Passphrase: "
 read -s passphrase

@@ -1,6 +1,5 @@
 qt_add_library(database_library STATIC 
                     database.cpp
-                    database.h
                 )
 
 target_link_libraries(database_library PUBLIC

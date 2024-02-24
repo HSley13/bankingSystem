@@ -13,3 +13,5 @@ add_subdirectory(src/adm_window/adm_option)
 add_subdirectory(src/client_window)
 add_subdirectory(src/client_window/option)
 add_subdirectory(src/client_window/option/edit_forget)
+
+install(TARGETS MyQtProject DESTINATION bin)
