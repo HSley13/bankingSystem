@@ -1,9 +1,0 @@
--rootPath
-/Users/test/Documents/banking_system/GUI/src/app
--cmake-output
--output-file
-/Users/test/Documents/banking_system/GUI/build/src/app/.qt_plugins/Qt6_QmlPlugins_Imports_MyQtProject.cmake
--importPath
-/Users/test/Documents/banking_system/GUI/build/src/app
--importPath
-/opt/homebrew/share/qt/qml
