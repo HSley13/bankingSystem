@@ -1,9 +1,4 @@
 #include "database.h"
-#include <iostream>
-#include <string>
-#include <random>
-#include <stack>
-#include <vector>
 
 #include <QWidget>
 #include <QVBoxLayout>

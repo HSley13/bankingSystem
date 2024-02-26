@@ -1,16 +1,7 @@
 #include "adm_option_main_window.h"
-#include <database.h>
-#include <QMainWindow>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QLabel>
-#include <QLineEdit>
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QPixmap>
-#include <QDateEdit>
-#include <QComboBox>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>

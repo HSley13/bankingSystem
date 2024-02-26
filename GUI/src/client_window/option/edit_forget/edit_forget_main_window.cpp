@@ -1,14 +1,5 @@
 #include "edit_forget_main_window.h"
-#include <database.h>
-#include <QMainWindow>
-#include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
 #include <QMessageBox>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QStackedWidget>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>

@@ -1,15 +1,8 @@
 #include "main_window.h"
-#include <database.h>
 #include <adm_main_window.h>
 #include <client_main_window.h>
-#include <iostream>
-#include <QMainWindow>
-#include <QWidget>
-#include <QLabel>
-#include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
-#include <QVBoxLayout>
 #include <QPixmap>
 #include <QPalette>
 #include <QLinearGradient>

@@ -1,21 +1,8 @@
 #include "client_main_window.h"
 #include <option_main_window.h>
-#include <database.h>
-#include <iostream>
-#include <QMainWindow>
-#include <QWidget>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QTextEdit>
 #include <QGroupBox>
-#include <QString>
 #include <QPixmap>
-#include <QLabel>
 #include <QInputDialog>
-#include <QDateEdit>
-#include <QString>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
