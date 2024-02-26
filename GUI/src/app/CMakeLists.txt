@@ -10,7 +10,11 @@ target_link_libraries(MyQtProject PRIVATE
                                 adm_library 
                                 adm_option_library 
                                 client_library
+                                ${OPENSSL_LIBRARIES}
                         )
 
+target_link_directories(MyQtProject PUBLIC /usr/local/mysql-8.2.0-macos13-arm64/lib)
+
+target_include_directories(MyQtProject PUBLIC /usr/local/mysql-8.2.0-macos13-arm64/include)
 
 set_target_properties(MyQtProject PROPERTIES MACOSX_BUNDLE ON)
