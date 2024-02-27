@@ -1,4 +1,4 @@
-qt_add_library(database_library STATIC 
+add_library(database_library STATIC 
                     database.cpp
                 )
 

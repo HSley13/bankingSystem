@@ -1,4 +1,4 @@
-qt_add_library(adm_option_library STATIC 
+add_library(adm_option_library STATIC 
     adm_option_main.cpp
     adm_option_main_window.cpp
 )

@@ -1,4 +1,4 @@
-qt_add_library(option_library STATIC
+add_library(option_library STATIC
     option_main.cpp
     option_main_window.cpp
 )

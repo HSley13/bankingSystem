@@ -1,4 +1,4 @@
-qt_add_library(client_library STATIC
+add_library(client_library STATIC
     client_main.cpp
     client_main_window.cpp
 )

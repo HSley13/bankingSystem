@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt6 COMPONENTS Core Widgets Quick REQUIRED)
 qt_standard_project_setup()
 
+find_package(OpenSSL REQUIRED)
+
 add_executable(BankingSystem main.cpp)
 
 target_link_libraries(BankingSystem PRIVATE database_library Qt6::Core Qt6::Widgets)
