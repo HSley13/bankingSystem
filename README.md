@@ -65,8 +65,7 @@
                 account_number INT PRIMARY KEY,
                 borrowed_amount DECIMAL(20, 5),
                 interest_rate DECIMAL(5, 3),
-                initial_timestamp TIMESTAMP,
-                paid_timestamp TIMESTAMP);
+                initial_timestamp TIMESTAMP);
 
             -------event_schedule
             CREATE TABLE
@@ -292,7 +291,7 @@
 
                 DECLARE cursor_acc CURSOR FOR
                 SELECT account_number FROM event_schedule
-                WHERE scheduled_time <= CURRENT_TIMESTAMP AND triggered = 0;
+                WHERE scheduled_time <= CURRENT_TIMESTAMP;
 
                 DECLARE CONTINUE HANDLER FOR NOT FOUND SET invalid_case = TRUE;
 
@@ -305,11 +304,11 @@
                             LEAVE read_loop;
                         END IF;
 
-                        UPDATE event_schedule_table SET triggered = 1
-                        WHERE account_number = account_number1;
-
                         CALL update_borrowed_money(account_number1);
                         CALL deduce_borrowed_money(account_number1);
+
+                        DELETE FROM event_schedule WHERE
+                        account_number = account_number1;
 
                     END LOOP read_loop;
                 CLOSE cursor_acc;
