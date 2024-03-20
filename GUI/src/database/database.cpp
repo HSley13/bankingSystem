@@ -1629,7 +1629,7 @@ void BANK::display_people_in_debt(sql::Connection *connection)
 {
     try
     {
-        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time AS E FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
@@ -1645,7 +1645,7 @@ void BANK::display_people_in_debt(sql::Connection *connection)
         {
             std::cout << "Account Number: " << result->getInt("A") << " | National ID: " << result->getString("national_ID") << " | First Name: " << result->getString("first_name") << " | Last Name: " << result->getString("last_name") << " | Balance: " << result->getDouble("balance");
             std::cout << " | Account Interest Rate: " << result->getDouble("B") << " | Borrowed Amount: " << result->getDouble("borrowed_amount") << " | Borrowed Amount Interest Rate: " << result->getDouble("C");
-            std::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("scheduled_time") << std::endl;
+            std::cout << " | Borrowed Amount Initial timestamp: " << result->getString("D") << " | Scheduled Time: " << result->getString("E") << std::endl;
             std::cout << std::endl;
             std::cout << std::endl;
         }
@@ -1666,7 +1666,7 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
     {
         QTableWidget *table = new QTableWidget();
         table->setRowCount(0);
-        table->setColumnCount(9);
+        table->setColumnCount(10);
 
         table->setHorizontalHeaderLabels(QStringList() << "Account Number"
                                                        << "National ID"
@@ -1686,7 +1686,7 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
         table->setShowGrid(true);
         table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
+        std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT accounts.account_number AS A, national_ID, first_name, last_name, balance, accounts.interest_rate AS B, borrowed_amount, borrowal_record.interest_rate AS C, borrowal_record.initial_timestamp AS D, scheduled_time AS E FROM accounts INNER JOIN borrowal_record ON accounts.account_number = borrowal_record.account_number INNER JOIN event_schedule ON accounts.account_number = event_schedule.account_number;"));
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
@@ -1704,7 +1704,7 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("borrowed_amount"))))
                   << new QTableWidgetItem(QString::number(static_cast<double>(result->getDouble("C"))))
                   << new QTableWidgetItem(QString::fromStdString(result->getString("D")))
-                  << new QTableWidgetItem(QString::fromStdString(result->getString("scheduled_time")));
+                  << new QTableWidgetItem(QString::fromStdString(result->getString("E")));
 
             table->insertRow(row);
 

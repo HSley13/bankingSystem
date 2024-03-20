@@ -71,8 +71,7 @@
             CREATE TABLE
             event_schedule(
                 account_number INT PRIMARY KEY,
-                scheduled_time TIMESTAMP,
-                triggered INT DEFAULT 0);
+                scheduled_time TIMESTAMP);
 
 
         *************** ALL THE TRIGGERS  ***************
