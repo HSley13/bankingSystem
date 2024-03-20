@@ -284,7 +284,7 @@
         ------- check_events
         CREATE EVENT check_events
         ON SCHEDULE EVERY 1 HOUR
-        STARTS CURRENT_TIMESTAMP + INTERVAL 5 HOUR
+        STARTS CURRENT_TIMESTAMP
         DO
             BEGIN
                 DECLARE account_number1 INT;
