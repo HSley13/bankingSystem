@@ -19,8 +19,3 @@ add_subdirectory(GUI/src/adm_window/adm_option)
 add_subdirectory(GUI/src/client_window)
 add_subdirectory(GUI/src/client_window/option)
 add_subdirectory(GUI/src/client_window/option/edit_forget)
-
-
-
-
-
