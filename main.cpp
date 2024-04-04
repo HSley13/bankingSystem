@@ -13,7 +13,7 @@ int main(int argc, const char **argv)
 {
     try
     {
-        if (argc < 2)
+        if (argc < 4)
         {
             std::cerr << "You should Enter the Password as the Second Argument in order to connect to the Database" << std::endl;
 
@@ -21,10 +21,10 @@ int main(int argc, const char **argv)
         }
 
         connection_details ID;
-        ID.server = "134.208.2.14";
-        ID.port = 3307;
-        ID.user = "bankingSystem";
-        ID.password = argv[1];
+        ID.server = argv[1];
+        ID.port = 3306;
+        ID.user = argv[2];
+        ID.password = argv[3];
 
         sql::Connection *connection = connection_setup(&ID);
         if (!connection)

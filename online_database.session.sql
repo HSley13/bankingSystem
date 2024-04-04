@@ -1,1 +1,2 @@
-ALTER TABLE borrowal_record DROP COLUMN paid_timestamp;
+SELECT *
+FROM accounts;

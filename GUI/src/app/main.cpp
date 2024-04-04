@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    if (argc < 2)
+    if (argc < 4)
     {
         QMessageBox::warning(nullptr, "ERROR!!!!!", "ERROR!!!! The Password to connect to the database should be entered as the second command line argument ( argv[1] )");
 
@@ -15,10 +15,10 @@ int main(int argc, char **argv)
     }
 
     connection_details ID;
-    ID.server = "134.208.2.14";
-    ID.port = 3307;
-    ID.user = "bankingSystem";
-    ID.password = argv[1];
+    ID.server = argv[1];
+    ID.port = 3306;
+    ID.user = argv[2];
+    ID.password = argv[3];
 
     sql::Connection *db_connection = connection_setup(&ID);
 

@@ -34,7 +34,7 @@ sql::Connection *connection_setup(connection_details *ID)
         connection_properties["password"] = ID->password;
 
         connection = driver->connect(connection_properties);
-        connection->setSchema("bankingSystem");
+        connection->setSchema("bankingSystemDatabase");
 
         return connection;
     }
