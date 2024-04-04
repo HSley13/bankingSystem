@@ -6,9 +6,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    connection_details ID;
-
-    sql::Connection *db_connection = connection_setup(&ID);
+    sql::Connection *db_connection;
 
     adm_option_main_window *Adm_option_main_window = new adm_option_main_window(db_connection);
     Adm_option_main_window->show();

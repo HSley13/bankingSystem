@@ -22,9 +22,9 @@ int main(int argc, const char **argv)
 
         connection_details ID;
         ID.server = argv[1];
-        ID.port = 3306;
-        ID.user = argv[2];
-        ID.password = argv[3];
+        ID.port = std::stoi(argv[2]);
+        ID.user = argv[3];
+        ID.password = argv[4];
 
         sql::Connection *connection = connection_setup(&ID);
         if (!connection)
