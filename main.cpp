@@ -15,7 +15,7 @@ int main(int argc, const char **argv)
     {
         if (argc < 4)
         {
-            std::cerr << "You should Enter the Password as the Second Argument in order to connect to the Database" << std::endl;
+            std::cerr << " ERROR !!!!The Information required to connect to the Databse should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Password-- > argv[4] " << std::endl;
 
             return 1;
         }

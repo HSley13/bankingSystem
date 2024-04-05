@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 
     if (argc < 4)
     {
-        QMessageBox::warning(nullptr, "ERROR!!!!!", "ERROR!!!! The Password to connect to the database should be entered as the second command line argument ( argv[1] )");
+        QMessageBox::warning(nullptr, "ERROR!!!!!", "ERROR!!!! The Information required to connect to the Databse should be entered as command line arguments: Server-->argv[1], Port-->argv[2], UserName-->argv[3], Password-->argv[4]");
 
         exit(1);
     }
