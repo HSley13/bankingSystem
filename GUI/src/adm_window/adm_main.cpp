@@ -1,6 +1,5 @@
 #include "adm_main_window.h"
 #include <database.h>
-#include <QApplication>
 
 int main(int argc, char **argv)
 {
@@ -8,8 +7,8 @@ int main(int argc, char **argv)
 
     sql::Connection *db_connection;
 
-    adm_main_window *Main_window = new adm_main_window(db_connection);
-    Main_window->show();
+    adm_main_window Main_window(db_connection);
+    Main_window.show();
 
     app.exec();
 }

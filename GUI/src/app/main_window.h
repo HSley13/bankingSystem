@@ -2,12 +2,9 @@
 
 #include <database.h>
 #include <iostream>
-#include <QWidget>
-#include <QMainWindow>
-#include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+
+#include <QtCore>
+#include <QtWidgets>
 
 class main_window : public QMainWindow
 {
@@ -18,16 +15,6 @@ public:
 
 private:
     sql::Connection *connection;
-
-    QLabel *name;
-    QLabel *welcome;
-
-    QPushButton *admin;
-    QPushButton *client;
-    QPushButton *information;
-
-    QVBoxLayout *vbox;
-    QHBoxLayout *hbox;
 
 private slots:
     void adm_button_clicked();

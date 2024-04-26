@@ -1,9 +1,5 @@
 #include "option_main_window.h"
 #include <edit_forget_main_window.h>
-#include <QTextEdit>
-#include <QGroupBox>
-#include <QInputDialog>
-#include <QPixmap>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -23,44 +19,44 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         setWindowTitle("Client Inquiry Window");
         resize(500, 500);
 
-        central_widget = new QWidget(this);
+        QWidget *central_widget = new QWidget(this);
 
-        balance = new QPushButton("1. Check Balance", this);
+        QPushButton *balance = new QPushButton("1. Check Balance", this);
         connect(balance, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(1); });
 
-        deposit = new QPushButton("2. Deposit", this);
+        QPushButton *deposit = new QPushButton("2. Deposit", this);
         connect(deposit, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(2); });
 
-        withdrawal = new QPushButton("3. Money Withdrawal", this);
+        QPushButton *withdrawal = new QPushButton("3. Money Withdrawal", this);
         connect(withdrawal, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(3); });
 
-        transfer = new QPushButton("4. Transfer Money", this);
+        QPushButton *transfer = new QPushButton("4. Transfer Money", this);
         connect(transfer, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(4); });
 
-        borrowal = new QPushButton("5. Borrowed Money", this);
+        QPushButton *borrowal = new QPushButton("5. Borrowed Money", this);
         connect(borrowal, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(5); });
 
-        return_borrowal = new QPushButton("6. Return Borrowed Money", this);
+        QPushButton *return_borrowal = new QPushButton("6. Return Borrowed Money", this);
         connect(return_borrowal, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(6); });
 
-        edit_and_forget = new QPushButton("7. Edit Account Information", this);
+        QPushButton *edit_and_forget = new QPushButton("7. Edit Account Information", this);
         connect(edit_and_forget, &QPushButton::clicked, this, &option_main_window::confirm_button_edit_perso);
 
-        transaction_history = new QPushButton("8. All Transaction History", this);
+        QPushButton *transaction_history = new QPushButton("8. All Transaction History", this);
         connect(transaction_history, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(7); });
 
-        specific_transaction_history = new QPushButton("9. All Transaction History Relative to a Specific Date", this);
+        QPushButton *specific_transaction_history = new QPushButton("9. All Transaction History Relative to a Specific Date", this);
         connect(specific_transaction_history, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(8); });
 
-        delete_account = new QPushButton("10. Delete Account", this);
+        QPushButton *delete_account = new QPushButton("10. Delete Account", this);
         connect(delete_account, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(9); });
 
@@ -69,7 +65,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         image_label->setPixmap(image.scaled(500, 400, Qt::KeepAspectRatio));
         image_label->setScaledContents(true);
 
-        VBOX = new QVBoxLayout();
+        QVBoxLayout *VBOX = new QVBoxLayout(central_widget);
         VBOX->addWidget(image_label, 2, Qt::AlignCenter);
         VBOX->addWidget(balance);
         VBOX->addWidget(deposit);
@@ -83,22 +79,21 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         VBOX->addWidget(delete_account);
         VBOX->setAlignment(Qt::AlignCenter);
 
-        central_widget->setLayout(VBOX);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        balance_widget = new QWidget();
+        QWidget *balance_widget = new QWidget();
         balance_widget->setWindowTitle("Check Balance");
 
-        balance_message1 = new QLabel("Enter Account Number", this);
+        QLabel *balance_message1 = new QLabel("Enter Account Number", this);
         account_number_ba = new QLineEdit(this);
-        ba_hbox1 = new QHBoxLayout();
+        QHBoxLayout *ba_hbox1 = new QHBoxLayout();
         ba_hbox1->addWidget(balance_message1, Qt::AlignCenter);
         ba_hbox1->addWidget(account_number_ba, Qt::AlignCenter);
 
-        balance_message2 = new QLabel("Enter Password", this);
+        QLabel *balance_message2 = new QLabel("Enter Password", this);
         password_ba = new QLineEdit(this);
         password_ba->setEchoMode(QLineEdit::Password);
-        ba_hbox2 = new QHBoxLayout();
+        QHBoxLayout *ba_hbox2 = new QHBoxLayout();
         ba_hbox2->addWidget(balance_message2, Qt::AlignCenter);
         ba_hbox2->addWidget(password_ba, Qt::AlignCenter);
 
@@ -110,34 +105,33 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox1 = new QVBoxLayout();
+        QVBoxLayout *vbox1 = new QVBoxLayout(balance_widget);
         vbox1->addLayout(ba_hbox1, Qt::AlignCenter);
         vbox1->addLayout(ba_hbox2, Qt::AlignCenter);
         vbox1->addWidget(confirm_button, Qt::AlignCenter);
         vbox1->addWidget(back_button, Qt::AlignCenter);
         vbox1->setAlignment(Qt::AlignCenter);
 
-        balance_widget->setLayout(vbox1);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        deposit_widget = new QWidget();
+        QWidget *deposit_widget = new QWidget();
         deposit_widget->setWindowTitle("Deposit Money");
 
-        deposit_message1 = new QLabel("Enter Account Number", this);
+        QLabel *deposit_message1 = new QLabel("Enter Account Number", this);
         account_number_de = new QLineEdit(this);
-        de_hbox1 = new QHBoxLayout();
+        QHBoxLayout *de_hbox1 = new QHBoxLayout();
         de_hbox1->addWidget(deposit_message1, Qt::AlignCenter);
         de_hbox1->addWidget(account_number_de, Qt::AlignCenter);
 
-        deposit_message2 = new QLabel("Enter Password", this);
+        QLabel *deposit_message2 = new QLabel("Enter Password", this);
         password_de = new QLineEdit();
         password_de->setEchoMode(QLineEdit::Password);
-        de_hbox2 = new QHBoxLayout();
+        QHBoxLayout *de_hbox2 = new QHBoxLayout();
         de_hbox2->addWidget(deposit_message2, Qt::AlignCenter);
         de_hbox2->addWidget(password_de, Qt::AlignCenter);
 
-        deposit_message3 = new QLabel("Enter Amount to Deposit", this);
+        QLabel *deposit_message3 = new QLabel("Enter Amount to Deposit", this);
         amount_de = new QLineEdit(this);
-        de_hbox3 = new QHBoxLayout();
+        QHBoxLayout *de_hbox3 = new QHBoxLayout();
         de_hbox3->addWidget(deposit_message3, Qt::AlignCenter);
         de_hbox3->addWidget(amount_de, Qt::AlignCenter);
 
@@ -149,7 +143,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox2 = new QVBoxLayout();
+        QVBoxLayout *vbox2 = new QVBoxLayout(deposit_widget);
         vbox2->addLayout(de_hbox1, Qt::AlignCenter);
         vbox2->addLayout(de_hbox2, Qt::AlignCenter);
         vbox2->addLayout(de_hbox3, Qt::AlignCenter);
@@ -157,27 +151,26 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         vbox2->addWidget(back_button, Qt::AlignCenter);
         vbox2->setAlignment(Qt::AlignCenter);
 
-        deposit_widget->setLayout(vbox2);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        withdrawal_widget = new QWidget();
+        QWidget *withdrawal_widget = new QWidget();
         withdrawal_widget->setWindowTitle("Withdraw Money");
 
-        withdrawal_message1 = new QLabel("Enter Account Number", this);
+        QLabel *withdrawal_message1 = new QLabel("Enter Account Number", this);
         account_number_with = new QLineEdit(this);
-        with_hbox1 = new QHBoxLayout();
+        QHBoxLayout *with_hbox1 = new QHBoxLayout();
         with_hbox1->addWidget(withdrawal_message1, Qt::AlignCenter);
         with_hbox1->addWidget(account_number_with, Qt::AlignCenter);
 
-        withdrawal_message2 = new QLabel("Enter Password", this);
+        QLabel *withdrawal_message2 = new QLabel("Enter Password", this);
         password_with = new QLineEdit();
         password_with->setEchoMode(QLineEdit::Password);
-        with_hbox2 = new QHBoxLayout();
+        QHBoxLayout *with_hbox2 = new QHBoxLayout();
         with_hbox2->addWidget(withdrawal_message2, Qt::AlignCenter);
         with_hbox2->addWidget(password_with, Qt::AlignCenter);
 
-        withdrawal_message3 = new QLabel("Enter Amount to Withdraw", this);
+        QLabel *withdrawal_message3 = new QLabel("Enter Amount to Withdraw", this);
         amount_with = new QLineEdit(this);
-        with_hbox3 = new QHBoxLayout();
+        QHBoxLayout *with_hbox3 = new QHBoxLayout();
         with_hbox3->addWidget(withdrawal_message3, Qt::AlignCenter);
         with_hbox3->addWidget(amount_with, Qt::AlignCenter);
 
@@ -189,7 +182,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox3 = new QVBoxLayout();
+        QVBoxLayout *vbox3 = new QVBoxLayout(withdrawal_widget);
         vbox3->addLayout(with_hbox1, Qt::AlignCenter);
         vbox3->addLayout(with_hbox2, Qt::AlignCenter);
         vbox3->addLayout(with_hbox3, Qt::AlignCenter);
@@ -197,34 +190,32 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         vbox3->addWidget(back_button, Qt::AlignCenter);
         vbox3->setAlignment(Qt::AlignCenter);
 
-        withdrawal_widget->setLayout(vbox3);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        transfer_widget = new QWidget();
+        QWidget *transfer_widget = new QWidget();
         transfer_widget->setWindowTitle("Transfer Money");
 
-        transfer_message1 = new QLabel("Enter Account Number", this);
+        QLabel *transfer_message1 = new QLabel("Enter Account Number", this);
         account_number1_tran = new QLineEdit(this);
-        tran_hbox1 = new QHBoxLayout();
+        QHBoxLayout *tran_hbox1 = new QHBoxLayout();
         tran_hbox1->addWidget(transfer_message1, Qt::AlignCenter);
         tran_hbox1->addWidget(account_number1_tran, Qt::AlignCenter);
 
-        transfer_message2 = new QLabel("Enter Password", this);
+        QLabel *transfer_message2 = new QLabel("Enter Password", this);
         password_tran = new QLineEdit();
         password_tran->setEchoMode(QLineEdit::Password);
-        tran_hbox2 = new QHBoxLayout();
+        QHBoxLayout *tran_hbox2 = new QHBoxLayout();
         tran_hbox2->addWidget(transfer_message2, Qt::AlignCenter);
         tran_hbox2->addWidget(password_tran, Qt::AlignCenter);
 
-        transfer_message3 = new QLabel("Enter Account Number which will receive the Money", this);
+        QLabel *transfer_message3 = new QLabel("Enter Account Number which will receive the Money", this);
         account_number2_tran = new QLineEdit(this);
-        tran_hbox3 = new QHBoxLayout();
+        QHBoxLayout *tran_hbox3 = new QHBoxLayout();
         tran_hbox3->addWidget(transfer_message3, Qt::AlignCenter);
         tran_hbox3->addWidget(account_number2_tran, Qt::AlignCenter);
 
-        transfer_message4 = new QLabel("Enter Amount to Transfer", this);
+        QLabel *transfer_message4 = new QLabel("Enter Amount to Transfer", this);
         amount_tran = new QLineEdit(this);
-        tran_hbox4 = new QHBoxLayout();
+        QHBoxLayout *tran_hbox4 = new QHBoxLayout();
         tran_hbox4->addWidget(transfer_message4, Qt::AlignCenter);
         tran_hbox4->addWidget(amount_tran, Qt::AlignCenter);
 
@@ -236,7 +227,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox4 = new QVBoxLayout();
+        QVBoxLayout *vbox4 = new QVBoxLayout(transfer_widget);
         vbox4->addLayout(tran_hbox1, Qt::AlignCenter);
         vbox4->addLayout(tran_hbox2, Qt::AlignCenter);
         vbox4->addLayout(tran_hbox3, Qt::AlignCenter);
@@ -245,25 +236,23 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         vbox4->addWidget(back_button, Qt::AlignCenter);
         vbox4->setAlignment(Qt::AlignCenter);
 
-        transfer_widget->setLayout(vbox4);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        borrowal_widget = new QWidget();
+        QWidget *borrowal_widget = new QWidget();
         borrowal_widget->setWindowTitle("Borrow Money");
 
         borrowal_widget = new QWidget();
         borrowal_widget->setWindowTitle("Deposit Money");
 
-        borrowal_message1 = new QLabel("Enter Account Number", this);
+        QLabel *borrowal_message1 = new QLabel("Enter Account Number", this);
         account_number_borr = new QLineEdit(this);
-        borr_hbox1 = new QHBoxLayout();
+        QHBoxLayout *borr_hbox1 = new QHBoxLayout();
         borr_hbox1->addWidget(borrowal_message1, Qt::AlignCenter);
         borr_hbox1->addWidget(account_number_borr, Qt::AlignCenter);
 
-        borrowal_message2 = new QLabel("Enter Password", this);
+        QLabel *borrowal_message2 = new QLabel("Enter Password", this);
         password_borr = new QLineEdit();
         password_borr->setEchoMode(QLineEdit::Password);
-        borr_hbox2 = new QHBoxLayout();
+        QHBoxLayout *borr_hbox2 = new QHBoxLayout();
         borr_hbox2->addWidget(borrowal_message2, Qt::AlignCenter);
         borr_hbox2->addWidget(password_borr, Qt::AlignCenter);
 
@@ -279,7 +268,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         interest_rate_info->setReadOnly(true);
         amount_borr = new QLineEdit(this);
 
-        borr_hbox3 = new QHBoxLayout();
+        QHBoxLayout *borr_hbox3 = new QHBoxLayout();
         borr_hbox3->addWidget(interest_rate_info, Qt::AlignCenter);
         borr_hbox3->addWidget(amount_borr, Qt::AlignCenter);
         QGroupBox *grp_balance = new QGroupBox();
@@ -293,7 +282,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox5 = new QVBoxLayout();
+        QVBoxLayout *vbox5 = new QVBoxLayout(borrowal_widget);
         vbox5->addLayout(borr_hbox1, Qt::AlignCenter);
         vbox5->addLayout(borr_hbox2, Qt::AlignCenter);
         vbox5->addWidget(grp_balance, Qt::AlignCenter);
@@ -301,22 +290,20 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         vbox5->addWidget(back_button, Qt::AlignCenter);
         vbox5->setAlignment(Qt::AlignCenter);
 
-        borrowal_widget->setLayout(vbox5);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        return_borrowal_widget = new QWidget();
+        QWidget *return_borrowal_widget = new QWidget();
         return_borrowal_widget->setWindowTitle("Return Borrowed Money");
 
-        return_borrowal_message1 = new QLabel("Enter Account Number", this);
+        QLabel *return_borrowal_message1 = new QLabel("Enter Account Number", this);
         account_number_ret = new QLineEdit(this);
-        ret_hbox1 = new QHBoxLayout();
+        QHBoxLayout *ret_hbox1 = new QHBoxLayout();
         ret_hbox1->addWidget(return_borrowal_message1, Qt::AlignCenter);
         ret_hbox1->addWidget(account_number_ret, Qt::AlignCenter);
 
-        return_borrowal_message2 = new QLabel("Enter Password", this);
+        QLabel *return_borrowal_message2 = new QLabel("Enter Password", this);
         password_ret = new QLineEdit(this);
         password_ret->setEchoMode(QLineEdit::Password);
-        ret_hbox2 = new QHBoxLayout();
+        QHBoxLayout *ret_hbox2 = new QHBoxLayout();
         ret_hbox2->addWidget(return_borrowal_message2, Qt::AlignCenter);
         ret_hbox2->addWidget(password_ret, Qt::AlignCenter);
 
@@ -328,29 +315,28 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox6 = new QVBoxLayout();
+        QVBoxLayout *vbox6 = new QVBoxLayout(return_borrowal_widget);
         vbox6->addLayout(ret_hbox1, Qt::AlignCenter);
         vbox6->addLayout(ret_hbox2, Qt::AlignCenter);
         vbox6->addWidget(confirm_button, Qt::AlignCenter);
         vbox6->addWidget(back_button, Qt::AlignCenter);
         vbox6->setAlignment(Qt::AlignCenter);
 
-        return_borrowal_widget->setLayout(vbox6);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        transaction_history_widget = new QWidget();
+        QWidget *transaction_history_widget = new QWidget();
         transaction_history_widget->setWindowTitle("Transaction History");
 
-        transaction_history_message1 = new QLabel("Enter Account Number", this);
+        QLabel *transaction_history_message1 = new QLabel("Enter Account Number", this);
         account_number_transac = new QLineEdit(this);
-        transac_hbox1 = new QHBoxLayout();
+        QHBoxLayout *transac_hbox1 = new QHBoxLayout();
         transac_hbox1->addWidget(transaction_history_message1, Qt::AlignCenter);
         transac_hbox1->addWidget(account_number_transac, Qt::AlignCenter);
 
-        transaction_history_message2 = new QLabel("Enter Password", this);
+        QLabel *transaction_history_message2 = new QLabel("Enter Password", this);
         password_transac = new QLineEdit(this);
         password_transac->setEchoMode(QLineEdit::Password);
-        transac_hbox2 = new QHBoxLayout();
+        QHBoxLayout *transac_hbox2 = new QHBoxLayout();
         transac_hbox2->addWidget(transaction_history_message2, Qt::AlignCenter);
         transac_hbox2->addWidget(password_transac, Qt::AlignCenter);
 
@@ -362,29 +348,28 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox8 = new QVBoxLayout();
-        vbox8->addLayout(transac_hbox1, Qt::AlignCenter);
-        vbox8->addLayout(transac_hbox2, Qt::AlignCenter);
-        vbox8->addWidget(confirm_button, Qt::AlignCenter);
-        vbox8->addWidget(back_button, Qt::AlignCenter);
-        vbox8->setAlignment(Qt::AlignCenter);
+        QVBoxLayout *vbox7 = new QVBoxLayout(transaction_history_widget);
+        vbox7->addLayout(transac_hbox1, Qt::AlignCenter);
+        vbox7->addLayout(transac_hbox2, Qt::AlignCenter);
+        vbox7->addWidget(confirm_button, Qt::AlignCenter);
+        vbox7->addWidget(back_button, Qt::AlignCenter);
+        vbox7->setAlignment(Qt::AlignCenter);
 
-        transaction_history_widget->setLayout(vbox8);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        specific_transaction_history_widget = new QWidget();
+        QWidget *specific_transaction_history_widget = new QWidget();
         specific_transaction_history_widget->setWindowTitle("Specific Transaction History");
 
-        specific_transaction_history_message1 = new QLabel("Enter Account Number", this);
+        QLabel *specific_transaction_history_message1 = new QLabel("Enter Account Number", this);
         specific_account_number_transac = new QLineEdit(this);
-        specific_transac_hbox1 = new QHBoxLayout();
+        QHBoxLayout *specific_transac_hbox1 = new QHBoxLayout();
         specific_transac_hbox1->addWidget(specific_transaction_history_message1, Qt::AlignCenter);
         specific_transac_hbox1->addWidget(specific_account_number_transac, Qt::AlignCenter);
 
-        specific_transaction_history_message2 = new QLabel("Enter Password", this);
+        QLabel *specific_transaction_history_message2 = new QLabel("Enter Password", this);
         specific_password_transac = new QLineEdit(this);
         specific_password_transac->setEchoMode(QLineEdit::Password);
-        specific_transac_hbox2 = new QHBoxLayout();
+        QHBoxLayout *specific_transac_hbox2 = new QHBoxLayout();
         specific_transac_hbox2->addWidget(specific_transaction_history_message2, Qt::AlignCenter);
         specific_transac_hbox2->addWidget(specific_password_transac, Qt::AlignCenter);
 
@@ -408,7 +393,7 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox8 = new QVBoxLayout();
+        QVBoxLayout *vbox8 = new QVBoxLayout(specific_transaction_history_widget);
         vbox8->addLayout(specific_transac_hbox1, Qt::AlignCenter);
         vbox8->addLayout(specific_transac_hbox2, Qt::AlignCenter);
         vbox8->addWidget(calendar, Qt::AlignCenter);
@@ -417,22 +402,20 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         vbox8->addWidget(back_button, Qt::AlignCenter);
         vbox8->setAlignment(Qt::AlignCenter);
 
-        specific_transaction_history_widget->setLayout(vbox8);
-
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        delete_account_widget = new QWidget();
+        QWidget *delete_account_widget = new QWidget();
         delete_account_widget->setWindowTitle("Delete Account");
 
-        delete_account_message1 = new QLabel("Enter Account Number", this);
+        QLabel *delete_account_message1 = new QLabel("Enter Account Number", this);
         account_number_dele = new QLineEdit(this);
-        dele_hbox1 = new QHBoxLayout();
+        QHBoxLayout *dele_hbox1 = new QHBoxLayout();
         dele_hbox1->addWidget(delete_account_message1, Qt::AlignCenter);
         dele_hbox1->addWidget(account_number_dele, Qt::AlignCenter);
 
-        delete_account_message2 = new QLabel("Enter Password", this);
+        QLabel *delete_account_message2 = new QLabel("Enter Password", this);
         password_dele = new QLineEdit(this);
         password_dele->setEchoMode(QLineEdit::Password);
-        dele_hbox2 = new QHBoxLayout();
+        QHBoxLayout *dele_hbox2 = new QHBoxLayout();
         dele_hbox2->addWidget(delete_account_message2, Qt::AlignCenter);
         dele_hbox2->addWidget(password_dele, Qt::AlignCenter);
 
@@ -444,14 +427,13 @@ option_main_window::option_main_window(sql::Connection *db_connection, QWidget *
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &option_main_window::back_button_func);
 
-        vbox10 = new QVBoxLayout();
-        vbox10->addLayout(dele_hbox1, Qt::AlignCenter);
-        vbox10->addLayout(dele_hbox2, Qt::AlignCenter);
-        vbox10->addWidget(confirm_button, Qt::AlignCenter);
-        vbox10->addWidget(back_button, Qt::AlignCenter);
-        vbox10->setAlignment(Qt::AlignCenter);
+        QVBoxLayout *vbox9 = new QVBoxLayout(delete_account_widget);
+        vbox9->addLayout(dele_hbox1, Qt::AlignCenter);
+        vbox9->addLayout(dele_hbox2, Qt::AlignCenter);
+        vbox9->addWidget(confirm_button, Qt::AlignCenter);
+        vbox9->addWidget(back_button, Qt::AlignCenter);
+        vbox9->setAlignment(Qt::AlignCenter);
 
-        delete_account_widget->setLayout(vbox10);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         window_stack->addWidget(central_widget);
         window_stack->addWidget(balance_widget);

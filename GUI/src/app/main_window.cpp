@@ -1,11 +1,6 @@
 #include "main_window.h"
 #include <adm_main_window.h>
 #include <client_main_window.h>
-#include <QMessageBox>
-#include <QDebug>
-#include <QPixmap>
-#include <QPalette>
-#include <QLinearGradient>
 
 main_window::main_window(sql::Connection *db_connection, QWidget *parent)
     : QMainWindow(parent), connection(db_connection)
@@ -21,19 +16,19 @@ main_window::main_window(sql::Connection *db_connection, QWidget *parent)
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);
 
-    name = new QLabel("CROSS-CONTINENTAL TREASUTY BANK", this);
+    QLabel *name = new QLabel("CROSS-CONTINENTAL TREASUTY BANK", this);
     name->setStyleSheet("font-family: Zapfino;"
                         "font: bold italic 20px;"
                         "font-size: 20;");
 
-    welcome = new QLabel("Welcome to our Bank, Choose among the Options below what best suits your Status", this);
+    QLabel *welcome = new QLabel("Welcome to our Bank, Choose among the Options below what best suits your Status", this);
 
-    admin = new QPushButton("1. Administrator", this);
+    QPushButton *admin = new QPushButton("1. Administrator", this);
     admin->setStyleSheet("color: black;"
                          "background-color: beige;");
     connect(admin, &QPushButton::clicked, this, &main_window::adm_button_clicked);
 
-    client = new QPushButton("2. Regular Client", this);
+    QPushButton *client = new QPushButton("2. Regular Client", this);
     client->setStyleSheet("color: black;"
                           "background-color: beige;");
     connect(client, &QPushButton::clicked, this, &main_window::client_button_clicked);
@@ -43,7 +38,7 @@ main_window::main_window(sql::Connection *db_connection, QWidget *parent)
     image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
-    vbox = new QVBoxLayout(central_widget);
+    QVBoxLayout *vbox = new QVBoxLayout(central_widget);
     vbox->addWidget(name, 2, Qt ::AlignCenter);
     vbox->addWidget(image_label, 2, Qt ::AlignCenter);
     vbox->addWidget(welcome, 2, Qt ::AlignCenter);

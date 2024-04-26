@@ -1,17 +1,8 @@
 #pragma once
 
 #include <database.h>
-#include <QMainWindow>
-#include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QTextEdit>
-#include <QDateEdit>
-#include <QString>
+#include <QtCore>
+#include <QtWidgets>
 
 class client_main_window : public QMainWindow
 {
@@ -25,29 +16,8 @@ private:
 
     QStackedWidget *window_stack;
 
-    QWidget *central_widget;
-    QWidget *create_account_widget;
-    QWidget *bank_info_widget;
-
-    QPushButton *create_account;
-    QPushButton *account_inquiry;
-    QPushButton *bank_info;
     QPushButton *confirm_button;
     QPushButton *back_button;
-
-    QLabel *message;
-    QLabel *national_ID;
-    QLabel *first_name;
-    QLabel *last_name;
-    QLabel *date_birth;
-    QLabel *phone_number;
-    QLabel *email;
-    QLabel *address;
-    QLabel *password;
-    QLabel *password_confirmation;
-    QLabel *question;
-    QLabel *answer;
-    QLabel *confirm_answer;
 
     QLineEdit *insert_national_ID;
     QLineEdit *insert_first_name;
@@ -61,20 +31,6 @@ private:
     QLineEdit *insert_question;
     QLineEdit *insert_answer;
     QLineEdit *insert_confirm_answer;
-
-    QHBoxLayout *hbox1;
-    QHBoxLayout *hbox2;
-    QHBoxLayout *hbox3;
-    QHBoxLayout *hbox4;
-    QHBoxLayout *hbox5;
-    QHBoxLayout *hbox6;
-    QHBoxLayout *hbox7;
-    QHBoxLayout *hbox8;
-    QHBoxLayout *hbox9;
-    QHBoxLayout *hbox10;
-    QHBoxLayout *hbox11;
-    QHBoxLayout *hbox12;
-    QHBoxLayout *hbox13;
 
     QVBoxLayout *vbox;
 

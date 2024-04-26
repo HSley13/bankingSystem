@@ -1,7 +1,5 @@
 #include "adm_main_window.h"
 #include <adm_option_main_window.h>
-#include <QMessageBox>
-#include <QPixmap>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -22,45 +20,43 @@ adm_main_window::adm_main_window(sql::Connection *db_connection, QWidget *parent
     QWidget *central_widget = new QWidget(this);
     setCentralWidget(central_widget);
 
-    adm_account_number = new QLabel("Enter ADM Account Number to log in?", this);
+    QLabel *adm_account_number = new QLabel("Enter ADM Account Number to log in?", this);
     insert_adm_account_number = new QLineEdit(this);
 
-    hbox1 = new QHBoxLayout();
+    QHBoxLayout *hbox1 = new QHBoxLayout();
     hbox1->addWidget(adm_account_number, Qt::AlignCenter);
     hbox1->addWidget(insert_adm_account_number, Qt::AlignCenter);
 
-    adm_password = new QLabel("Enter ADM Password: ");
+    QLabel *adm_password = new QLabel("Enter ADM Password: ");
     insert_adm_password = new QLineEdit(this);
     insert_adm_password->setEchoMode(QLineEdit::Password);
 
-    hbox2 = new QHBoxLayout();
+    QHBoxLayout *hbox2 = new QHBoxLayout();
     hbox2->addWidget(adm_password, Qt::AlignCenter);
     hbox2->addWidget(insert_adm_password, Qt::AlignCenter);
 
-    confirm_login = new QPushButton("Confirm", this);
+    QPushButton *confirm_login = new QPushButton("Confirm", this);
     confirm_login->setStyleSheet("color: black;"
                                  "background-color: beige;");
     connect(confirm_login, &QPushButton::clicked, this, &adm_main_window::confirm_login_func);
 
-    vbox = new QVBoxLayout();
+    QVBoxLayout *vbox = new QVBoxLayout();
     vbox->addLayout(hbox1);
     vbox->addLayout(hbox2);
     vbox->addWidget(confirm_login);
 
-    box = new QGroupBox();
+    QGroupBox *box = new QGroupBox();
     box->setLayout(vbox);
     box->setFixedSize(500, 300);
 
-    image_label = new QLabel(this);
+    QLabel *image_label = new QLabel(this);
     QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/adm.jpeg");
     image_label->setPixmap(image.scaled(300, 300, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
-    hbox = new QHBoxLayout();
+    QHBoxLayout *hbox = new QHBoxLayout(central_widget);
     hbox->addWidget(image_label);
     hbox->addWidget(box);
-
-    central_widget->setLayout(hbox);
 }
 
 void adm_main_window::confirm_login_func()

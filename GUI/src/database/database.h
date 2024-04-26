@@ -4,7 +4,9 @@
 #include <random>
 #include <stack>
 #include <vector>
-#include <QWidget>
+
+#include <QtCore>
+#include <QtWidgets>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -14,7 +16,7 @@
 class connection_details
 {
 public:
-    std ::string server, user, password;
+    std ::string server, user, password, schema;
     int port;
 };
 

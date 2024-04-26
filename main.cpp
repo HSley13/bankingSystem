@@ -13,9 +13,9 @@ int main(int argc, const char **argv)
 {
     try
     {
-        if (argc < 4)
+        if (argc < 5)
         {
-            std::cerr << " ERROR !!!!The Information required to connect to the Databse should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Password-- > argv[4] " << std::endl;
+            std::cerr << " ERROR !!!!The Information required to connect to the Databse should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Schema-- > argv[4], Password-- > argv[5] " << std::endl;
 
             return 1;
         }
@@ -24,7 +24,8 @@ int main(int argc, const char **argv)
         ID.server = argv[1];
         ID.port = std::stoi(argv[2]);
         ID.user = argv[3];
-        ID.password = argv[4];
+        ID.schema = argv[4];
+        ID.password = argv[5];
 
         sql::Connection *connection = connection_setup(&ID);
         if (!connection)

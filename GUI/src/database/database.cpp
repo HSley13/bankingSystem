@@ -1,18 +1,5 @@
 #include "database.h"
 
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QHBoxLayout>
-#include <QMessageBox>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QHeaderView>
-#include <QDate>
-#include <QInputDialog>
-
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/prepared_statement.h>
@@ -22,19 +9,17 @@ sql::Connection *connection_setup(connection_details *ID)
 {
     try
     {
-        sql::mysql::MySQL_Driver *driver;
-        sql::Connection *connection;
-
-        driver = sql::mysql::get_driver_instance();
-
         sql::ConnectOptionsMap connection_properties;
         connection_properties["hostName"] = ID->server;
         connection_properties["port"] = ID->port;
         connection_properties["userName"] = ID->user;
+        connection_properties["schema"] = ID->schema;
         connection_properties["password"] = ID->password;
 
-        connection = driver->connect(connection_properties);
-        connection->setSchema("bankingSystemDatabase");
+        sql::mysql::MySQL_Driver *driver;
+        driver = sql::mysql::get_driver_instance();
+
+        sql::Connection *connection = driver->connect(connection_properties);
 
         return connection;
     }
@@ -50,8 +35,6 @@ double check_balance(sql::Connection *connection, int account_number)
 {
     try
     {
-        double balance;
-
         std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
@@ -60,7 +43,7 @@ double check_balance(sql::Connection *connection, int account_number)
         if (!result->next())
             return 0.0;
 
-        balance = result->getDouble("balance");
+        double balance = result->getDouble("balance");
 
         return balance;
     }
@@ -82,7 +65,6 @@ void Qt_display_balance(sql::Connection *connection, int account_number)
 {
     try
     {
-
         std::unique_ptr<sql::PreparedStatement> prep_statement(connection->prepareStatement("SELECT balance FROM accounts WHERE account_number = ?;"));
         prep_statement->setInt(1, account_number);
 
@@ -986,8 +968,6 @@ std::string BANK::retrieve_hashed_password(sql::Connection *connection, int acco
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string hashed_password;
-
         if (!result->next())
         {
             std::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
@@ -996,7 +976,7 @@ std::string BANK::retrieve_hashed_password(sql::Connection *connection, int acco
             return "";
         }
 
-        hashed_password = result->getString("hashed_password");
+        std::string hashed_password = result->getString("hashed_password");
 
         return hashed_password;
     }
@@ -1023,8 +1003,6 @@ std::string BANK::Qt_retrieve_hashed_password(sql::Connection *connection, int a
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string hashed_password;
-
         if (!result->next())
         {
             QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
@@ -1032,7 +1010,7 @@ std::string BANK::Qt_retrieve_hashed_password(sql::Connection *connection, int a
             return "";
         }
 
-        hashed_password = result->getString("hashed_password");
+        std::string hashed_password = result->getString("hashed_password");
 
         return hashed_password;
     }
@@ -1059,8 +1037,6 @@ std::string BANK::retrieve_adm_hashed_password(sql::Connection *connection, int 
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string hashed_password;
-
         if (!result->next())
         {
             std::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
@@ -1068,7 +1044,7 @@ std::string BANK::retrieve_adm_hashed_password(sql::Connection *connection, int 
             return "";
         }
 
-        hashed_password = result->getString("hashed_password");
+        std::string hashed_password = result->getString("hashed_password");
 
         return hashed_password;
     }
@@ -1095,8 +1071,6 @@ std::string BANK::Qt_retrieve_adm_hashed_password(sql::Connection *connection, i
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string hashed_password;
-
         if (!result->next())
         {
             QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
@@ -1104,7 +1078,7 @@ std::string BANK::Qt_retrieve_adm_hashed_password(sql::Connection *connection, i
             return "";
         }
 
-        hashed_password = result->getString("hashed_password");
+        std::string hashed_password = result->getString("hashed_password");
 
         return hashed_password;
     }
@@ -1164,8 +1138,6 @@ std::string BANK::retrieve_interest_rate_initial_timestamp(sql::Connection *conn
 
         std::unique_ptr<sql::ResultSet> result(prep_statement->executeQuery());
 
-        std::string initial_timestamp;
-
         if (!result->next())
         {
             std::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std::endl;
@@ -1173,7 +1145,7 @@ std::string BANK::retrieve_interest_rate_initial_timestamp(sql::Connection *conn
             return "";
         }
 
-        initial_timestamp = result->getString("initial_timestamp");
+        std::string initial_timestamp = result->getString("initial_timestamp");
 
         return initial_timestamp;
     }

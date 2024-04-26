@@ -1,8 +1,5 @@
 #include "client_main_window.h"
 #include <option_main_window.h>
-#include <QGroupBox>
-#include <QPixmap>
-#include <QInputDialog>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
@@ -23,16 +20,16 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     setWindowTitle("Client");
     resize(500, 500);
 
-    central_widget = new QWidget(this);
+    QWidget *central_widget = new QWidget(this);
 
-    create_account = new QPushButton("1. New to our Bank and Would like to Create an Account", this);
+    QPushButton *create_account = new QPushButton("1. New to our Bank and Would like to Create an Account", this);
     connect(create_account, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(1); });
 
-    account_inquiry = new QPushButton("2. Already possess an Account and would like to process some inquiries relative to it", this);
+    QPushButton *account_inquiry = new QPushButton("2. Already possess an Account and would like to process some inquiries relative to it", this);
     connect(account_inquiry, &QPushButton::clicked, this, &client_main_window::account_inquiry_func);
 
-    bank_info = new QPushButton("3. Information on our Bank", this);
+    QPushButton *bank_info = new QPushButton("3. Information on our Bank", this);
     connect(bank_info, &QPushButton::clicked, this, [=]()
             { window_stack->setCurrentIndex(2); });
 
@@ -41,64 +38,63 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     image_label->setPixmap(image.scaled(600, 600, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
-    vbox = new QVBoxLayout();
+    vbox = new QVBoxLayout(central_widget);
     vbox->addWidget(image_label, 2, Qt::AlignCenter);
     vbox->addWidget(create_account, Qt::AlignCenter);
     vbox->addWidget(account_inquiry, Qt::AlignCenter);
     vbox->addWidget(bank_info, Qt::AlignCenter);
 
-    central_widget->setLayout(vbox);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-    create_account_widget = new QWidget();
+    QWidget *create_account_widget = new QWidget();
     create_account_widget->setWindowTitle("Create Account");
 
-    message = new QLabel("Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information", this);
+    QLabel *message = new QLabel("Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information", this);
 
-    national_ID = new QLabel("National ID with at least a letter within it: ", this);
+    QLabel *national_ID = new QLabel("National ID with at least a letter within it: ", this);
     insert_national_ID = new QLineEdit(this);
-    hbox1 = new QHBoxLayout();
+    QHBoxLayout *hbox1 = new QHBoxLayout();
     hbox1->addWidget(national_ID, Qt::AlignCenter);
     hbox1->addWidget(insert_national_ID, Qt::AlignCenter);
 
-    first_name = new QLabel("First Name: ", this);
+    QLabel *first_name = new QLabel("First Name: ", this);
     insert_first_name = new QLineEdit(this);
-    hbox2 = new QHBoxLayout();
+    QHBoxLayout *hbox2 = new QHBoxLayout();
     hbox2->addWidget(first_name, Qt::AlignCenter);
     hbox2->addWidget(insert_first_name, Qt::AlignCenter);
 
-    last_name = new QLabel("Last Name: ", this);
+    QLabel *last_name = new QLabel("Last Name: ", this);
     insert_last_name = new QLineEdit(this);
-    hbox3 = new QHBoxLayout();
+    QHBoxLayout *hbox3 = new QHBoxLayout();
     hbox3->addWidget(last_name, Qt::AlignCenter);
     hbox3->addWidget(insert_last_name, Qt::AlignCenter);
 
-    date_birth = new QLabel("Date of Birth: ", this);
+    QLabel *date_birth = new QLabel("Date of Birth: ", this);
     calendar = new QDateEdit(this);
     calendar->setCalendarPopup(true);
     calendar->setDate(QDate::currentDate());
     connect(calendar, &QDateEdit::dateChanged, this, [=]()
             { selected_date = calendar->date(); });
 
-    hbox4 = new QHBoxLayout();
+    QHBoxLayout *hbox4 = new QHBoxLayout();
     hbox4->addWidget(date_birth, Qt::AlignCenter);
     hbox4->addWidget(calendar, Qt::AlignCenter);
 
-    phone_number = new QLabel("Phone Number: ", this);
+    QLabel *phone_number = new QLabel("Phone Number: ", this);
     insert_phone_number = new QLineEdit(this);
-    hbox5 = new QHBoxLayout();
+    QHBoxLayout *hbox5 = new QHBoxLayout();
     hbox5->addWidget(phone_number, Qt::AlignCenter);
     hbox5->addWidget(insert_phone_number, Qt::AlignCenter);
 
-    email = new QLabel("Email: ", this);
+    QLabel *email = new QLabel("Email: ", this);
     insert_email = new QLineEdit(this);
-    hbox6 = new QHBoxLayout();
+    QHBoxLayout *hbox6 = new QHBoxLayout();
     hbox6->addWidget(email, Qt::AlignCenter);
     hbox6->addWidget(insert_email, Qt::AlignCenter);
 
-    address = new QLabel("Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ", this);
+    QLabel *address = new QLabel("Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ", this);
     insert_address = new QLineEdit(this);
-    hbox7 = new QHBoxLayout();
+    QHBoxLayout *hbox7 = new QHBoxLayout();
     hbox7->addWidget(address, Qt::AlignCenter);
     hbox7->addWidget(insert_address, Qt::AlignCenter);
 
@@ -115,40 +111,40 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
 
     insert_balance = new QLineEdit(this);
 
-    hbox8 = new QHBoxLayout();
+    QHBoxLayout *hbox8 = new QHBoxLayout();
     hbox8->addWidget(interest_rate_info, Qt::AlignCenter);
     hbox8->addWidget(insert_balance, Qt::AlignCenter);
     QGroupBox *grp_balance = new QGroupBox();
     grp_balance->setLayout(hbox8);
 
-    password = new QLabel("Enter Password: ", this);
+    QLabel *password = new QLabel("Enter Password: ", this);
     insert_password = new QLineEdit(this);
-    hbox9 = new QHBoxLayout();
+    QHBoxLayout *hbox9 = new QHBoxLayout();
     hbox9->addWidget(password, Qt::AlignCenter);
     hbox9->addWidget(insert_password, Qt::AlignCenter);
 
-    password_confirmation = new QLabel("Enter Password Confirmation: ", this);
+    QLabel *password_confirmation = new QLabel("Enter Password Confirmation: ", this);
     insert_password_confirmation = new QLineEdit(this);
     insert_password_confirmation->setEchoMode(QLineEdit::Password);
-    hbox10 = new QHBoxLayout();
+    QHBoxLayout *hbox10 = new QHBoxLayout();
     hbox10->addWidget(password_confirmation, Qt::AlignCenter);
     hbox10->addWidget(insert_password_confirmation, Qt::AlignCenter);
 
-    question = new QLabel("Ask Yourself question which is gonna be used for Password Recovery", this);
+    QLabel *question = new QLabel("Ask Yourself question which is gonna be used for Password Recovery", this);
     insert_question = new QLineEdit(this);
-    hbox11 = new QHBoxLayout();
+    QHBoxLayout *hbox11 = new QHBoxLayout();
     hbox11->addWidget(question, Qt::AlignCenter);
     hbox11->addWidget(insert_question, Qt::AlignCenter);
 
-    answer = new QLabel("Enter the Answer", this);
+    QLabel *answer = new QLabel("Enter the Answer", this);
     insert_answer = new QLineEdit(this);
-    hbox12 = new QHBoxLayout();
+    QHBoxLayout *hbox12 = new QHBoxLayout();
     hbox12->addWidget(answer, Qt::AlignCenter);
     hbox12->addWidget(insert_answer, Qt::AlignCenter);
 
-    confirm_answer = new QLabel("Confirm the Answer", this);
+    QLabel *confirm_answer = new QLabel("Confirm the Answer", this);
     insert_confirm_answer = new QLineEdit(this);
-    hbox13 = new QHBoxLayout();
+    QHBoxLayout *hbox13 = new QHBoxLayout();
     hbox13->addWidget(confirm_answer, Qt::AlignCenter);
     hbox13->addWidget(insert_confirm_answer, Qt::AlignCenter);
 
@@ -160,7 +156,7 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     back_button = new QPushButton("Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
 
-    QVBoxLayout *VBOX = new QVBoxLayout();
+    QVBoxLayout *VBOX = new QVBoxLayout(create_account_widget);
     VBOX->addWidget(message, Qt::AlignCenter);
     VBOX->addLayout(hbox1, Qt::AlignCenter);
     VBOX->addLayout(hbox2, Qt::AlignCenter);
@@ -178,10 +174,9 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     VBOX->addWidget(confirm_button, Qt::AlignCenter);
     VBOX->addWidget(back_button, Qt::AlignCenter);
 
-    create_account_widget->setLayout(VBOX);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-    bank_info_widget = new QWidget();
+    QWidget *bank_info_widget = new QWidget();
     bank_info_widget->setWindowTitle("Bank Info");
 
     QTextEdit *information = new QTextEdit(this);
@@ -278,12 +273,11 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     back_button = new QPushButton("Previous Menu", this);
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
 
-    QVBoxLayout *vbox = new QVBoxLayout();
+    vbox = new QVBoxLayout(bank_info_widget);
     vbox->addWidget(information, Qt::AlignCenter);
     vbox->addWidget(back_button, Qt::AlignCenter);
     vbox->setAlignment(Qt::AlignCenter);
 
-    bank_info_widget->setLayout(vbox);
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
     window_stack->addWidget(central_widget);
