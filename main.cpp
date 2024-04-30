@@ -15,7 +15,7 @@ int main(int argc, const char **argv)
     {
         if (argc < 5)
         {
-            std::cerr << " ERROR !!!!The Information required to connect to the Databse should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Schema-- > argv[4], Password-- > argv[5] " << std::endl;
+            std::cerr << " ERROR !!!!The Information required to connect to the Database should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Schema-- > argv[4], Password-- > argv[5] " << std::endl;
 
             return 1;
         }
@@ -197,9 +197,9 @@ int main(int argc, const char **argv)
                                 std::cin >> date;
                                 std::cout << std::endl;
 
-                                std::cout << "0. Display All Transactions occured BEFORE the selected Date" << std::endl;
-                                std::cout << "1. Display All Transactions occured AFTER the selected Date" << std::endl;
-                                std::cout << "2. Display All Transactions occured ONLY ON the selected Date" << std::endl;
+                                std::cout << "0. Display All Transactions occurred BEFORE the selected Date" << std::endl;
+                                std::cout << "1. Display All Transactions occurred AFTER the selected Date" << std::endl;
+                                std::cout << "2. Display All Transactions occurred ONLY ON the selected Date" << std::endl;
                                 std::cout << std::endl;
 
                                 std::cin >> choice;
@@ -340,7 +340,7 @@ int main(int argc, const char **argv)
 
                         do
                         {
-                            std::cout << "Passord Confirmation: ";
+                            std::cout << "Password Confirmation: ";
                             std::cin >> password_confirmation;
                             std::cout << std::endl;
 
@@ -540,7 +540,7 @@ int main(int argc, const char **argv)
                                         {
                                             std::cout << "Balance is: " << balance << " which is less than the Amount to Withdraw" << std::endl;
 
-                                            std::cout << "So Please Enter a reasonnable Amount: ";
+                                            std::cout << "So Please Enter a reasonable Amount: ";
                                             std::cin >> amount_to_withdraw;
                                             std::cout << std::endl;
                                         }
@@ -593,7 +593,7 @@ int main(int argc, const char **argv)
                                         {
                                             std::cout << "Your balance is: " << balance << " which is less than the Amount to Transfer" << std::endl;
 
-                                            std::cout << "So Please enter a reasonnable Amount: ";
+                                            std::cout << "So Please enter a reasonable Amount: ";
                                             std::cin >> amount_to_transfer;
                                             std::cout << std::endl;
                                         }
@@ -1240,9 +1240,9 @@ int main(int argc, const char **argv)
                                         std::cin >> date;
                                         std::cout << std::endl;
 
-                                        std::cout << "0. Display All Transactions occured BEFORE the selected Date" << std::endl;
-                                        std::cout << "1. Display All Transactions occured AFTER the selected Date" << std::endl;
-                                        std::cout << "2. Display All Transactions occured ONLY ON the selected Date" << std::endl;
+                                        std::cout << "0. Display All Transactions occurred BEFORE the selected Date" << std::endl;
+                                        std::cout << "1. Display All Transactions occurred AFTER the selected Date" << std::endl;
+                                        std::cout << "2. Display All Transactions occurred ONLY ON the selected Date" << std::endl;
                                         std::cout << std::endl;
 
                                         std::cin >> choice;
@@ -1320,7 +1320,7 @@ int main(int argc, const char **argv)
                         std::cout << std::endl;
                         std::cout << "Integrity: Upholding the highest ethical standards in all interactions." << std::endl;
                         std::cout << "Innovation: Pioneering financial solutions that adapt to the dynamic global landscape." << std::endl;
-                        std::cout << "Client Satisfaction: Plastd::cing our clients at the center and ensuring their success is our success." << std::endl;
+                        std::cout << "Client Satisfaction: Place our clients at the center and ensuring their success is our success." << std::endl;
                         std::cout << std::endl;
                         std::cout << std::endl;
                         std::cout << std::endl;
@@ -1362,12 +1362,12 @@ int main(int argc, const char **argv)
                         std::cout << std::endl;
                         std::cout << std::endl;
 
-                        std::cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSABILITY" << std::endl;
+                        std::cout << "CHAPTER 5: ENVIRONMENTAL AND SOCIAL RESPONSIBILITY" << std::endl;
                         std::cout << std::endl;
                         std::cout << "SECTION 5.1: Sustainable Banking Practices" << std::endl;
                         std::cout << std::endl;
                         std::cout << "Integrating environmental and social responsibility into our business model." << std::endl;
-                        std::cout << "Investing in eco-fristd::endly initiatives and supporting community development projects." << std::endl;
+                        std::cout << "Investing in eco-friendly initiatives and supporting community development projects." << std::endl;
                         std::cout << std::endl;
                         std::cout << std::endl;
                         std::cout << std::endl;
@@ -1376,7 +1376,7 @@ int main(int argc, const char **argv)
                         std::cout << std::endl;
                         std::cout << "SECTION 6.1: Technological Advancements" << std::endl;
                         std::cout << std::endl;
-                        std::cout << "Embrastd::cing cutting-edge technology to enhance efficiency, security, and user experience." << std::endl;
+                        std::cout << "Embrace cutting-edge technology to enhance efficiency, security, and user experience." << std::endl;
                         std::cout << "Exploring blockchain, artificial intelligence, and other innovations to shape the future of banking." << std::endl;
                         std::cout << "SECTION 6.2: Continuous Improvement" << std::endl;
                         std::cout << std::endl;

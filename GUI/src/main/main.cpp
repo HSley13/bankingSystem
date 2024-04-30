@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 
     if (argc < 5)
     {
-        std::cerr << " ERROR !!!!The Information required to connect to the Databse should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Schema-- > argv[4], Password-- > argv[5] " << std::endl;
+        std::cerr << " ERROR !!!!The Information required to connect to the Database should be entered as command line arguments : Server-- > argv[1], Port-- > argv[2], UserName-- > argv[3], Schema-- > argv[4], Password-- > argv[5] " << std::endl;
 
         return 1;
     }
