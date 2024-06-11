@@ -393,24 +393,14 @@ void client_main_window::confirm_button_func()
                    QString::fromStdString(answer) + "\n\n"
                                                     "Type YES to confirm and NO to cancel";
 
-    QString input = QInputDialog::getText(this, "Confirmation", info, QLineEdit::Normal, "", &OK);
+    QMessageBox review;
+    review.setWindowTitle("Information Review");
+    review.setText(info);
+    review.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    int result = review.exec();
 
-    if (input.isEmpty())
-    {
-        QMessageBox::warning(this, "void", "Input Empty");
-
+    if (result == QMessageBox::Cancel)
         return;
-    }
-
-    if (OK && !input.isEmpty())
-    {
-        if (input != "YES")
-        {
-            QMessageBox::warning(this, "Unsufficient amount", "CANCELLING...");
-
-            return;
-        }
-    }
 
     std::string hash_password = BANK::hashing_password(password1);
 

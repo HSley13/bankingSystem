@@ -5,7 +5,7 @@
 #include <stack>
 #include <vector>
 
-#include <QtCore>
+// #include <QtCore>
 #include <QtWidgets>
 
 #include <mysql_driver.h>

@@ -58,8 +58,7 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         connect(button8, &QPushButton::clicked, this, [=]()
                 { window_stack->setCurrentIndex(8); });
 
-        QVBoxLayout *vbox = new QVBoxLayout();
-
+        QVBoxLayout *vbox = new QVBoxLayout(central_widget);
         vbox->addWidget(image_label);
         vbox->addWidget(button1);
         vbox->addWidget(button2);
@@ -71,7 +70,6 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         vbox->addWidget(button8);
         vbox->setAlignment(Qt::AlignCenter);
 
-        central_widget->setLayout(vbox);
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         QWidget *wid_1 = new QWidget();
         wid_1->setWindowTitle("Create Administrator");

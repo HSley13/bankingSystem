@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.29.2)
-project(BankingSystem)
+project(BankingSystem LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 6.7.0 REQUIRED COMPONENTS Core Widgets REQUIRED)
 qt_standard_project_setup()
 
 add_executable(BankingSystem main.cpp)
