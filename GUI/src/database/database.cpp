@@ -247,7 +247,7 @@ void Transactions::transfer(sql::Connection *connection, const double amount_to_
 
         if (!result->next())
         {
-            std::cout << "Acount Number which will reiceive the money is not found in our database, check and try again" << std::endl;
+            std::cout << "Account Number which will receive the money is not found in our database, check and try again" << std::endl;
 
             return;
         }
@@ -289,7 +289,7 @@ void Transactions::Qt_transfer(sql::Connection *connection, const double amount_
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Error", "Acount Number which will reiceive the money is not found in our database, check and try again");
+            QMessageBox::warning(nullptr, "Error", "Account Number which will receive the money is not found in our database, check and try again");
 
             return;
         }
@@ -789,7 +789,7 @@ void Account::remove_accounts(sql::Connection *connection, int account_number)
 
         if (!result->next())
         {
-            std::cerr << "Acount Number not found in our database, check and try again" << std::endl;
+            std::cerr << "Account Number not found in our database, check and try again" << std::endl;
 
             return;
         }
@@ -848,7 +848,7 @@ void Account::Qt_remove_accounts(sql::Connection *connection, int account_number
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Error", "Acount Number not found in our database, check and try again");
+            QMessageBox::warning(nullptr, "Error", "Account Number not found in our database, check and try again");
 
             return;
         }
@@ -918,7 +918,7 @@ std::string BANK::generate_random_salt(std::size_t len)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -944,7 +944,7 @@ std::string BANK::hashing_password(std::string &password)
         {
             std::cout << "Error Hashing Password" << std::endl;
 
-            return "";
+            return std::string();
         }
 
         std::string hashed_password = salt + hash;
@@ -955,7 +955,7 @@ std::string BANK::hashing_password(std::string &password)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -970,10 +970,10 @@ std::string BANK::retrieve_hashed_password(sql::Connection *connection, int acco
 
         if (!result->next())
         {
-            std::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
+            std::cout << "Error Retrieving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
             std::cout << std::endl;
 
-            return "";
+            return std::string();
         }
 
         std::string hashed_password = result->getString("hashed_password");
@@ -984,13 +984,13 @@ std::string BANK::retrieve_hashed_password(sql::Connection *connection, int acco
     {
         std::cerr << "SQL ERROR: " << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -1005,9 +1005,9 @@ std::string BANK::Qt_retrieve_hashed_password(sql::Connection *connection, int a
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "Error Retrieving hash password! The Account entered doesn't exist in our database, Check and try again");
 
-            return "";
+            return std::string();
         }
 
         std::string hashed_password = result->getString("hashed_password");
@@ -1018,13 +1018,13 @@ std::string BANK::Qt_retrieve_hashed_password(sql::Connection *connection, int a
     {
         std::cerr << "SQL ERROR: " << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -1039,9 +1039,9 @@ std::string BANK::retrieve_adm_hashed_password(sql::Connection *connection, int 
 
         if (!result->next())
         {
-            std::cout << "Error retriving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
+            std::cout << "Error Retrieving Hash Password! The Account " << account_number << " entered doesn't exist in our database, Check and try again" << std::endl;
 
-            return "";
+            return std::string();
         }
 
         std::string hashed_password = result->getString("hashed_password");
@@ -1052,13 +1052,13 @@ std::string BANK::retrieve_adm_hashed_password(sql::Connection *connection, int 
     {
         std::cerr << "SQL ERROR: " << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -1073,9 +1073,9 @@ std::string BANK::Qt_retrieve_adm_hashed_password(sql::Connection *connection, i
 
         if (!result->next())
         {
-            QMessageBox::warning(nullptr, "Warning!", "Error Retriving hash password! The Account entered doesn't exist in our database, Check and try again");
+            QMessageBox::warning(nullptr, "Warning!", "Error Retrieving hash password! The Account entered doesn't exist in our database, Check and try again");
 
-            return "";
+            return std::string();
         }
 
         std::string hashed_password = result->getString("hashed_password");
@@ -1086,13 +1086,13 @@ std::string BANK::Qt_retrieve_adm_hashed_password(sql::Connection *connection, i
     {
         std::cerr << "SQL ERROR: " << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -1142,7 +1142,7 @@ std::string BANK::retrieve_interest_rate_initial_timestamp(sql::Connection *conn
         {
             std::cout << "Account " << account_number << " Not Found, Verify the Number and try again" << std::endl;
 
-            return "";
+            return std::string();
         }
 
         std::string initial_timestamp = result->getString("initial_timestamp");
@@ -1153,13 +1153,13 @@ std::string BANK::retrieve_interest_rate_initial_timestamp(sql::Connection *conn
     {
         std::cerr << "SQL ERROR: " << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
 
-        return "";
+        return std::string();
     }
 }
 
@@ -1340,7 +1340,7 @@ bool BANK::authentification_message(sql::Connection *connection, int &account_nu
 
     hash_password = BANK::retrieve_hashed_password(connection, account_number);
 
-    if (hash_password == "")
+    if (hash_password.empty())
         return false;
 
     return true;
@@ -1354,7 +1354,7 @@ bool BANK::adm_authentification_message(sql::Connection *connection, int &accoun
 
     hash_password = BANK::retrieve_adm_hashed_password(connection, account_number);
 
-    if (hash_password == "")
+    if (hash_password.empty())
         return false;
 
     return true;
@@ -1394,7 +1394,7 @@ void BANK::display_accounts_table(sql::Connection *connection)
             {
                 std::cout << "National ID: " << result->getString("national_ID") << " | Account Number: " << result->getInt("account_number") << " | First Name: " << result->getString("first_name");
 
-                std::cout << " | Last Nmae: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
+                std::cout << " | Last Name: " << result->getString("last_name") << " | Date of Birth: " << result->getString("date_birth") << " | Phone Number: " << result->getInt("phone_number");
 
                 std::cout << " | Email: " << result->getString("email") << " | Address: " << result->getString("address") << " | Balance: " << result->getDouble("balance") << " | Interest Rate: " << result->getDouble("interest_rate");
 
@@ -1537,10 +1537,10 @@ void BANK::Qt_display_specific_accounts(sql::Connection *connection, int account
                                                        << "Date of Birth"
                                                        << "Phone Number"
                                                        << "Email"
-                                                       << "Adress"
+                                                       << "Address"
                                                        << "Balance"
-                                                       << "Interes Rate"
-                                                       << "Itinial Timestamp");
+                                                       << "Interest Rate"
+                                                       << "Initial Timestamp");
         table->horizontalHeader()->setStyleSheet("color: black;"
                                                  "background-color: beige;");
         table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -1645,7 +1645,7 @@ void BANK::Qt_display_people_in_debt(sql::Connection *connection)
                                                        << "First Name"
                                                        << "Last Name"
                                                        << "Balance"
-                                                       << "Account Inerest Rate"
+                                                       << "Account Interest Rate"
                                                        << "Borrowed Amount"
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"
@@ -1756,7 +1756,7 @@ void BANK::Qt_display_specific_accounts_in_debt(sql::Connection *connection, int
                                                        << "First Name"
                                                        << "Last Name"
                                                        << "Balance"
-                                                       << "Account Inerest Rate"
+                                                       << "Account Interest Rate"
                                                        << "Borrowed Amount"
                                                        << "Borrowed Amount Interest Rate"
                                                        << "Borrowed Amount Initial Timestamp"

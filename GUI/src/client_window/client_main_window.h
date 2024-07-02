@@ -9,12 +9,14 @@ class client_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    client_main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
+    client_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack = nullptr, QWidget *parent = nullptr);
 
 private:
     sql::Connection *connection;
 
-    QStackedWidget *window_stack;
+    QStackedWidget *stack;
+
+    QStackedWidget *_previous_stack;
 
     QPushButton *confirm_button;
     QPushButton *back_button;

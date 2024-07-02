@@ -5,96 +5,92 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, QWidget *parent)
-    : QMainWindow(parent), connection(db_connection)
+adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection), _previous_stack(previous_stack)
 {
-        window_stack = new QStackedWidget();
-        setWindowTitle("ADM window Management");
-        setCentralWidget(window_stack);
+        stack = new QStackedWidget(this);
+        setCentralWidget(stack);
         setStyleSheet("font-family: Arial Black;"
-                      "font-size: 20;"
-                      "font: bold italic 14px;"
+                      "font-size: 16px;"
+                      "font: bold italic;"
                       "color: beige;"
                       "background-color: black;");
-        resize(600, 300);
+        resize(200, 200);
 
-        QWidget *central_widget = new QWidget(this);
-        central_widget->resize(600, 300);
+        QWidget *adm_option_widget = new QWidget();
 
         QLabel *image_label = new QLabel(this);
         QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/adm_option.jpeg");
-        image_label->setPixmap(image.scaled(500, 500, Qt::KeepAspectRatio));
+        image_label->setPixmap(image.scaled(80, 80, Qt::KeepAspectRatio));
         image_label->setScaledContents(true);
 
         QPushButton *button1 = new QPushButton("1. Create Administrator", this);
         connect(button1, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(1); });
+                { stack->setCurrentIndex(1); });
 
-        QPushButton *button2 = new QPushButton("2. Display The Accounts Table", this);
+        QPushButton *button2 = new QPushButton("2. Accounts Table", this);
         connect(button2, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(2); });
+                { stack->setCurrentIndex(2); });
 
-        QPushButton *button3 = new QPushButton("3. Display Specific Account through the Account number", this);
+        QPushButton *button3 = new QPushButton("3. Specific Account", this);
         connect(button3, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(3); });
+                { stack->setCurrentIndex(3); });
 
-        QPushButton *button4 = new QPushButton("4. Display People in Debt", this);
+        QPushButton *button4 = new QPushButton("4. People in Debt", this);
         connect(button4, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(4); });
+                { stack->setCurrentIndex(4); });
 
-        QPushButton *button5 = new QPushButton("5. Display Specific Person in Debt through the Account_number", this);
+        QPushButton *button5 = new QPushButton("5. Specific Account in Debt", this);
         connect(button5, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(5); });
+                { stack->setCurrentIndex(5); });
 
-        QPushButton *button6 = new QPushButton("6. Display all Transactions History for an Account_number", this);
+        QPushButton *button6 = new QPushButton("6. Account Transaction History", this);
         connect(button6, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(6); });
+                { stack->setCurrentIndex(6); });
 
-        QPushButton *button7 = new QPushButton("7. Display All Transaction History Relative to a Specific Date for an Account_Number", this);
+        QPushButton *button7 = new QPushButton("7. Transaction History according a Date", this);
         connect(button7, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(7); });
+                { stack->setCurrentIndex(7); });
 
-        QPushButton *button8 = new QPushButton("8. Remove Accounts through the Account_number", this);
+        QPushButton *button8 = new QPushButton("8. Remove Account", this);
         connect(button8, &QPushButton::clicked, this, [=]()
-                { window_stack->setCurrentIndex(8); });
+                { stack->setCurrentIndex(8); });
 
-        QVBoxLayout *vbox = new QVBoxLayout(central_widget);
-        vbox->addWidget(image_label);
-        vbox->addWidget(button1);
-        vbox->addWidget(button2);
-        vbox->addWidget(button3);
-        vbox->addWidget(button4);
-        vbox->addWidget(button5);
-        vbox->addWidget(button6);
-        vbox->addWidget(button7);
-        vbox->addWidget(button8);
-        vbox->setAlignment(Qt::AlignCenter);
+        QPushButton *back_button = new QPushButton("Previous Menu", this);
+        back_button->setStyleSheet("color: beige;"
+                                   "font-family: Arial Black;"
+                                   "font-size: 20;"
+                                   "font: bold italic 14px;"
+                                   "background-color: black;");
+        connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
+
+        QFormLayout *formLayout1 = new QFormLayout();
+        formLayout1->addRow(button1);
+        formLayout1->addRow(button2);
+        formLayout1->addRow(button3);
+        formLayout1->addRow(button4);
+
+        QFormLayout *formLayout2 = new QFormLayout();
+        formLayout2->addRow(button5);
+        formLayout2->addRow(button6);
+        formLayout2->addRow(button7);
+        formLayout2->addRow(button8);
+
+        QGridLayout *gridLayout = new QGridLayout(adm_option_widget);
+        gridLayout->setSpacing(2);
+        gridLayout->addWidget(image_label, 0, 0, 1, 2, Qt::AlignCenter);
+        gridLayout->addLayout(formLayout1, 1, 0);
+        gridLayout->addLayout(formLayout2, 1, 1);
+        gridLayout->addWidget(back_button, 2, 0, 1, 2, Qt::AlignCenter);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
         QWidget *wid_1 = new QWidget();
-        wid_1->setWindowTitle("Create Administrator");
 
-        QLabel *message1 = new QLabel("Enter your Desired Account Number", this);
         new_adm_account_number = new QLineEdit(this);
-
-        QHBoxLayout *wid_1_hbox1 = new QHBoxLayout();
-        wid_1_hbox1->addWidget(message1, Qt::AlignCenter);
-        wid_1_hbox1->addWidget(new_adm_account_number, Qt::AlignCenter);
-
-        QLabel *message2 = new QLabel("Enter your Desired Password", this);
         new_adm_password = new QLineEdit(this);
 
-        QHBoxLayout *wid_1_hbox2 = new QHBoxLayout();
-        wid_1_hbox2->addWidget(message2, Qt::AlignCenter);
-        wid_1_hbox2->addWidget(new_adm_password, Qt::AlignCenter);
-
-        QLabel *message3 = new QLabel("Confirmed Password", this);
         new_adm_password_confirmation = new QLineEdit(this);
         new_adm_password_confirmation->setEchoMode(QLineEdit::Password);
-
-        QHBoxLayout *wid_1_hbox3 = new QHBoxLayout();
-        wid_1_hbox3->addWidget(message3, Qt::AlignCenter);
-        wid_1_hbox3->addWidget(new_adm_password_confirmation, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -104,15 +100,15 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Previous Menu");
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QVBoxLayout *wid_1_vbox = new QVBoxLayout();
-        wid_1_vbox->addLayout(wid_1_hbox1);
-        wid_1_vbox->addLayout(wid_1_hbox2);
-        wid_1_vbox->addLayout(wid_1_hbox3);
-        wid_1_vbox->addWidget(confirm_button);
-        wid_1_vbox->addWidget(back_button);
+        QFormLayout *wid_1_layout = new QFormLayout();
+        wid_1_layout->addRow("Enter Desired Account Number", new_adm_account_number);
+        wid_1_layout->addRow("Enter Desired Password", new_adm_password);
+        wid_1_layout->addRow("Confirmed Password", new_adm_password_confirmation);
+        wid_1_layout->addWidget(confirm_button);
+        wid_1_layout->addWidget(back_button);
 
         QGroupBox *box_1 = new QGroupBox();
-        box_1->setLayout(wid_1_vbox);
+        box_1->setLayout(wid_1_layout);
         box_1->setFixedSize(500, 300);
 
         QHBoxLayout *HBOX_1 = new QHBoxLayout(wid_1);
@@ -121,7 +117,6 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_2 = new QWidget();
-        wid_2->setWindowTitle("Display The Accounts Table");
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -131,7 +126,7 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Previous Menu");
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QLabel *message_2 = new QLabel("Are sure you want to display The Accounts Table?", this);
+        QLabel *message_2 = new QLabel("Are sure to display The Accounts Table?", this);
 
         QVBoxLayout *wid_2_vbox = new QVBoxLayout();
         wid_2_vbox->addWidget(message_2);
@@ -148,17 +143,13 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_3 = new QWidget();
-        wid_3->setWindowTitle("Display Specific Account through the Account number");
-        wid_3->resize(600, 300);
 
-        QLabel *wid_3_label = new QLabel("DISPLAY SPECIFIC ACCOUNT INFO", this);
         wid_3_account_number = new QLineEdit(this);
 
-        QHBoxLayout *wid_3_hbox = new QHBoxLayout();
-        wid_3_hbox->addWidget(wid_3_label, Qt::AlignCenter);
-        wid_3_hbox->addWidget(wid_3_account_number, Qt::AlignCenter);
+        QFormLayout *wid_3_layout = new QFormLayout();
+        wid_3_layout->addRow("DISPLAY SPECIFIC ACCOUNT INFO", wid_3_account_number);
 
-        QLabel *message_3 = new QLabel("Are sure you want to display the entered Account?", this);
+        QLabel *message_3 = new QLabel("Are sure to display the entered Account?", this);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -169,14 +160,13 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
         QVBoxLayout *wid_3_vbox = new QVBoxLayout();
-        wid_3_vbox->addLayout(wid_3_hbox);
+        wid_3_vbox->addLayout(wid_3_layout);
         wid_3_vbox->addWidget(message_3);
         wid_3_vbox->addWidget(confirm_button);
         wid_3_vbox->addWidget(back_button);
 
         QGroupBox *box_3 = new QGroupBox();
         box_3->setLayout(wid_3_vbox);
-        box_3->setFixedSize(500, 300);
 
         QHBoxLayout *HBOX_3 = new QHBoxLayout(wid_3);
         HBOX_3->addWidget(box_3);
@@ -184,8 +174,6 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_4 = new QWidget();
-        wid_4->setWindowTitle("Display People in Debt");
-        wid_4->resize(600, 300);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -195,7 +183,7 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QLabel *message_4 = new QLabel("Are sure you want to display all People in bebt??", this);
+        QLabel *message_4 = new QLabel("Are sure to display all People in debt??", this);
 
         QVBoxLayout *wid_4_vbox = new QVBoxLayout();
         wid_4_vbox->addWidget(message_4, Qt::AlignCenter);
@@ -204,7 +192,6 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
 
         QGroupBox *box_4 = new QGroupBox();
         box_4->setLayout(wid_4_vbox);
-        box_4->setFixedSize(500, 300);
 
         QHBoxLayout *HBOX_4 = new QHBoxLayout(wid_4);
         HBOX_4->addWidget(box_4);
@@ -212,15 +199,11 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_5 = new QWidget();
-        wid_5->setWindowTitle("Display Specific Person in Debt through the Account_number");
-        wid_5->resize(600, 300);
 
-        QLabel *wid_5_label = new QLabel("DISPLAY SPECIFIC ACCOUNT IN DEBT", this);
         wid_5_account_number = new QLineEdit(this);
 
-        QHBoxLayout *wid_5_hbox = new QHBoxLayout();
-        wid_5_hbox->addWidget(wid_5_label, Qt::AlignCenter);
-        wid_5_hbox->addWidget(wid_5_account_number, Qt::AlignCenter);
+        QFormLayout *wid_5_layout = new QFormLayout();
+        wid_5_layout->addRow("DISPLAY SPECIFIC ACCOUNT IN DEBT", wid_5_account_number);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -230,17 +213,16 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QLabel *message_5 = new QLabel("Are sure you want to display the entered Account?", this);
+        QLabel *message_5 = new QLabel("Are sure to display the entered Account?", this);
 
         QVBoxLayout *wid_5_vbox = new QVBoxLayout();
-        wid_5_vbox->addLayout(wid_5_hbox, Qt::AlignCenter);
+        wid_5_vbox->addLayout(wid_5_layout, Qt::AlignCenter);
         wid_5_vbox->addWidget(message_5, Qt::AlignCenter);
         wid_5_vbox->addWidget(confirm_button, Qt::AlignCenter);
         wid_5_vbox->addWidget(back_button, Qt::AlignCenter | Qt::AlignBottom);
 
         QGroupBox *box_5 = new QGroupBox();
         box_5->setLayout(wid_5_vbox);
-        box_5->setFixedSize(500, 300);
 
         QHBoxLayout *HBOX_5 = new QHBoxLayout(wid_5);
         HBOX_5->addWidget(box_5);
@@ -248,14 +230,11 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_6 = new QWidget();
-        wid_6->setWindowTitle("Display all Transactions History for an Account_number");
-        wid_6->resize(600, 300);
 
-        QLabel *wid_6_label = new QLabel("DISPLAY TRANSACTION HISTORY", this);
         wid_6_account_number = new QLineEdit(this);
-        QHBoxLayout *wid_6_hbox = new QHBoxLayout();
-        wid_6_hbox->addWidget(wid_6_label, Qt::AlignCenter);
-        wid_6_hbox->addWidget(wid_6_account_number, Qt::AlignCenter);
+
+        QFormLayout *wid_6_layout = new QFormLayout();
+        wid_6_layout->addRow("DISPLAY TRANSACTION HISTORY", wid_6_account_number);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -265,17 +244,16 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QLabel *message_6 = new QLabel("Are sure you want to display the Transaction History?", this);
+        QLabel *message_6 = new QLabel("Are sure to display the Transaction History?", this);
 
         QVBoxLayout *wid_6_vbox = new QVBoxLayout();
-        wid_6_vbox->addLayout(wid_6_hbox, Qt::AlignCenter);
+        wid_6_vbox->addLayout(wid_6_layout, Qt::AlignCenter);
         wid_6_vbox->addWidget(message_6, Qt::AlignCenter);
         wid_6_vbox->addWidget(confirm_button, Qt::AlignCenter);
         wid_6_vbox->addWidget(back_button, Qt::AlignCenter | Qt::AlignBottom);
 
         QGroupBox *box_6 = new QGroupBox();
         box_6->setLayout(wid_6_vbox);
-        box_6->setFixedSize(500, 300);
 
         QHBoxLayout *HBOX_6 = new QHBoxLayout(wid_6);
         HBOX_6->addWidget(box_6);
@@ -283,14 +261,8 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_7 = new QWidget();
-        wid_7->setWindowTitle("Display Account Relative Transaction History");
-        wid_7->resize(600, 300);
 
-        QLabel *specific_transaction_history_message1 = new QLabel("Enter Account Number", this);
         specific_account_number_transac = new QLineEdit(this);
-        QHBoxLayout *specific_transac_hbox1 = new QHBoxLayout();
-        specific_transac_hbox1->addWidget(specific_transaction_history_message1, Qt::AlignCenter);
-        specific_transac_hbox1->addWidget(specific_account_number_transac, Qt::AlignCenter);
 
         calendar = new QDateEdit(this);
         calendar->setCalendarPopup(true);
@@ -299,9 +271,9 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
                 { selected_date = calendar->date(); });
 
         QComboBox *choice = new QComboBox(this);
-        choice->addItem("Display All Transactions occured BEFORE the selected Date");
-        choice->addItem("Display All Transactions occured AFTER the selected Date");
-        choice->addItem("Display All Transactions occured ONLY on the selected Date");
+        choice->addItem("Display All Transactions BEFORE the selected Date");
+        choice->addItem("Display All Transactions AFTER the selected Date");
+        choice->addItem("Display All Transactions ONLY on the selected Date");
         choice->setStyleSheet("color: red;");
 
         confirm_button = new QPushButton("Confirm", this);
@@ -312,17 +284,15 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         back_button = new QPushButton("Return to the Previous Menu", this);
         connect(back_button, &QPushButton::clicked, this, &adm_option_main_window::back_button_func);
 
-        QVBoxLayout *wid_7_vbox = new QVBoxLayout();
-        wid_7_vbox->addLayout(specific_transac_hbox1, Qt::AlignCenter);
-        wid_7_vbox->addWidget(calendar, Qt::AlignCenter);
-        wid_7_vbox->addWidget(choice, Qt::AlignCenter);
-        wid_7_vbox->addWidget(confirm_button, Qt::AlignCenter);
-        wid_7_vbox->addWidget(back_button, Qt::AlignCenter);
-        wid_7_vbox->setAlignment(Qt::AlignCenter);
+        QFormLayout *wid_7_layout = new QFormLayout();
+        wid_7_layout->addRow("Enter Account Number", specific_account_number_transac);
+        wid_7_layout->addWidget(calendar);
+        wid_7_layout->addWidget(choice);
+        wid_7_layout->addWidget(confirm_button);
+        wid_7_layout->addWidget(back_button);
 
         QGroupBox *box_7 = new QGroupBox();
-        box_7->setLayout(wid_7_vbox);
-        box_7->setFixedSize(500, 300);
+        box_7->setLayout(wid_7_layout);
 
         QHBoxLayout *HBOX_7 = new QHBoxLayout(wid_7);
         HBOX_7->addWidget(box_7);
@@ -330,14 +300,8 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         QWidget *wid_8 = new QWidget();
-        wid_8->setWindowTitle("Remove Accounts through the Account_number");
-        wid_8->resize(600, 300);
 
-        QLabel *wid_8_label = new QLabel("DELETE ACCOUNT", this);
         QLineEdit *wid_8_account_number = new QLineEdit(this);
-        QHBoxLayout *wid_8_hbox = new QHBoxLayout();
-        wid_8_hbox->addWidget(wid_8_label, Qt::AlignCenter);
-        wid_8_hbox->addWidget(wid_8_account_number, Qt::AlignCenter);
 
         confirm_button = new QPushButton("Confirm", this);
         confirm_button->setStyleSheet("color: black;"
@@ -349,38 +313,35 @@ adm_option_main_window::adm_option_main_window(sql::Connection *db_connection, Q
 
         QLabel *message_8 = new QLabel("Are sure you want to delete the entered Account?", this);
 
-        QVBoxLayout *wid_8_vbox = new QVBoxLayout();
-        wid_8_vbox->addLayout(wid_8_hbox, Qt::AlignCenter);
-        wid_8_vbox->addWidget(message_8, Qt::AlignCenter);
-        wid_8_vbox->addWidget(confirm_button, Qt::AlignCenter);
-        wid_8_vbox->addWidget(back_button, Qt::AlignCenter | Qt::AlignBottom);
+        QFormLayout *wid_8_layout = new QFormLayout();
+        wid_8_layout->addRow("DELETE ACCOUNT", wid_8_account_number);
+        wid_8_layout->addWidget(confirm_button);
+        wid_8_layout->addWidget(back_button);
 
         QGroupBox *box_8 = new QGroupBox();
-        box_8->setLayout(wid_8_vbox);
-        box_8->setFixedSize(500, 300);
+        box_8->setLayout(wid_8_layout);
 
         QHBoxLayout *HBOX_8 = new QHBoxLayout(wid_8);
         HBOX_8->addWidget(box_8);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        window_stack->addWidget(central_widget);
-        window_stack->addWidget(wid_1);
-        window_stack->addWidget(wid_2);
-        window_stack->addWidget(wid_3);
-        window_stack->addWidget(wid_4);
-        window_stack->addWidget(wid_5);
-        window_stack->addWidget(wid_6);
-        window_stack->addWidget(wid_7);
-        window_stack->addWidget(wid_8);
+        stack->addWidget(adm_option_widget);
+        stack->addWidget(wid_1);
+        stack->addWidget(wid_2);
+        stack->addWidget(wid_3);
+        stack->addWidget(wid_4);
+        stack->addWidget(wid_5);
+        stack->addWidget(wid_6);
+        stack->addWidget(wid_7);
+        stack->addWidget(wid_8);
 }
 
 void adm_option_main_window::back_button_func()
 {
-        int current_index = window_stack->currentIndex();
+        int current_index = stack->currentIndex();
 
-        if (current_index)
-                window_stack->setCurrentIndex(0);
+        (current_index != 0) ? stack->setCurrentIndex(0) : _previous_stack->setCurrentIndex(0);
 }
 
 void adm_option_main_window::wid_1_config()

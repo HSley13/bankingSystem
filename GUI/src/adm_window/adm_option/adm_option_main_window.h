@@ -9,7 +9,7 @@ class adm_option_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    adm_option_main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
+    adm_option_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack = nullptr, QWidget *parent = nullptr);
 
 private:
     sql::Connection *connection;
@@ -28,7 +28,8 @@ private:
     QPushButton *back_button;
     QPushButton *confirm_button;
 
-    QStackedWidget *window_stack;
+    QStackedWidget *stack;
+    QStackedWidget *_previous_stack;
 
     QComboBox *choice;
     QDateEdit *calendar;

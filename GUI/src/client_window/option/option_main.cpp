@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 
     sql::Connection *db_connection;
 
-    option_main_window Option_main_window(db_connection);
+    option_main_window Option_main_window(db_connection, nullptr);
     Option_main_window.show();
 
     app.exec();

@@ -42,13 +42,13 @@ set(__QT_DEPLOY_ACTIVE_CONFIG "")
 set(__QT_NO_CREATE_VERSIONLESS_FUNCTIONS "")
 set(__QT_DEFAULT_MAJOR_VERSION "6")
 set(__QT_DEPLOY_QT_ADDITIONAL_PACKAGES_PREFIX_PATH "")
-set(__QT_DEPLOY_QT_INSTALL_PREFIX "/Users/test/qt-everywhere-src-6.7.0/qtbase")
+set(__QT_DEPLOY_QT_INSTALL_PREFIX "/Users/test/qt-wasm/qtbase")
 set(__QT_DEPLOY_QT_INSTALL_BINS "bin")
 set(__QT_DEPLOY_QT_INSTALL_DATA ".")
 set(__QT_DEPLOY_QT_INSTALL_LIBEXECS "libexec")
 set(__QT_DEPLOY_QT_INSTALL_PLUGINS "plugins")
 set(__QT_DEPLOY_QT_INSTALL_TRANSLATIONS "translations")
-set(__QT_DEPLOY_TARGET_QT_PATHS_PATH "/Users/test/qt-everywhere-src-6.7.0/qtbase/bin/qtpaths")
+set(__QT_DEPLOY_TARGET_QT_PATHS_PATH "/Users/test/qt-wasm/qtbase/bin/qtpaths")
 set(__QT_DEPLOY_PLUGINS "")
 set(__QT_DEPLOY_MUST_ADJUST_PLUGINS_RPATH "")
 set(__QT_DEPLOY_USE_PATCHELF "")
@@ -59,8 +59,8 @@ set(__QT_DEPLOY_QT_DEBUG_POSTFIX "")
 # Define the CMake commands to be made available during deployment.
 set(__qt_deploy_support_files
     "/Users/test/Documents/banking_system/.qt/QtDeployTargets.cmake"
-    "/Users/test/qt-everywhere-src-6.7.0/qtbase/lib/cmake/Qt6Core/Qt6CoreDeploySupport.cmake"
-    "/Users/test/qt-everywhere-src-6.7.0/qtbase/lib/cmake/Qt6Qml/Qt6QmlDeploySupport.cmake"
+    "/Users/test/qt-wasm/qtbase/lib/cmake/Qt6Core/Qt6CoreDeploySupport.cmake"
+    "/Users/test/qt-wasm/qtbase/lib/cmake/Qt6Qml/Qt6QmlDeploySupport.cmake"
 )
 foreach(__qt_deploy_support_file IN LISTS __qt_deploy_support_files)
     include("${__qt_deploy_support_file}")

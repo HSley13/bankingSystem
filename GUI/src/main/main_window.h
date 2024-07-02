@@ -16,6 +16,8 @@ public:
 private:
     sql::Connection *connection;
 
+    QStackedWidget *stack;
+
 private slots:
     void adm_button_clicked();
     void client_button_clicked();

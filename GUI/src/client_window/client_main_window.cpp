@@ -6,100 +6,71 @@
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
 
-client_main_window::client_main_window(sql::Connection *db_connection, QWidget *parent)
-    : QMainWindow(parent), connection(db_connection)
+client_main_window::client_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack, QWidget *parent)
+    : QMainWindow(parent), connection(db_connection), _previous_stack(previous_stack)
 {
-    window_stack = new QStackedWidget();
-    window_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setCentralWidget(window_stack);
+    stack = new QStackedWidget(this);
+    stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setCentralWidget(stack);
     setStyleSheet("color: beige;"
                   "font-family: Arial Black;"
                   "font-size: 20;"
                   "font: bold italic 14px;"
                   "background-color: black;");
     setWindowTitle("Client");
-    resize(500, 500);
+    resize(200, 200);
 
-    QWidget *central_widget = new QWidget(this);
+    QWidget *client_option = new QWidget();
 
-    QPushButton *create_account = new QPushButton("1. New to our Bank and Would like to Create an Account", this);
+    QPushButton *create_account = new QPushButton("1. Create New Account", this);
     connect(create_account, &QPushButton::clicked, this, [=]()
-            { window_stack->setCurrentIndex(1); });
+            { stack->setCurrentIndex(1); });
 
-    QPushButton *account_inquiry = new QPushButton("2. Already possess an Account and would like to process some inquiries relative to it", this);
+    QPushButton *account_inquiry = new QPushButton("2. Already possess an Account", this);
     connect(account_inquiry, &QPushButton::clicked, this, &client_main_window::account_inquiry_func);
 
     QPushButton *bank_info = new QPushButton("3. Information on our Bank", this);
     connect(bank_info, &QPushButton::clicked, this, [=]()
-            { window_stack->setCurrentIndex(2); });
+            { stack->setCurrentIndex(2); });
 
     QLabel *image_label = new QLabel(this);
     QPixmap image("/Users/test/Documents/banking_system/GUI/src/ressources/client.jpeg");
-    image_label->setPixmap(image.scaled(600, 600, Qt::KeepAspectRatio));
+    image_label->setPixmap(image.scaled(80, 80, Qt::KeepAspectRatio));
     image_label->setScaledContents(true);
 
-    vbox = new QVBoxLayout(central_widget);
+    back_button = new QPushButton("Previous Menu", this);
+    connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
+
+    vbox = new QVBoxLayout(client_option);
     vbox->addWidget(image_label, 2, Qt::AlignCenter);
     vbox->addWidget(create_account, Qt::AlignCenter);
     vbox->addWidget(account_inquiry, Qt::AlignCenter);
     vbox->addWidget(bank_info, Qt::AlignCenter);
+    vbox->addWidget(back_button, Qt::AlignCenter);
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
     QWidget *create_account_widget = new QWidget();
     create_account_widget->setWindowTitle("Create Account");
 
-    QLabel *message = new QLabel("Please Provide Us with the following Information in order to create your account. Make sure You enter the Correct Information", this);
+    QLabel *message = new QLabel("Please Provide Us with the following Information to create your Account", this);
 
-    QLabel *national_ID = new QLabel("National ID with at least a letter within it: ", this);
-    insert_national_ID = new QLineEdit(this);
-    QHBoxLayout *hbox1 = new QHBoxLayout();
-    hbox1->addWidget(national_ID, Qt::AlignCenter);
-    hbox1->addWidget(insert_national_ID, Qt::AlignCenter);
+    QLineEdit *insert_national_ID = new QLineEdit(this);
+    QLineEdit *insert_first_name = new QLineEdit(this);
+    QLineEdit *insert_last_name = new QLineEdit(this);
 
-    QLabel *first_name = new QLabel("First Name: ", this);
-    insert_first_name = new QLineEdit(this);
-    QHBoxLayout *hbox2 = new QHBoxLayout();
-    hbox2->addWidget(first_name, Qt::AlignCenter);
-    hbox2->addWidget(insert_first_name, Qt::AlignCenter);
-
-    QLabel *last_name = new QLabel("Last Name: ", this);
-    insert_last_name = new QLineEdit(this);
-    QHBoxLayout *hbox3 = new QHBoxLayout();
-    hbox3->addWidget(last_name, Qt::AlignCenter);
-    hbox3->addWidget(insert_last_name, Qt::AlignCenter);
-
-    QLabel *date_birth = new QLabel("Date of Birth: ", this);
-    calendar = new QDateEdit(this);
+    QDateEdit *calendar = new QDateEdit(this);
     calendar->setCalendarPopup(true);
     calendar->setDate(QDate::currentDate());
     connect(calendar, &QDateEdit::dateChanged, this, [=]()
             { selected_date = calendar->date(); });
 
-    QHBoxLayout *hbox4 = new QHBoxLayout();
-    hbox4->addWidget(date_birth, Qt::AlignCenter);
-    hbox4->addWidget(calendar, Qt::AlignCenter);
+    QLineEdit *insert_phone_number = new QLineEdit(this);
+    QLineEdit *insert_email = new QLineEdit(this);
+    QLineEdit *insert_address = new QLineEdit(this);
 
-    QLabel *phone_number = new QLabel("Phone Number: ", this);
-    insert_phone_number = new QLineEdit(this);
-    QHBoxLayout *hbox5 = new QHBoxLayout();
-    hbox5->addWidget(phone_number, Qt::AlignCenter);
-    hbox5->addWidget(insert_phone_number, Qt::AlignCenter);
-
-    QLabel *email = new QLabel("Email: ", this);
-    insert_email = new QLineEdit(this);
-    QHBoxLayout *hbox6 = new QHBoxLayout();
-    hbox6->addWidget(email, Qt::AlignCenter);
-    hbox6->addWidget(insert_email, Qt::AlignCenter);
-
-    QLabel *address = new QLabel("Address ( Taiwan-Taipei_City-Datong_District-Zhongshan_Road-001 ): ", this);
-    insert_address = new QLineEdit(this);
-    QHBoxLayout *hbox7 = new QHBoxLayout();
-    hbox7->addWidget(address, Qt::AlignCenter);
-    hbox7->addWidget(insert_address, Qt::AlignCenter);
-
-    QString info_text = "Your Account should have at least $100 when creating it, so please enter those $100 and not less.\n\n"
-                        "Interest Rate Scale according to your First Deposit, which can't be changed.\n\n"
+    QString info_text = "Minimum Balance is $100\n\n"
+                        "Definitive Interest Rate Scale according to your First Deposit.\n\n"
                         "1. Balance = $100 ---> Interest Rate = 0%\n"
                         "2. $500 > Balance > $100 ---> Interest Rate = 2%\n"
                         "3. $1000 > Balance >= $500 ---> Interest Rate = 5%\n"
@@ -109,70 +80,51 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     interest_rate_info->setPlainText(info_text);
     interest_rate_info->setReadOnly(true);
 
-    insert_balance = new QLineEdit(this);
-
-    QHBoxLayout *hbox8 = new QHBoxLayout();
-    hbox8->addWidget(interest_rate_info, Qt::AlignCenter);
-    hbox8->addWidget(insert_balance, Qt::AlignCenter);
-    QGroupBox *grp_balance = new QGroupBox();
-    grp_balance->setLayout(hbox8);
-
-    QLabel *password = new QLabel("Enter Password: ", this);
-    insert_password = new QLineEdit(this);
-    QHBoxLayout *hbox9 = new QHBoxLayout();
-    hbox9->addWidget(password, Qt::AlignCenter);
-    hbox9->addWidget(insert_password, Qt::AlignCenter);
-
-    QLabel *password_confirmation = new QLabel("Enter Password Confirmation: ", this);
-    insert_password_confirmation = new QLineEdit(this);
+    QLineEdit *insert_balance = new QLineEdit(this);
+    QLineEdit *insert_password = new QLineEdit(this);
+    QLineEdit *insert_password_confirmation = new QLineEdit(this);
     insert_password_confirmation->setEchoMode(QLineEdit::Password);
-    QHBoxLayout *hbox10 = new QHBoxLayout();
-    hbox10->addWidget(password_confirmation, Qt::AlignCenter);
-    hbox10->addWidget(insert_password_confirmation, Qt::AlignCenter);
 
-    QLabel *question = new QLabel("Ask Yourself question which is gonna be used for Password Recovery", this);
-    insert_question = new QLineEdit(this);
-    QHBoxLayout *hbox11 = new QHBoxLayout();
-    hbox11->addWidget(question, Qt::AlignCenter);
-    hbox11->addWidget(insert_question, Qt::AlignCenter);
+    QLineEdit *insert_question = new QLineEdit(this);
+    QLineEdit *insert_answer = new QLineEdit(this);
+    QLineEdit *insert_confirm_answer = new QLineEdit(this);
 
-    QLabel *answer = new QLabel("Enter the Answer", this);
-    insert_answer = new QLineEdit(this);
-    QHBoxLayout *hbox12 = new QHBoxLayout();
-    hbox12->addWidget(answer, Qt::AlignCenter);
-    hbox12->addWidget(insert_answer, Qt::AlignCenter);
-
-    QLabel *confirm_answer = new QLabel("Confirm the Answer", this);
-    insert_confirm_answer = new QLineEdit(this);
-    QHBoxLayout *hbox13 = new QHBoxLayout();
-    hbox13->addWidget(confirm_answer, Qt::AlignCenter);
-    hbox13->addWidget(insert_confirm_answer, Qt::AlignCenter);
-
-    confirm_button = new QPushButton("Confirm", this);
-    confirm_button->setStyleSheet("color: black;"
-                                  "background-color: beige;");
+    QPushButton *confirm_button = new QPushButton("Confirm", this);
+    confirm_button->setStyleSheet("color: black; background-color: beige;");
     connect(confirm_button, &QPushButton::clicked, this, &client_main_window::confirm_button_func);
 
     back_button = new QPushButton("Previous Menu", this);
+    back_button->setStyleSheet("color: beige;"
+                               "font-family: Arial Black;"
+                               "font-size: 20;"
+                               "font: bold italic 14px;"
+                               "background-color: black;");
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
 
-    QVBoxLayout *VBOX = new QVBoxLayout(create_account_widget);
-    VBOX->addWidget(message, Qt::AlignCenter);
-    VBOX->addLayout(hbox1, Qt::AlignCenter);
-    VBOX->addLayout(hbox2, Qt::AlignCenter);
-    VBOX->addLayout(hbox3, Qt::AlignCenter);
-    VBOX->addLayout(hbox4, Qt::AlignCenter);
-    VBOX->addLayout(hbox5, Qt::AlignCenter);
-    VBOX->addLayout(hbox6, Qt::AlignCenter);
-    VBOX->addLayout(hbox7, Qt::AlignCenter);
-    VBOX->addWidget(grp_balance, Qt::AlignCenter);
-    VBOX->addLayout(hbox9, Qt::AlignCenter);
-    VBOX->addLayout(hbox10, Qt::AlignCenter);
-    VBOX->addLayout(hbox11, Qt::AlignCenter);
-    VBOX->addLayout(hbox12, Qt::AlignCenter);
-    VBOX->addLayout(hbox13, Qt::AlignCenter);
-    VBOX->addWidget(confirm_button, Qt::AlignCenter);
-    VBOX->addWidget(back_button, Qt::AlignCenter);
+    QGridLayout *gridLayout = new QGridLayout(create_account_widget);
+
+    QFormLayout *formLayout1 = new QFormLayout();
+    formLayout1->addRow("National ID: ", insert_national_ID);
+    formLayout1->addRow("First Name: ", insert_first_name);
+    formLayout1->addRow("Last Name: ", insert_last_name);
+    formLayout1->addRow("Date of Birth: ", calendar);
+    formLayout1->addRow("Phone Number: ", insert_phone_number);
+    formLayout1->addRow("Email: ", insert_email);
+    formLayout1->addRow("Address: ", insert_address);
+
+    QFormLayout *formLayout2 = new QFormLayout();
+    formLayout2->addRow(interest_rate_info, insert_balance);
+    formLayout2->addRow("Password: ", insert_password);
+    formLayout2->addRow("Password Confirmation: ", insert_password_confirmation);
+    formLayout2->addRow("Secret Question", insert_question);
+    formLayout2->addRow("Secret Answer", insert_answer);
+    formLayout2->addRow("Secret Answer Confirmation", insert_confirm_answer);
+
+    gridLayout->addWidget(message, 0, 0, 1, 2, Qt::AlignCenter);
+    gridLayout->addLayout(formLayout1, 1, 0);
+    gridLayout->addLayout(formLayout2, 1, 1);
+    gridLayout->addWidget(confirm_button, 2, 0, 1, 2, Qt::AlignCenter);
+    gridLayout->addWidget(back_button, 3, 0, 1, 2, Qt::AlignCenter);
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -271,6 +223,11 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     information->setStyleSheet("color: white;");
 
     back_button = new QPushButton("Previous Menu", this);
+    back_button->setStyleSheet("color: beige;"
+                               "font-family: Arial Black;"
+                               "font-size: 20;"
+                               "font: bold italic 14px;"
+                               "background-color: black;");
     connect(back_button, &QPushButton::clicked, this, &client_main_window::back_button_func);
 
     vbox = new QVBoxLayout(bank_info_widget);
@@ -279,41 +236,25 @@ client_main_window::client_main_window(sql::Connection *db_connection, QWidget *
     vbox->setAlignment(Qt::AlignCenter);
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-    window_stack->addWidget(central_widget);
-    window_stack->addWidget(create_account_widget);
-    window_stack->addWidget(bank_info_widget);
+    stack->addWidget(client_option);
+    stack->addWidget(create_account_widget);
+    stack->addWidget(bank_info_widget);
 }
 
 void client_main_window::back_button_func()
 {
-    int current_index = window_stack->currentIndex();
+    int current_index = stack->currentIndex();
 
-    if (current_index)
-        window_stack->setCurrentIndex(0);
+    (current_index != 0) ? stack->setCurrentIndex(0) : _previous_stack->setCurrentIndex(0);
 }
 
 void client_main_window::confirm_button_func()
 {
-    std::string national_ID1 = insert_national_ID->text().toStdString();
-    std::string first_name1 = insert_first_name->text().toStdString();
-    std::string last_name1 = insert_last_name->text().toStdString();
-    int phone_number1 = insert_phone_number->text().toInt();
-    QString date_birth1 = selected_date.toString(Qt::ISODate);
-    std::string email1 = insert_email->text().toStdString();
-    std::string address1 = insert_address->text().toStdString();
-    double balance = insert_balance->text().toDouble();
-    std::string question = insert_question->text().toStdString();
-    std::string answer = insert_answer->text().toStdString();
-    std::string confirm_answer = insert_confirm_answer->text().toStdString();
     int account_number;
 
-    std::string password1 = insert_password->text().toStdString();
-    std::string password_confirmation1 = insert_password_confirmation->text().toStdString();
-
-    if (balance < 100 || password1 != password_confirmation1)
+    if (insert_balance->text().toDouble() < 100 || insert_password->text().compare(insert_password_confirmation->text()))
     {
-        if (balance < 100)
+        if (insert_balance->text().toDouble() < 100)
         {
             insert_balance->setStyleSheet("border: 1px solid red");
             QMessageBox::warning(this, "Balance XXX", "Insufficient Balance, Enter an amount >= 100");
@@ -333,14 +274,14 @@ void client_main_window::confirm_button_func()
     insert_password_confirmation->setStyleSheet("border: 1px solid gray");
 
     double interest_rate = 0;
-    if (balance > 100 && balance < 500)
+    if (insert_balance->text().toDouble() > 100 && insert_balance->text().toDouble() < 500)
         interest_rate = 0.02;
-    else if (balance < 1000 && balance >= 500)
+    else if (insert_balance->text().toDouble() < 1000 && insert_balance->text().toDouble() >= 500)
         interest_rate = 0.05;
-    else if (balance >= 1000)
+    else if (insert_balance->text().toDouble() >= 1000)
         interest_rate = 0.07;
 
-    if (question.empty())
+    if (insert_question->text().isEmpty())
     {
         QMessageBox::warning(this, "void!!!", "Question left empty!!!");
         insert_question->setStyleSheet("border: 1px solid red;");
@@ -350,7 +291,7 @@ void client_main_window::confirm_button_func()
 
     insert_question->setStyleSheet("border: 1px solid gray;");
 
-    if (answer.empty())
+    if (insert_answer->text().isEmpty())
     {
         QMessageBox::warning(this, "void!!!", "Answer left empty!!!");
         insert_answer->setStyleSheet("border: 1px solid red;");
@@ -360,7 +301,7 @@ void client_main_window::confirm_button_func()
 
     insert_answer->setStyleSheet("border: 1px solid gray;");
 
-    if (answer.compare(confirm_answer))
+    if (insert_answer->text().compare(insert_confirm_answer->text()))
     {
         QMessageBox::warning(this, "Confirmation Incorrect!!", "The Answer's Confirmation is Incorrect!!");
         insert_confirm_answer->setStyleSheet("border: 1px solid red;");
@@ -372,26 +313,17 @@ void client_main_window::confirm_button_func()
 
     bool OK;
 
-    QString info = "National ID: " + QString::fromStdString(national_ID1) + "\n"
-                                                                            "First Name: " +
-                   QString::fromStdString(first_name1) + "\n"
-                                                         "Last Name: " +
-                   QString::fromStdString(last_name1) + "\n"
-                                                        "Date of Birth: " +
-                   date_birth1 + "\n"
-                                 "Phone Number: " +
-                   QString::number(phone_number1) + "\n"
-                                                    "Email: " +
-                   QString::fromStdString(email1) + "\n"
-                                                    "Address: " +
-                   QString::fromStdString(address1) + "\n"
-                                                      "Balance: " +
-                   QString::number(balance) + "\n"
-                                              "Question: " +
-                   QString::fromStdString(question) + "\n"
-                                                      "Answer: " +
-                   QString::fromStdString(answer) + "\n\n"
-                                                    "Type YES to confirm and NO to cancel";
+    QString info = QString("National ID: %1\n First Name: %2\n Last Name: %3\n Date of Birth: %4\n Phone Number: %5\n Phone Number: %6\n Email: %7\n Address: %8\n Balance: %9\n Question: %10\n Answer: %11\n\n  Type YES to confirm and NO to cancel")
+                       .arg(insert_national_ID->text())
+                       .arg(insert_first_name->text())
+                       .arg(insert_last_name->text())
+                       .arg(selected_date.toString(Qt::ISODate))
+                       .arg(insert_phone_number->text())
+                       .arg(insert_email->text())
+                       .arg(insert_address->text())
+                       .arg(insert_balance->text())
+                       .arg(insert_question->text())
+                       .arg(insert_answer->text());
 
     QMessageBox review;
     review.setWindowTitle("Information Review");
@@ -402,40 +334,20 @@ void client_main_window::confirm_button_func()
     if (result == QMessageBox::Cancel)
         return;
 
-    std::string hash_password = BANK::hashing_password(password1);
+    std::string password = insert_password->text().toStdString();
 
-    Account::Qt_create_account(connection, account_number, national_ID1, first_name1, last_name1, date_birth1.toStdString(), phone_number1, email1, address1, balance, interest_rate, hash_password, question, answer);
+    std::string hash_password = BANK::hashing_password(password);
 
-    national_ID1.clear();
-    last_name1.clear();
-    first_name1.clear();
-    email1.clear();
-    address1.clear();
-    password1.clear();
-    password_confirmation1.clear();
-    question.clear();
-    answer.clear();
-    confirm_answer.clear();
-
-    insert_national_ID->clear();
-    insert_last_name->clear();
-    insert_first_name->clear();
-    insert_email->clear();
-    insert_address->clear();
-    insert_phone_number->clear();
-    insert_balance->clear();
-    insert_password->clear();
-    insert_password_confirmation->clear();
-    insert_question->clear();
-    insert_answer->clear();
-    insert_confirm_answer->clear();
+    Account::Qt_create_account(connection, account_number, insert_national_ID->text().toStdString(), insert_first_name->text().toStdString(), insert_last_name->text().toStdString(), selected_date.toString(Qt::ISODate).toStdString(), insert_phone_number->text().toInt(), insert_email->text().toStdString(), insert_address->text().toStdString(), insert_balance->text().toDouble(), interest_rate, hash_password, insert_question->text().toStdString(), insert_answer->text().toStdString());
 }
 
 void client_main_window::account_inquiry_func()
 {
     QMessageBox::information(this, "Redirecting...", "You are about to be redirected to the Client's Official Page");
 
-    option_main_window *new_window = new option_main_window(connection);
+    option_main_window *option_window = new option_main_window(connection, stack, this);
 
-    new_window->show();
+    stack->addWidget(option_window);
+
+    stack->setCurrentWidget(option_window);
 }

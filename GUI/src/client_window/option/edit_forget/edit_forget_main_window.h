@@ -15,14 +15,16 @@ class edit_forget_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    edit_forget_main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
+    edit_forget_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack = nullptr, QWidget *parent = nullptr);
 
 private:
     sql::Connection *connection;
 
-    QStackedWidget *window_stack;
+    QStackedWidget *stack;
 
-    QWidget *central_widget;
+    QStackedWidget *_previous_stack;
+
+    QWidget *edit_forget_widget;
 
     QWidget *edit_perso_widget;
     QWidget *edit_first_name_widget;

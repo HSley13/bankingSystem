@@ -9,12 +9,13 @@ class option_main_window : public QMainWindow
     Q_OBJECT
 
 public:
-    option_main_window(sql::Connection *db_connection, QWidget *parent = nullptr);
+    option_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack = nullptr, QWidget *parent = nullptr);
 
 private:
     sql::Connection *connection;
 
-    QStackedWidget *window_stack;
+    QStackedWidget *stack;
+    QStackedWidget *_previous_stack;
 
     QPushButton *back_button;
     QPushButton *confirm_button;
@@ -60,8 +61,7 @@ private:
     QDate selected_date;
 
 private slots:
-    void
-    back_button_func();
+    void back_button_func();
     void confirm_button_balance();
     void confirm_button_deposit();
     void confirm_button_withdrawal();
