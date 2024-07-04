@@ -1,5 +1,4 @@
 #include "main_window.h"
-#include <database.h>
 
 int main(int argc, char **argv)
 {

@@ -1,9 +1,6 @@
 #pragma once
 
 #include <database.h>
-#include <QtCore>
-#include <QtWidgets>
-
 class option_main_window : public QMainWindow
 {
     Q_OBJECT
@@ -14,51 +11,51 @@ public:
 private:
     sql::Connection *connection;
 
-    QStackedWidget *stack;
+    QStackedWidget *_stack;
     QStackedWidget *_previous_stack;
 
-    QPushButton *back_button;
-    QPushButton *confirm_button;
+    QPushButton *_back_button;
+    QPushButton *_confirm_button;
 
-    QLineEdit *account_number_ba;
-    QLineEdit *password_ba;
+    QLineEdit *_account_number_ba;
+    QLineEdit *_password_ba;
 
-    QLineEdit *account_number_de;
-    QLineEdit *password_de;
-    QLineEdit *amount_de;
+    QLineEdit *_account_number_de;
+    QLineEdit *_password_de;
+    QLineEdit *_amount_de;
 
-    QLineEdit *account_number_with;
-    QLineEdit *password_with;
-    QLineEdit *amount_with;
+    QLineEdit *_account_number_with;
+    QLineEdit *_password_with;
+    QLineEdit *_amount_with;
 
-    QLineEdit *account_number1_tran;
-    QLineEdit *account_number2_tran;
-    QLineEdit *password_tran;
-    QLineEdit *amount_tran;
+    QLineEdit *_account_number1_tran;
+    QLineEdit *_account_number2_tran;
+    QLineEdit *_password_tran;
+    QLineEdit *_amount_tran;
 
-    QLineEdit *account_number_borr;
-    QLineEdit *password_borr;
-    QLineEdit *amount_borr;
+    QLineEdit *_account_number_borr;
+    QLineEdit *_password_borr;
+    QLineEdit *_amount_borr;
 
-    QLineEdit *account_number_ret;
-    QLineEdit *password_ret;
-    QLineEdit *amount_ret;
+    QLineEdit *_account_number_ret;
+    QLineEdit *_password_ret;
+    QLineEdit *_amount_ret;
 
-    QLineEdit *account_number_transac;
-    QLineEdit *password_transac;
+    QLineEdit *_account_number_transac;
+    QLineEdit *_password_transac;
 
-    QLineEdit *specific_account_number_transac;
-    QLineEdit *specific_password_transac;
+    QLineEdit *_specific_account_number_transac;
+    QLineEdit *_specific_password_transac;
 
-    QLineEdit *account_number_edit;
-    QLineEdit *password_edit;
+    QLineEdit *_account_number_edit;
+    QLineEdit *_password_edit;
 
-    QLineEdit *account_number_dele;
-    QLineEdit *password_dele;
+    QLineEdit *_account_number_dele;
+    QLineEdit *_password_dele;
 
-    QComboBox *choice;
-    QDateEdit *calendar;
-    QDate selected_date;
+    QComboBox *_choice;
+    QDateEdit *_calendar;
+    QDate _selected_date;
 
 private slots:
     void back_button_func();

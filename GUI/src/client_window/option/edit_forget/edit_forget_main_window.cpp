@@ -1,10 +1,4 @@
 #include "edit_forget_main_window.h"
-#include <QMessageBox>
-
-#include <mysql_driver.h>
-#include <mysql_connection.h>
-#include <cppconn/prepared_statement.h>
-#include <argon2.h>
 
 edit_forget_main_window::edit_forget_main_window(sql::Connection *db_connection, QStackedWidget *previous_stack, QWidget *parent)
     : QMainWindow(parent), connection(db_connection), _previous_stack(previous_stack)

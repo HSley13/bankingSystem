@@ -1,4 +1,4 @@
-#include "client_main_window.h"
+#include "login_window.h"
 
 int main(int argc, char **argv)
 {
@@ -6,8 +6,8 @@ int main(int argc, char **argv)
 
     sql::Connection *db_connection = nullptr;
 
-    client_main_window Client_main_window(db_connection);
-    Client_main_window.show();
+    login_window Main_window(db_connection);
+    Main_window.show();
 
     app.exec();
 }

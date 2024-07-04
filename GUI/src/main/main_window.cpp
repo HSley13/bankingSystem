@@ -1,5 +1,5 @@
 #include "main_window.h"
-#include <adm_main_window.h>
+#include <login_window.h>
 #include <client_main_window.h>
 
 main_window::main_window(sql::Connection *db_connection, QWidget *parent)
@@ -13,8 +13,8 @@ main_window::main_window(sql::Connection *db_connection, QWidget *parent)
                   "font-size: 20;"
                   "background-color: black;");
 
-    stack = new QStackedWidget(this);
-    setCentralWidget(stack);
+    _stack = new QStackedWidget(this);
+    setCentralWidget(_stack);
 
     QWidget *central_widget = new QWidget(this);
 
@@ -47,23 +47,23 @@ main_window::main_window(sql::Connection *db_connection, QWidget *parent)
     vbox->addWidget(admin, Qt ::AlignLeft);
     vbox->addWidget(client, Qt ::AlignLeft);
 
-    stack->addWidget(central_widget);
+    _stack->addWidget(central_widget);
 }
 
 void main_window::client_button_clicked()
 {
-    client_main_window *client_window = new client_main_window(connection, stack, this);
+    client_main_window *client_window = new client_main_window(connection, _stack, this);
 
-    stack->addWidget(client_window);
+    _stack->addWidget(client_window);
 
-    stack->setCurrentWidget(client_window);
+    _stack->setCurrentWidget(client_window);
 }
 
 void main_window::adm_button_clicked()
 {
-    adm_main_window *adm_window = new adm_main_window(connection, stack, this);
+    login_window *login = new login_window(connection, _stack, "adm", this);
 
-    stack->addWidget(adm_window);
+    _stack->addWidget(login);
 
-    stack->setCurrentWidget(adm_window);
+    _stack->setCurrentWidget(login);
 }

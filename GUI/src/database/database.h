@@ -1,18 +1,18 @@
 #pragma once
+
 #include <iostream>
 #include <string>
 #include <random>
 #include <stack>
 #include <vector>
 
-// #include <QtCore>
+#include <QtCore>
 #include <QtWidgets>
 
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/prepared_statement.h>
 #include <argon2.h>
-
 class connection_details
 {
 public:

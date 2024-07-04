@@ -1,10 +1,5 @@
 #include "database.h"
 
-#include <mysql_driver.h>
-#include <mysql_connection.h>
-#include <cppconn/prepared_statement.h>
-#include <argon2.h>
-
 sql::Connection *connection_setup(connection_details *ID)
 {
     try

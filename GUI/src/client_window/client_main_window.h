@@ -1,9 +1,6 @@
 #pragma once
 
 #include <database.h>
-#include <QtCore>
-#include <QtWidgets>
-
 class client_main_window : public QMainWindow
 {
     Q_OBJECT
@@ -14,30 +11,30 @@ public:
 private:
     sql::Connection *connection;
 
-    QStackedWidget *stack;
+    QStackedWidget *_stack;
 
     QStackedWidget *_previous_stack;
 
-    QPushButton *confirm_button;
-    QPushButton *back_button;
+    QPushButton *_confirm_button;
+    QPushButton *_back_button;
 
-    QLineEdit *insert_national_ID;
-    QLineEdit *insert_first_name;
-    QLineEdit *insert_last_name;
-    QLineEdit *insert_phone_number;
-    QLineEdit *insert_email;
-    QLineEdit *insert_address;
-    QLineEdit *insert_balance;
-    QLineEdit *insert_password;
-    QLineEdit *insert_password_confirmation;
-    QLineEdit *insert_question;
-    QLineEdit *insert_answer;
-    QLineEdit *insert_confirm_answer;
+    QLineEdit *_national_ID;
+    QLineEdit *_first_name;
+    QLineEdit *_last_name;
+    QLineEdit *_phone_number;
+    QLineEdit *_email;
+    QLineEdit *_address;
+    QLineEdit *_balance;
+    QLineEdit *_password;
+    QLineEdit *_password_confirmation;
+    QLineEdit *_question;
+    QLineEdit *_answer;
+    QLineEdit *_confirm_answer;
 
-    QVBoxLayout *vbox;
+    QVBoxLayout *_VBOX;
 
-    QDateEdit *calendar;
-    QDate selected_date;
+    QDateEdit *_calendar;
+    QDate _selected_date;
 
 private slots:
     void back_button_func();

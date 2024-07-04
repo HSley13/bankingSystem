@@ -6,8 +6,7 @@ add_executable(MyQtProject
 target_link_libraries(MyQtProject PRIVATE
                                 SSL
                                 Crypto
-                                adm_library 
-                                adm_option_library 
+                                login_library
                                 client_library
                                 database_library
                         )

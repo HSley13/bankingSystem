@@ -1,11 +1,6 @@
 #pragma once
 
 #include <database.h>
-#include <iostream>
-
-#include <QtCore>
-#include <QtWidgets>
-
 class main_window : public QMainWindow
 {
     Q_OBJECT
@@ -16,7 +11,7 @@ public:
 private:
     sql::Connection *connection;
 
-    QStackedWidget *stack;
+    QStackedWidget *_stack;
 
 private slots:
     void adm_button_clicked();

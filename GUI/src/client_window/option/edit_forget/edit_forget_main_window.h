@@ -1,15 +1,6 @@
 #pragma once
 
 #include <database.h>
-#include <QMainWindow>
-#include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-
 class edit_forget_main_window : public QMainWindow
 {
     Q_OBJECT
